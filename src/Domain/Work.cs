@@ -1,8 +1,7 @@
-namespace Domain.Models;
+namespace Domain;
 
-public class Work : IEntity
+public class Work : BaseEntity
 {
-    public int Id { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
     public int GroupId { get; set; }

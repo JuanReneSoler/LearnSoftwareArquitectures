@@ -1,8 +1,8 @@
-using Domain.Models;
+using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure;
+namespace Infrastructure.Data.Maps;
 
 public class PersonMap : IEntityTypeConfiguration<Person>
 {

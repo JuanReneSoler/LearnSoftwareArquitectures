@@ -1,10 +1,10 @@
-using Domain.Models;
+using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure;
+namespace Infrastructure.Data.Maps;
 
-public class WorkMap : IEntityTypeConfiguration<Work>
+public class TaskMap : IEntityTypeConfiguration<Work>
 {
     public void Configure(EntityTypeBuilder<Work> builder)
     {

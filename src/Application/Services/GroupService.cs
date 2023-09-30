@@ -1,8 +1,7 @@
 using Domain; 
-using Domain.Models;
 using System.Linq.Expressions;
 
-namespace Application;
+namespace Application.Services;
 
 public interface IGroupService : IGenericService<Group>
 {
@@ -20,7 +19,7 @@ public class GroupService : IGroupService
     public Group Add(Group Entity)
     {
        _repository.Add(Entity);
-       _repository.Save();
+       _repository.Commit();
        return Entity;
     }
 
@@ -32,7 +31,7 @@ public class GroupService : IGroupService
        if( item is null ) throw new NullReferenceException("Este Grupo no existe.");
 
        _repository.Delete(Id);
-       _repository.Save();
+       _repository.Commit();
     }
     public void Update(Group Entity, int Id)
     {
@@ -43,13 +42,13 @@ public class GroupService : IGroupService
        Entity.Id = Id;
        entity = Entity;
        _repository.Update(entity);
-       _repository.Save();
+       _repository.Commit();
     }
 
-    public IList<Group> GetAll()=> _repository.GetAll();
+    public IList<Group> GetAll(int? skip, int? take)=> _repository.GetAll(skip, take);
 
-    public IList<Group> Filter(Expression<Func<Group, bool>> predicate)
+    public IList<Group> Filter(Expression<Func<Group, bool>> predicate, int? skip, int? take)
     {
-       return _repository.Where(predicate);
+       return _repository.Where(predicate, skip, take);
     }
 }

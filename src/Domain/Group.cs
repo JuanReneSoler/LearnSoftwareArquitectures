@@ -1,8 +1,7 @@
-namespace Domain.Models;
+namespace Domain;
 
-public class Group : IEntity
+public class Group : BaseEntity
 {
-    public int Id { get; set; }
     public string Name { get; set; }
 
     public ICollection<Task> Tasks { get; set; }

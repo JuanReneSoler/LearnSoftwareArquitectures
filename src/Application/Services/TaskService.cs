@@ -1,19 +1,18 @@
 using Domain;
-using Domain.Models;
 using System.Linq.Expressions;
 
-namespace Application;
+namespace Application.Services;
 
-public interface IWorkService : IGenericService<Work>
+public interface ITaskService : IGenericService<Work>
 {
-   void ReasignToGroup(int WorkId, int GroupId);
+   void ReasignToGroup(int TaskId, int GroupId);
 }
 
-public class WorkService : IWorkService
+public class TaskService : ITaskService
 {
    private readonly IGenericRepository<Work> _repository;
    
-   public WorkService(IGenericRepository<Work> Repository)
+   public TaskService(IGenericRepository<Work> Repository)
    {
       _repository = Repository;
    }
@@ -21,7 +20,7 @@ public class WorkService : IWorkService
     public Work Add(Work Entity)
     {
        _repository.Add(Entity);
-       _repository.Save();
+       _repository.Commit();
        return Entity;
     }
 
@@ -32,7 +31,7 @@ public class WorkService : IWorkService
        if(entity is null) throw new NullReferenceException("Esta Tarea no existe.");
 
        _repository.Delete(Id);
-       _repository.Save(); 
+       _repository.Commit(); 
     }
 
     public void Update(Work Entity, int Id)
@@ -45,21 +44,21 @@ public class WorkService : IWorkService
        Entity.Id = Id;
        entity = Entity;
        _repository.Update(entity);
-       _repository.Save();
+       _repository.Commit();
     }
 
-    public IList<Work> GetAll()=> _repository.GetAll();
+    public IList<Work> GetAll(int? skip, int? take)=> _repository.GetAll(skip, take);
 
-    public IList<Work> Filter(Expression<Func<Work, bool>> predicate)
+    public IList<Work> Filter(Expression<Func<Work, bool>> predicate, int? skip, int? take)
     {
-       var result = _repository.Where(predicate);
+       var result = _repository.Where(predicate, skip, take);
        return result.ToList();
     }
 
-   public void ReasignToGroup(int WorkId, int GroupId)
+   public void ReasignToGroup(int TaskId, int GroupId)
    {
-      var _work = _repository.Get(WorkId);
+      var _work = _repository.Get(TaskId);
       _work.GroupId = GroupId;
-      _repository.Save();
+      _repository.Commit();
    }
 }
