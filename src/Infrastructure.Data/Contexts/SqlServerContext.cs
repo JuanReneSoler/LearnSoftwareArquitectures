@@ -30,7 +30,7 @@ public class SqlServerContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
+        
         modelBuilder.ApplyConfiguration(new GroupMap());
         modelBuilder.ApplyConfiguration(new PersonMap());
         modelBuilder.ApplyConfiguration(new TaskMap());

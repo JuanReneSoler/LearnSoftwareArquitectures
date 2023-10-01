@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Data.Repositories;
 
 public class GenericRepository<TEntity> : IGenericRepository<TEntity>
-    where TEntity : BaseEntity
+    where TEntity : class, IBaseEntity
 {
     private readonly DbContext _context;
     private readonly DbSet<TEntity> _table;

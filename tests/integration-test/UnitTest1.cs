@@ -11,16 +11,8 @@ public class UnitTest1
     private readonly SqlServerContext _context;
     public UnitTest1()
     {
-      try
-      {
-          _context = new SqlServerContext(@"Data Source=localhost;Initial Catalog=Tasks;Integrated Security=False;User Id=sa;Password=Linux@1993;");
-          _context.Database.EnsureCreated();
-      }
-      catch (System.Exception)
-      {
-          
-          throw;
-      }
+        _context = new SqlServerContext(@"Server=.;Database=Tasks;Trusted_Connection=false;User Id=sa;Password=Linux@1993;Persist Security Info=False;Encrypt=False");
+        _context.Database.EnsureCreated();
     }
 
     [TestMethod]

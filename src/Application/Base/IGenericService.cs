@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 namespace Domain;
 
 public interface IGenericService<TEntity>
-    where TEntity : BaseEntity
+    where TEntity : IBaseEntity
 {
     TEntity Add(TEntity Entity);
     void Delete(int Id);
