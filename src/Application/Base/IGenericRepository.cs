@@ -1,9 +1,11 @@
+using Domain.Base;
+
 using System.Linq.Expressions;
 
 namespace Domain;
 
 public interface IGenericRepository<TEntity> 
-    where TEntity : IBaseEntity
+    where TEntity : BaseEntity
 {
     TEntity Add(TEntity Entity);
     void AddRange(TEntity[] Entities);
