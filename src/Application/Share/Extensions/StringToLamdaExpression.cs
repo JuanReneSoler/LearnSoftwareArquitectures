@@ -17,7 +17,8 @@ public static class StringToLamdaExpression
             body = Expression.Property(body, propertyStr);
         }
 
-        var lamda = Expression.Lambda(body, param);
+        var convert = Expression.Convert(body, typeof(TKey));
+        var lamda = Expression.Lambda(convert, param);
 
         return (Expression<Func<TSource, TKey>>)lamda;
     }
