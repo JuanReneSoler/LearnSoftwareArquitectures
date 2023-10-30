@@ -1,23 +1,24 @@
 using System.Linq.Expressions;
-using Domain;
 using Domain.Base;
 using Microsoft.EntityFrameworkCore;
+using Domain;
+using Infrastructure.Data.Contexts;
 
 namespace Infrastructure.Data.Repositories;
 
-public class GenericRepository<TEntity> : IGenericRepository<TEntity>
+public class GenericRepository<TEntity> : IGenericRepository<TEntity, int>
     where TEntity : BaseEntity
 {
     private readonly DbContext _context;
     private readonly DbSet<TEntity> _table;
 
-    public GenericRepository(DbContext Context)
+    public GenericRepository(SqlServerContext Context)
     {
         _context = Context;
         _table = Context.Set<TEntity>();
     }
 
-    public TEntity Add(TEntity Entity)=>_table.Add(Entity).Entity;
+    public TEntity Add(TEntity Entity) => _table.Add(Entity).Entity;
 
     public void AddRange(TEntity[] Entities) => _table.AddRange(Entities);
 
@@ -30,7 +31,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
     {
         var entity = this.Get(Id);
 
-        if(entity is null) throw new NullReferenceException("El elemento no existe.");
+        if (entity is null) throw new NullReferenceException("El elemento no existe.");
 
         _table.Remove(entity);
     }
@@ -42,9 +43,9 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
 
     public TEntity Get(int Id)
     {
-        var entity = _table.FirstOrDefault(x=>x.Id == Id);
+        var entity = _table.FirstOrDefault(x => x.Id == Id);
 
-        if(entity is null) throw new NullReferenceException("El elemento no existe.");
+        if (entity is null) throw new NullReferenceException("El elemento no existe.");
 
         return entity;
     }
@@ -53,19 +54,19 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
     {
         var entity = _table.FirstOrDefault(predicate);
 
-        if(entity is null) throw new NullReferenceException("El elemento no existe.");
+        if (entity is null) throw new NullReferenceException("El elemento no existe.");
 
         return entity;
     }
 
-    public IList<TEntity> GetAll(int? skip = null, int? take = null)
+    public IQueryable<TEntity> GetAll(int? skip = null, int? take = null)
     {
-        var items = _table.Select(x=>x);
+        var items = _table.Select(x => x);
 
-        if(!( ( skip ?? take ) is null ))
+        if (!((skip ?? take) is null))
             items = items.Skip(skip.Value).Take(take.Value);
 
-        return items.ToList();
+        return items;
     }
 
     public void Rollback()
@@ -80,8 +81,8 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
                     break;
                 case EntityState.Modified:
                 case EntityState.Deleted:
-                      entry.Reload();
-                      break;
+                    entry.Reload();
+                    break;
             }
         }
     }
@@ -92,13 +93,13 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
         _context.Entry(Entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
     }
 
-    public IList<TEntity> Where(Expression<Func<TEntity, bool>> predicate, int? skip = null, int? take = null)
+    public IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> predicate, int? skip = null, int? take = null)
     {
         var entities = _table.Where(predicate);
 
-        if(!((take ?? skip) is null))
+        if (!((take ?? skip) is null))
             entities.Take(take.Value).Skip(skip.Value);
 
-        return entities.ToList();
+        return entities;
     }
 }

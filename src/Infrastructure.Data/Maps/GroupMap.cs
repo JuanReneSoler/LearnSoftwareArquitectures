@@ -10,6 +10,6 @@ public class GroupMap : IEntityTypeConfiguration<Group>
     {
         builder.ToTable("Group");
         builder.HasKey(i => i.Id);
-        builder.HasMany(x=>x.Tasks);
+        builder.HasMany(x => x.Tasks);
     }
 }

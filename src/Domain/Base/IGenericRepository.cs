@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace Domain;
 
-public interface IGenericRepository<TEntity> 
+public interface IGenericRepository<TEntity, TEntityID>
     where TEntity : BaseEntity
 {
     TEntity Add(TEntity Entity);
@@ -12,14 +12,14 @@ public interface IGenericRepository<TEntity>
     //
     void Update(TEntity Entity);
     //
-    void Delete(int Id);
-    void DeleteRange(int[] Ids);
+    void Delete(TEntityID Id);
+    void DeleteRange(TEntityID[] Ids);
     //
-    TEntity Get(int Id);
+    TEntity Get(TEntityID Id);
     TEntity Get(Expression<Func<TEntity, bool>> predicate);
     //
-    IList<TEntity> GetAll(int? skip, int? take);
-    IList<TEntity> Where(Expression<Func<TEntity, bool>> predicate, int? skip, int? take);
+    IQueryable<TEntity> GetAll(int? skip, int? take);
+    IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> predicate, int? skip, int? take);
     //
     void Commit();
     void Rollback();

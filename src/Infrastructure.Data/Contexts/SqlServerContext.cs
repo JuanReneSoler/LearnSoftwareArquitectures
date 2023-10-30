@@ -1,36 +1,35 @@
 using Domain;
 using Microsoft.EntityFrameworkCore;
-using System.Configuration;
 using Infrastructure.Data.Maps;
 
 namespace Infrastructure.Data.Contexts;
 
 public class SqlServerContext : DbContext
 {
-    private readonly string _stringConnection;
+    public DbSet<Group>? Groups { get; set; }
+    public DbSet<Work>? Tasks { get; set; }
+    public DbSet<Person>? People { get; set; }
 
-    public SqlServerContext() : base()
+    public SqlServerContext(DbContextOptions<SqlServerContext> options) : base(options)
     {
-        _stringConnection = ConfigurationManager.ConnectionStrings["default"].ConnectionString;
     }
 
-    public SqlServerContext(string stringConnection) : base()
+    public SqlServerContext()
     {
-        _stringConnection = stringConnection;
     }
-    public DbSet<Group> Groups { get; set; }
-    public DbSet<Work> Tasks { get; set; }
-    public DbSet<Person> People { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(_stringConnection);
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseSqlServer(@"Server=.;Database=Tasks;Trusted_Connection=false;User Id=sa;Password=Linux@1993;Persist Security Info=False;Encrypt=False");
+        }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        
+
         modelBuilder.ApplyConfiguration(new GroupMap());
         modelBuilder.ApplyConfiguration(new PersonMap());
         modelBuilder.ApplyConfiguration(new TaskMap());

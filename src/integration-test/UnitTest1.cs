@@ -1,4 +1,4 @@
-using Application.Services;
+using Application;
 using Domain;
 using Infrastructure.Data.Contexts;
 using Infrastructure.Data.Repositories;
@@ -11,7 +11,7 @@ public class UnitTest1
     private readonly SqlServerContext _context;
     public UnitTest1()
     {
-        _context = new SqlServerContext(@"Server=.;Database=Tasks;Trusted_Connection=false;User Id=sa;Password=Linux@1993;Persist Security Info=False;Encrypt=False");
+        _context = new SqlServerContext();
         _context.Database.EnsureCreated();
     }
 
