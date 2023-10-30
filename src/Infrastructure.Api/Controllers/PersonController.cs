@@ -1,5 +1,5 @@
 using Application;
-using Domain;
+using Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Infrastructure.Api.Controllers;
@@ -30,14 +30,14 @@ public class PersonController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Add(Person Person)
+    public IActionResult Add(PersonDto Person)
     {
         _personService.Add(Person);
         return Ok("Created Person Successfull");
     }
 
     [HttpPut]
-    public IActionResult Update(Person Person)
+    public IActionResult Update(PersonDto Person)
     {
         _personService.Update(Person, Person.Id);
         return Ok("Update Person Successfull");

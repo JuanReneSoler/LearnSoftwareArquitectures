@@ -1,5 +1,5 @@
 using Application;
-using Domain;
+using Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Infrastructure.Api.Controllers;
@@ -30,14 +30,14 @@ public class GroupController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Add(Group Group)
+    public IActionResult Add(GroupDto Group)
     {
         _groupService.Add(Group);
         return Ok("Group Created Successfull");
     }
 
     [HttpPut]
-    public IActionResult Update(Group Group)
+    public IActionResult Update(GroupDto Group)
     {
         _groupService.Update(Group, Group.Id);
         return Ok("Update Group Successfull");

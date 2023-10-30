@@ -1,11 +1,9 @@
-using Domain.Base;
-
 using System.Linq.Expressions;
 
 namespace Application;
 
 public interface IGenericService<TEntity, TEntityID>
-    where TEntity : BaseEntity
+    where TEntity : class
 {
     TEntity Add(TEntity Entity);
     void Delete(TEntityID Id);

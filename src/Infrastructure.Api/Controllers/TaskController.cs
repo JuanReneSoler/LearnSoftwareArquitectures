@@ -1,5 +1,5 @@
 using Application;
-using Domain;
+using Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Infrastructure.Api.Controllers;
@@ -30,14 +30,14 @@ public class TaskController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Add(Work Task)
+    public IActionResult Add(TaskDto Task)
     {
         _taskService.Add(Task);
         return Ok("Opeation Successfull");
     }
 
     [HttpPut]
-    public IActionResult Update(Work Task)
+    public IActionResult Update(TaskDto Task)
     {
         _taskService.Update(Task, Task.Id);
         return Ok("Update Successfull");

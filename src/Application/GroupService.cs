@@ -1,9 +1,10 @@
 using Domain;
 using System.Linq.Expressions;
+using Application.Dtos;
 
 namespace Application;
 
-public interface IGroupService : IGenericService<Group, int>
+public interface IGroupService : IGenericService<GroupDto, int>
 {
    //
 }
@@ -16,9 +17,13 @@ public class GroupService : IGroupService
    {
       _repository = Repository;
    }
-   public Group Add(Group Entity)
+   public GroupDto Add(GroupDto Entity)
    {
-      _repository.Add(Entity);
+      var group = new Group
+      {
+         Name = Entity.Name,
+      };
+      _repository.Add(group);
       _repository.Commit();
       return Entity;
    }
@@ -33,22 +38,32 @@ public class GroupService : IGroupService
       _repository.Delete(Id);
       _repository.Commit();
    }
-   public void Update(Group Entity, int Id)
+   public void Update(GroupDto Entity, int Id)
    {
       var entity = _repository.Get(Id);
 
       if (entity is null) throw new NullReferenceException("Este Grupo no existe.");
 
-      Entity.Id = Id;
-      entity = Entity;
+      entity.Name = Entity.Name;
       _repository.Update(entity);
       _repository.Commit();
    }
 
-   public IList<Group> GetAll(int? skip, int? take) => _repository.GetAll(skip, take).ToList();
+   public IList<GroupDto> GetAll(int? skip, int? take)
+      => _repository.GetAll(skip, take).Select(x => new GroupDto
+      {
+         Id = x.Id,
+         Name = x.Name
+      }).ToList();
 
-   public IList<Group> Filter(Expression<Func<Group, bool>> predicate, int? skip, int? take)
+   public IList<GroupDto> Filter(Expression<Func<GroupDto, bool>> predicate, int? skip, int? take)
    {
-      return _repository.Where(predicate, skip, take).ToList();
+      var result = _repository.GetAll(skip, take).Select(x => new GroupDto
+      {
+         Id = x.Id,
+         Name = x.Name
+      });
+
+      return result.Where(predicate).ToList();
    }
 }
