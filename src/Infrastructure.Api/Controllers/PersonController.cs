@@ -15,18 +15,19 @@ public class PersonController : ControllerBase
         _personService = PersonService;
     }
 
-    [HttpGet("All")]
-    public IActionResult GetAll()
-    {
-        var result = _personService.GetAll(null, null);
-        return Ok(result);
-    }
-
     [HttpGet]
-    public IActionResult Find(int Id)
+    public IActionResult Find(int? Id)
     {
-        var entiry = _personService.Filter(x => x.Id == Id, null, null).FirstOrDefault();
-        return Ok(entiry);
+        if (Id is null)
+        {
+            var result = _personService.GetAll(null, null);
+            return Ok(result);
+        }
+        else
+        {
+            var entiry = _personService.Filter(x => x.Id == Id, null, null).FirstOrDefault();
+            return Ok(entiry);
+        }
     }
 
     [HttpPost]

@@ -15,18 +15,19 @@ public class TaskController : ControllerBase
         _taskService = TaskService;
     }
 
-    [HttpGet("All")]
-    public IActionResult GeAll()
-    {
-        var result = _taskService.GetAll(null, null);
-        return Ok(result);
-    }
-
     [HttpGet]
-    public IActionResult Get(int Id)
+    public IActionResult Get(int? Id)
     {
-        var entiry = _taskService.Filter(x => x.Id == Id, null, null).FirstOrDefault();
-        return Ok(entiry);
+        if (Id is null)
+        {
+            var result = _taskService.GetAll(null, null);
+            return Ok(result);
+        }
+        else
+        {
+            var entiry = _taskService.Filter(x => x.Id == Id, null, null).FirstOrDefault();
+            return Ok(entiry);
+        }
     }
 
     [HttpPost]
