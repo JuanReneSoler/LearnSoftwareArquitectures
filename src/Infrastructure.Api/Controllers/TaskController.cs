@@ -32,21 +32,21 @@ public class TaskController : ControllerBase
     [HttpPost]
     public IActionResult Add(TaskDto Task)
     {
-        _taskService.Add(Task);
-        return Ok("Opeation Successfull");
+        var result = _taskService.Add(Task);
+        return Ok(result);
     }
 
     [HttpPut]
     public IActionResult Update(TaskDto Task)
     {
-        _taskService.Update(Task, Task.Id);
-        return Ok("Update Successfull");
+        var result = _taskService.Update(Task, Task.Id);
+        return Ok(result);
     }
 
     [HttpDelete]
     public IActionResult Delete(int Id)
     {
-        _taskService.Delete(Id);
-        return Ok("delete Successfull");
+        var result = _taskService.Delete(Id);
+        return Ok(result);
     }
 }

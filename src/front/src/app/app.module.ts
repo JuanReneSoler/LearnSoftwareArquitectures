@@ -3,12 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
-import { TasksModule } from './modules/tasks/tasks.module';
+import { TaskListComponent } from './components/task-list/task-list.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/task-list',
     pathMatch: 'full',
   },
   {
@@ -18,9 +17,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, TaskListComponent],
   exports: [RouterModule],
-  imports: [BrowserModule, RouterModule.forRoot(routes), TasksModule],
+  imports: [BrowserModule, RouterModule.forRoot(routes)],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

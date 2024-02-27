@@ -18,14 +18,9 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity, int>
         _table = Context.Set<TEntity>();
     }
 
-    public TEntity Add(TEntity Entity) => _table.Add(Entity).Entity;
+    public void Add(TEntity Entity) => _table.Add(Entity);
 
-    public void AddRange(TEntity[] Entities) => _table.AddRange(Entities);
-
-    public void Commit()
-    {
-        _context.SaveChanges();
-    }
+    public bool Commit() => _context.SaveChanges() == 1;
 
     public void Delete(int Id)
     {
@@ -36,26 +31,15 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity, int>
         _table.Remove(entity);
     }
 
-    public void DeleteRange(int[] Ids)
-    {
-        var entities = this.Where(x => Ids.Contains(x.Id));
-    }
-
-    public TEntity Get(int Id)
+    public TEntity? Get(int Id)
     {
         var entity = _table.FirstOrDefault(x => x.Id == Id);
-
-        if (entity is null) throw new NullReferenceException("El elemento no existe.");
-
         return entity;
     }
 
-    public TEntity Get(Expression<Func<TEntity, bool>> predicate)
+    public TEntity? Get(Expression<Func<TEntity, bool>> predicate)
     {
         var entity = _table.FirstOrDefault(predicate);
-
-        if (entity is null) throw new NullReferenceException("El elemento no existe.");
-
         return entity;
     }
 
@@ -63,7 +47,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity, int>
     {
         var items = _table.Select(x => x);
 
-        if (!((skip ?? take) is null))
+        if (skip != null && take != null)
             items = items.Skip(skip.Value).Take(take.Value);
 
         return items;
@@ -97,7 +81,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity, int>
     {
         var entities = _table.Where(predicate);
 
-        if (!((take ?? skip) is null))
+        if (skip != null && take != null)
             entities.Take(take.Value).Skip(skip.Value);
 
         return entities;

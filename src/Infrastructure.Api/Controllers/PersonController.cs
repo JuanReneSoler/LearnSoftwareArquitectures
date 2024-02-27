@@ -32,21 +32,21 @@ public class PersonController : ControllerBase
     [HttpPost]
     public IActionResult Add(PersonDto Person)
     {
-        _personService.Add(Person);
-        return Ok("Created Person Successfull");
+        var result = _personService.Add(Person);
+        return Ok(result);
     }
 
     [HttpPut]
     public IActionResult Update(PersonDto Person)
     {
-        _personService.Update(Person, Person.Id);
-        return Ok("Update Person Successfull");
+        var result = _personService.Update(Person, Person.Id);
+        return Ok(result);
     }
 
     [HttpDelete]
     public IActionResult Delete(int Id)
     {
-        _personService.Delete(Id);
-        return Ok("delete Successfull");
+        var result = _personService.Delete(Id);
+        return Ok(result);
     }
 }

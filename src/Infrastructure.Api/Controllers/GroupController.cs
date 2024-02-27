@@ -32,21 +32,21 @@ public class GroupController : ControllerBase
     [HttpPost]
     public IActionResult Add(GroupDto Group)
     {
-        _groupService.Add(Group);
-        return Ok("Group Created Successfull");
+        var result = _groupService.Add(Group);
+        return Ok(result);
     }
 
     [HttpPut]
     public IActionResult Update(GroupDto Group)
     {
-        _groupService.Update(Group, Group.Id);
-        return Ok("Update Group Successfull");
+        var result = _groupService.Update(Group, Group.Id);
+        return Ok(result);
     }
 
     [HttpDelete]
     public IActionResult Delete(int Id)
     {
-        _groupService.Delete(Id);
-        return Ok("delete group Successfull");
+        var result = _groupService.Delete(Id);
+        return Ok(result);
     }
 }
