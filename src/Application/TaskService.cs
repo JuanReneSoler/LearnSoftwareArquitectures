@@ -1,5 +1,7 @@
+using Application.Base;
 using Application.Dtos;
-using Domain;
+using Domain.Entities;
+using Domain.Base;
 using System.Linq.Expressions;
 
 namespace Application;
@@ -11,16 +13,16 @@ public interface ITaskService : IGenericService<TaskDto, int>
 
 public class TaskService : ITaskService
 {
-    private readonly IGenericRepository<Work, int> _repository;
+    private readonly IGenericRepository<Tasks, int> _repository;
 
-    public TaskService(IGenericRepository<Work, int> Repository)
+    public TaskService(IGenericRepository<Tasks, int> Repository)
     {
         _repository = Repository;
     }
 
     public TaskDto? Add(TaskDto Entity)
     {
-        var entity = new Work
+        var entity = new Tasks
         {
             Title = Entity.Title,
             Description = Entity.Description,

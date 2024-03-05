@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
 
-namespace Application;
+namespace Application.Base;
 
 public interface IGenericService<TEntity, TEntityID>
-    where TEntity : class
+    where TEntity : DtoBase<TEntityID>
 {
     TEntity? Add(TEntity Entity);
     TEntityID Delete(TEntityID Id);

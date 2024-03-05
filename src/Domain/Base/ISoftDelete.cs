@@ -1,10 +1,12 @@
-public interface ISoftDelete
+namespace Domain.Base;
+
+public interface ISoftDelete<TEntityID>
 {
 
-    string CreatedById { get; set; }
+    TEntityID CreatedById { get; set; }
     DateTime CreatedOn { get; set; }
     bool IsDeleted { get; set; }
     bool IsReadOnly { get; set; }
-    string ModifiedById { get; set; }
+    TEntityID ModifiedById { get; set; }
     DateTime ModifiedOn { get; set; }
 }

@@ -1,7 +1,8 @@
+using Application.Base;
+
 namespace Application.Dtos;
 
-public class PersonDto
+public class PersonDto : DtoBase<int>
 {
-   public int Id { get; set; }
-   public string Name { get; set; }
+    public string Name { get; set; }
 }

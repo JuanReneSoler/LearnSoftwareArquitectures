@@ -1,12 +1,12 @@
-using Domain;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Data.Maps;
 
-public class TaskMap : IEntityTypeConfiguration<Work>
+public class TaskMap : IEntityTypeConfiguration<Tasks>
 {
-    public void Configure(EntityTypeBuilder<Work> builder)
+    public void Configure(EntityTypeBuilder<Tasks> builder)
     {
         builder.ToTable("Task");
         builder.HasKey(x => x.Id);

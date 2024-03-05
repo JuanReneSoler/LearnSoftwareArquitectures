@@ -1,5 +1,7 @@
+using Application.Base;
 using Application.Dtos;
-using Domain;
+using Domain.Entities;
+using Domain.Base;
 using System.Linq.Expressions;
 
 namespace Application;

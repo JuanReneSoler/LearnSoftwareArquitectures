@@ -1,11 +1,9 @@
-using Domain.Base;
-
 using System.Linq.Expressions;
 
-namespace Domain;
+namespace Domain.Base;
 
 public interface IGenericRepository<TEntity, TEntityID>
-    where TEntity : BaseEntity
+    where TEntity : BaseEntity<TEntityID>
 {
     void Add(TEntity Entity);
     //

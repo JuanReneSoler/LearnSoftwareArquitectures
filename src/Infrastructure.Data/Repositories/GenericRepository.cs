@@ -1,13 +1,12 @@
 using System.Linq.Expressions;
 using Domain.Base;
 using Microsoft.EntityFrameworkCore;
-using Domain;
 using Infrastructure.Data.Contexts;
 
 namespace Infrastructure.Data.Repositories;
 
 public class GenericRepository<TEntity> : IGenericRepository<TEntity, int>
-    where TEntity : BaseEntity
+    where TEntity : BaseEntity<int>
 {
     private readonly DbContext _context;
     private readonly DbSet<TEntity> _table;

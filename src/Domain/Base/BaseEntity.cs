@@ -1,6 +1,6 @@
 namespace Domain.Base;
 
-public abstract class BaseEntity
+public abstract class BaseEntity<TEntityID>
 {
-    public int Id { get; set; }
+    public TEntityID Id { get; set; }
 }
