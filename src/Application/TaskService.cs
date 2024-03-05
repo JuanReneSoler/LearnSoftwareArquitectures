@@ -81,7 +81,17 @@ public class TaskService : ITaskService
         Description = x.Description,
         Title = x.Title,
         GroupId = x.GroupId,
-        PersonId = x.PersonId
+        PersonId = x.PersonId,
+        Person = new PersonDto
+        {
+            Id = x.Person.Id,
+            Name = x.Person.Name
+        },
+        Group = new GroupDto
+        {
+            Id = x.Group.Id,
+            Name = x.Group.Name
+        }
     }).ToList();
 
     public IList<TaskDto> Filter(Expression<Func<TaskDto, bool>> predicate, int? skip, int? take)
