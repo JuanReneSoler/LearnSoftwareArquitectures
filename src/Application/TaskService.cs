@@ -102,7 +102,17 @@ public class TaskService : ITaskService
             Title = x.Title,
             Description = x.Description,
             GroupId = x.GroupId,
-            PersonId = x.PersonId
+            PersonId = x.PersonId,
+            Person = new PersonDto
+            {
+                Id = x.Person.Id,
+                Name = x.Person.Name
+            },
+            Group = new GroupDto
+            {
+                Id = x.Group.Id,
+                Name = x.Group.Name
+            }
         });
         return result.Where(predicate).ToList();
     }
