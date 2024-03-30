@@ -20,7 +20,7 @@ public class GroupController : ControllerBase
     {
         if (Id is null)
         {
-            var result = _groupService.GetAll(null, null);
+            var result = _groupService.Filter(x => x.Id > 0, null, null);
             return Ok(result);
         }
         else
@@ -33,7 +33,7 @@ public class GroupController : ControllerBase
     [HttpPost]
     public IActionResult Add(GroupDto Group)
     {
-        var result = _groupService.Add(Group);
+        var result = _groupService.Create(Group);
         return Ok(result);
     }
 

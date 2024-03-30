@@ -18,7 +18,7 @@ public class PersonService : IPersonService
         _repository = Repository;
     }
 
-    public PersonDto? Add(PersonDto Entity)
+    public PersonDto? Create(PersonDto Entity)
     {
         var entity = new Person
         {
@@ -39,7 +39,7 @@ public class PersonService : IPersonService
 
     public int Delete(int Id)
     {
-        var entity = _repository.Get(Id);
+        var entity = _repository.Where(x => x.Id == Id, null, null).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Esta Persona no existe.");
 
@@ -49,7 +49,7 @@ public class PersonService : IPersonService
 
     public IList<PersonDto> Filter(Expression<Func<PersonDto, bool>> predicate, int? skip, int? take)
     {
-        var result = _repository.GetAll(skip, take).Select(x => new PersonDto
+        var result = _repository.Where(x => x.Id > 0, skip, take).Select(x => new PersonDto
         {
             Id = x.Id,
             Name = x.Name,
@@ -57,18 +57,9 @@ public class PersonService : IPersonService
         return result.Where(predicate).ToList();
     }
 
-    public IList<PersonDto> GetAll(int? skip, int? take)
-    {
-        return _repository.GetAll(skip, take).Select(x => new PersonDto
-        {
-            Id = x.Id,
-            Name = x.Name,
-        }).ToList();
-    }
-
     public PersonDto? Update(PersonDto Entity, int Id)
     {
-        var entity = _repository.Get(Id);
+        var entity = _repository.Where(x => x.Id == Id, null, null).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Esta Persona no existe.");
 

@@ -20,7 +20,7 @@ public class TaskController : ControllerBase
     {
         if (Id is null)
         {
-            var result = _taskService.GetAll(null, null);
+            var result = _taskService.Filter(x => x.Id > 0, null, null);
             return Ok(result);
         }
         else
@@ -33,7 +33,7 @@ public class TaskController : ControllerBase
     [HttpPost]
     public IActionResult Add(TaskDto Task)
     {
-        var result = _taskService.Add(Task);
+        var result = _taskService.Create(Task);
         return Ok(result);
     }
 

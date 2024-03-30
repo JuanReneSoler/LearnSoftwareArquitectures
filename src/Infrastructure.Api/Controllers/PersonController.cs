@@ -20,7 +20,7 @@ public class PersonController : ControllerBase
     {
         if (Id is null)
         {
-            var result = _personService.GetAll(null, null);
+            var result = _personService.Filter(x => x.Id > 0, null, null);
             return Ok(result);
         }
         else
@@ -33,7 +33,7 @@ public class PersonController : ControllerBase
     [HttpPost]
     public IActionResult Add(PersonDto Person)
     {
-        var result = _personService.Add(Person);
+        var result = _personService.Create(Person);
         return Ok(result);
     }
 

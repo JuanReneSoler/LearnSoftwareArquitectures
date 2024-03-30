@@ -17,7 +17,8 @@ public class GroupService : IGroupService
     {
         _repository = Repository;
     }
-    public GroupDto? Add(GroupDto Entity)
+
+    public GroupDto? Create(GroupDto Entity)
     {
         var group = new Group
         {
@@ -36,19 +37,19 @@ public class GroupService : IGroupService
         }
     }
 
-
     public int Delete(int Id)
     {
-        var item = _repository.Get(Id);
+        var item = _repository.Where(x => x.Id == Id, null, null).FirstOrDefault();
 
         if (item is null) throw new NullReferenceException("Este Grupo no existe.");
 
         _repository.Delete(Id);
         return _repository.Commit() ? Id : 0;
     }
+
     public GroupDto? Update(GroupDto Entity, int Id)
     {
-        var entity = _repository.Get(Id);
+        var entity = _repository.Where(x => x.Id == Id, null, null).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Este Grupo no existe.");
 
@@ -65,16 +66,9 @@ public class GroupService : IGroupService
         }
     }
 
-    public IList<GroupDto> GetAll(int? skip, int? take)
-       => _repository.GetAll(skip, take).Select(x => new GroupDto
-       {
-           Id = x.Id,
-           Name = x.Name
-       }).ToList();
-
     public IList<GroupDto> Filter(Expression<Func<GroupDto, bool>> predicate, int? skip, int? take)
     {
-        var result = _repository.GetAll(skip, take).Select(x => new GroupDto
+        var result = _repository.Where(x => x.Id > 0, skip, take).Select(x => new GroupDto
         {
             Id = x.Id,
             Name = x.Name

@@ -19,7 +19,7 @@ public class TaskService : ITaskService
         _repository = Repository;
     }
 
-    public TaskDto? Add(TaskDto Entity)
+    public TaskDto? Create(TaskDto Entity)
     {
         var entity = new Tasks
         {
@@ -43,7 +43,7 @@ public class TaskService : ITaskService
 
     public int Delete(int Id)
     {
-        var entity = _repository.Get(Id);
+        var entity = _repository.Where(x => x.Id == Id, null, null).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Esta Tarea no existe.");
 
@@ -53,7 +53,7 @@ public class TaskService : ITaskService
 
     public TaskDto? Update(TaskDto Entity, int Id)
     {
-        var entity = _repository.Get(Id);
+        var entity = _repository.Where(x => x.Id == Id, null, null).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Esta Persona no existe.");
 
@@ -74,28 +74,9 @@ public class TaskService : ITaskService
         }
     }
 
-    public IList<TaskDto> GetAll(int? skip, int? take) => _repository.GetAll(skip, take).Select(x => new TaskDto
-    {
-        Id = x.Id,
-        Description = x.Description,
-        Title = x.Title,
-        GroupId = x.GroupId,
-        PersonId = x.PersonId,
-        Person = new PersonDto
-        {
-            Id = x.Person.Id,
-            Name = x.Person.Name
-        },
-        Group = new GroupDto
-        {
-            Id = x.Group.Id,
-            Name = x.Group.Name
-        }
-    }).ToList();
-
     public IList<TaskDto> Filter(Expression<Func<TaskDto, bool>> predicate, int? skip, int? take)
     {
-        var result = _repository.GetAll(skip, take).Select(x => new TaskDto
+        var result = _repository.Where(x => x.Id > 0, skip, take).Select(x => new TaskDto
         {
             Id = x.Id,
             Title = x.Title,
@@ -118,8 +99,12 @@ public class TaskService : ITaskService
 
     public void ReasignToGroup(int TaskId, int GroupId)
     {
-        var _work = _repository.Get(TaskId);
+        var _work = _repository.Where(x => x.Id == TaskId, null, null).FirstOrDefault();
+
+        if(_work is null) throw new Exception("This task not exist!");
+
         _work.GroupId = GroupId;
+
         _repository.Commit();
     }
 }

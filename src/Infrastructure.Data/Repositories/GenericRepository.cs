@@ -20,38 +20,32 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
 
     public void Add(TEntity Entity) => _table.Add(Entity);
 
-    public bool Commit() => _context.SaveChanges() == 1;
+    public void Update(TEntity Entity)
+    {
+        _table.Update(Entity);
+        _context.Entry(Entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+    }
 
     public void Delete(int Id)
     {
-        var entity = this.Get(Id);
+        var entity = this.Where(x => x.Id == Id).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("El elemento no existe.");
 
         _table.Remove(entity);
     }
 
-    public TEntity? Get(int Id)
+    public IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> predicate, int? skip = null, int? take = null)
     {
-        var entity = _table.FirstOrDefault(x => x.Id == Id);
-        return entity;
-    }
-
-    public TEntity? Get(Expression<Func<TEntity, bool>> predicate)
-    {
-        var entity = _table.FirstOrDefault(predicate);
-        return entity;
-    }
-
-    public IQueryable<TEntity> GetAll(int? skip = null, int? take = null)
-    {
-        var items = _table.Select(x => x);
+        var entities = _table.Where(predicate);
 
         if (skip != null && take != null)
-            items = items.Skip(skip.Value).Take(take.Value);
+            entities.Take(take.Value).Skip(skip.Value);
 
-        return items;
+        return entities;
     }
+
+    public bool Commit() => _context.SaveChanges() == 1;
 
     public void Rollback()
     {
@@ -69,21 +63,5 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
                     break;
             }
         }
-    }
-
-    public void Update(TEntity Entity)
-    {
-        _table.Update(Entity);
-        _context.Entry(Entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-    }
-
-    public IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> predicate, int? skip = null, int? take = null)
-    {
-        var entities = _table.Where(predicate);
-
-        if (skip != null && take != null)
-            entities.Take(take.Value).Skip(skip.Value);
-
-        return entities;
     }
 }
