@@ -1,21 +1,19 @@
 using Domain.Entities;
 using System.Linq.Expressions;
 using Application.Dtos;
-using Application.Base;
-using Domain.Base;
+using Domain.Repositories;
 
-namespace Application;
+namespace Application.Services;
 
-public interface IGroupService : IGenericService<GroupDto, int>
+public interface IGroupService : IGenericService<GroupDto>
 {
-    //
 }
 
 public class GroupService : IGroupService
 {
-    private readonly IGenericRepository<Group, int> _repository;
+    private readonly IGenericRepository<Group> _repository;
 
-    public GroupService(IGenericRepository<Group, int> Repository)
+    public GroupService(IGenericRepository<Group> Repository)
     {
         _repository = Repository;
     }

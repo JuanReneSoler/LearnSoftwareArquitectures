@@ -1,21 +1,19 @@
-using Application.Base;
 using Application.Dtos;
 using Domain.Entities;
-using Domain.Base;
 using System.Linq.Expressions;
+using Domain.Repositories;
 
-namespace Application;
+namespace Application.Services;
 
-public interface IPersonService : IGenericService<PersonDto, int>
+public interface IPersonService : IGenericService<PersonDto>
 {
-    //
 }
 
 public class PersonService : IPersonService
 {
-    private readonly IGenericRepository<Person, int> _repository;
+    private readonly IGenericRepository<Person> _repository;
 
-    public PersonService(IGenericRepository<Person, int> Repository)
+    public PersonService(IGenericRepository<Person> Repository)
     {
         _repository = Repository;
     }

@@ -2,10 +2,11 @@ using System.Linq.Expressions;
 using Domain.Base;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Data.Contexts;
+using Domain.Repositories;
 
 namespace Infrastructure.Data.Repositories;
 
-public class GenericRepository<TEntity> : IGenericRepository<TEntity, int>
+public class GenericRepository<TEntity> : IGenericRepository<TEntity>
     where TEntity : BaseEntity<int>
 {
     private readonly DbContext _context;

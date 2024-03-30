@@ -1,5 +1,5 @@
-using Application;
-using Domain;
+using Application.Services;
+using Domain.Entities;
 using Infrastructure.Data.Contexts;
 using Infrastructure.Data.Repositories;
 
@@ -32,7 +32,7 @@ public class UnitTest1
     [TestMethod]
     public void TestTaskService()
     {
-        var repository = new GenericRepository<Work>(_context);
+        var repository = new GenericRepository<Tasks>(_context);
         var taskService = new TaskService(repository);
     }
 }

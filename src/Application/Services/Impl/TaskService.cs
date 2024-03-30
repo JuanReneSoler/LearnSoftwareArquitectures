@@ -1,21 +1,20 @@
-using Application.Base;
 using Application.Dtos;
 using Domain.Entities;
-using Domain.Base;
 using System.Linq.Expressions;
+using Domain.Repositories;
 
-namespace Application;
+namespace Application.Services;
 
-public interface ITaskService : IGenericService<TaskDto, int>
+public interface ITaskService : IGenericService<TaskDto>
 {
     void ReasignToGroup(int TaskId, int GroupId);
 }
 
 public class TaskService : ITaskService
 {
-    private readonly IGenericRepository<Tasks, int> _repository;
+    private readonly IGenericRepository<Tasks> _repository;
 
-    public TaskService(IGenericRepository<Tasks, int> Repository)
+    public TaskService(IGenericRepository<Tasks> Repository)
     {
         _repository = Repository;
     }

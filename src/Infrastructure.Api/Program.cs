@@ -1,6 +1,6 @@
-using Application;
-using Domain.Base;
+using Application.Services;
 using Domain.Entities;
+using Domain.Repositories;
 using Infrastructure.Data.Contexts;
 using Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -21,9 +21,9 @@ builder.Services.AddDbContext<SqlServerContext>(options =>
 });
 
 //Repositories
-builder.Services.AddScoped<IGenericRepository<Tasks, int>, GenericRepository<Tasks>>();
-builder.Services.AddScoped<IGenericRepository<Person, int>, GenericRepository<Person>>();
-builder.Services.AddScoped<IGenericRepository<Group, int>, GenericRepository<Group>>();
+builder.Services.AddScoped<IGenericRepository<Tasks>, GenericRepository<Tasks>>();
+builder.Services.AddScoped<IGenericRepository<Person>, GenericRepository<Person>>();
+builder.Services.AddScoped<IGenericRepository<Group>, GenericRepository<Group>>();
 
 //services
 builder.Services.AddScoped<ITaskService, TaskService>();
