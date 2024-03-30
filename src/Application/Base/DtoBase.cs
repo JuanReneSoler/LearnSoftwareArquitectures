@@ -1,6 +1,6 @@
 namespace Application.Base;
 
-public abstract class DtoBase<TEntityID>
+public abstract class DtoBase<TDtoID>
 {
-    public TEntityID Id { get; set; }
+    public TDtoID Id { get; set; }
 }
