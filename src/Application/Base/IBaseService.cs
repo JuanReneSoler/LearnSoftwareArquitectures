@@ -2,11 +2,11 @@
 
 namespace Application.Base;
 
-public interface IBaseService<TEntity, TEntityID>
-    where TEntity : DtoBase<TEntityID>
+public interface IBaseService<TDto, TEntityID>
+    where TDto : DtoBase<TEntityID>
 {
-    TEntity? Create(TEntity Entity);
+    TDto? Create(TDto Entity);
     TEntityID Delete(TEntityID Id);
-    TEntity? Update(TEntity Entity, TEntityID Id);
-    IList<TEntity> Filter(Expression<Func<TEntity, bool>> predicate, int? skip, int? take);
+    TDto? Update(TDto Entity, TEntityID Id);
+    IList<TDto> Filter(Expression<Func<TDto, bool>> predicate, int? skip, int? take);
 }
