@@ -19,20 +19,20 @@ public class TaskService : ITaskService
         _repository = Repository;
     }
 
-    public TaskDto? Create(TaskDto Entity)
+    public TaskDto? Create(TaskDto Dto)
     {
         var entity = new Tasks
         {
-            Title = Entity.Title,
-            Description = Entity.Description,
-            GroupId = Entity.GroupId,
-            PersonId = Entity.PersonId
+            Title = Dto.Title,
+            Description = Dto.Description,
+            GroupId = Dto.GroupId,
+            PersonId = Dto.PersonId
         };
         _repository.Add(entity);
         if (_repository.Commit())
         {
-            Entity.Id = entity.Id;
-            return Entity;
+            Dto.Id = entity.Id;
+            return Dto;
         }
         else
         {
@@ -51,21 +51,21 @@ public class TaskService : ITaskService
         return _repository.Commit() ? Id : 0;
     }
 
-    public TaskDto? Update(TaskDto Entity, int Id)
+    public TaskDto? Update(TaskDto Dto, int Id)
     {
         var entity = _repository.Where(x => x.Id == Id, null, null).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Esta Persona no existe.");
 
 
-        entity.Description = Entity.Description;
-        entity.Title = Entity.Title;
-        entity.GroupId = Entity.GroupId;
-        entity.PersonId = Entity.PersonId;
+        entity.Description = Dto.Description;
+        entity.Title = Dto.Title;
+        entity.GroupId = Dto.GroupId;
+        entity.PersonId = Dto.PersonId;
         _repository.Update(entity);
         if (_repository.Commit())
         {
-            return Entity;
+            return Dto;
         }
         else
         {

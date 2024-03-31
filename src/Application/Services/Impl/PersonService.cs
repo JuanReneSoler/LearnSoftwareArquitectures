@@ -18,17 +18,17 @@ public class PersonService : IPersonService
         _repository = Repository;
     }
 
-    public PersonDto? Create(PersonDto Entity)
+    public PersonDto? Create(PersonDto Dto)
     {
         var entity = new Person
         {
-            Name = Entity.Name,
+            Name = Dto.Name,
         };
         _repository.Add(entity);
         if (_repository.Commit())
         {
-            Entity.Id = entity.Id;
-            return Entity;
+            Dto.Id = entity.Id;
+            return Dto;
         }
         else
         {
@@ -57,18 +57,18 @@ public class PersonService : IPersonService
         return result.Where(predicate).ToList();
     }
 
-    public PersonDto? Update(PersonDto Entity, int Id)
+    public PersonDto? Update(PersonDto Dto, int Id)
     {
         var entity = _repository.Where(x => x.Id == Id, null, null).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Esta Persona no existe.");
 
-        entity.Name = Entity.Name;
+        entity.Name = Dto.Name;
         _repository.Update(entity);
         if (_repository.Commit())
         {
-            Entity.Id = entity.Id;
-            return Entity;
+            Dto.Id = entity.Id;
+            return Dto;
         }
         else
         {

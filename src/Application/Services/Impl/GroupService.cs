@@ -18,17 +18,17 @@ public class GroupService : IGroupService
         _repository = Repository;
     }
 
-    public GroupDto? Create(GroupDto Entity)
+    public GroupDto? Create(GroupDto Dto)
     {
         var group = new Group
         {
-            Name = Entity.Name,
+            Name = Dto.Name,
         };
         _repository.Add(group);
         if (_repository.Commit())
         {
-            Entity.Id = group.Id;
-            return Entity;
+            Dto.Id = group.Id;
+            return Dto;
         }
         else
         {
@@ -47,17 +47,17 @@ public class GroupService : IGroupService
         return _repository.Commit() ? Id : 0;
     }
 
-    public GroupDto? Update(GroupDto Entity, int Id)
+    public GroupDto? Update(GroupDto Dto, int Id)
     {
         var entity = _repository.Where(x => x.Id == Id, null, null).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Este Grupo no existe.");
 
-        entity.Name = Entity.Name;
+        entity.Name = Dto.Name;
         _repository.Update(entity);
         if (_repository.Commit())
         {
-            return Entity;
+            return Dto;
         }
         else
         {
