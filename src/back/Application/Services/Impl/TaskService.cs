@@ -2,6 +2,7 @@ using Application.Dtos;
 using Domain.Entities;
 using System.Linq.Expressions;
 using Domain.Repositories;
+using EasyMapper;
 
 namespace Application.Services;
 
@@ -13,21 +14,19 @@ public interface ITaskService : IGenericService<TaskDto>
 public class TaskService : ITaskService
 {
     private readonly IGenericRepository<Tasks> _repository;
+    private readonly IMapper _mapper;
 
-    public TaskService(IGenericRepository<Tasks> Repository)
+    public TaskService(
+            IGenericRepository<Tasks> Repository,
+            IMapper Mapper)
     {
         _repository = Repository;
+        _mapper = Mapper;
     }
 
     public TaskDto? Create(TaskDto Dto)
     {
-        var entity = new Tasks
-        {
-            Title = Dto.Title,
-            Description = Dto.Description,
-            GroupId = Dto.GroupId,
-            PersonId = Dto.PersonId
-        };
+        var entity = _mapper.Map<TaskDto, Tasks>(Dto);
         _repository.Add(entity);
         if (_repository.Commit())
         {

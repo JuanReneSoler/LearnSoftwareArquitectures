@@ -2,6 +2,7 @@ using Domain.Entities;
 using System.Linq.Expressions;
 using Application.Dtos;
 using Domain.Repositories;
+using EasyMapper;
 
 namespace Application.Services;
 
@@ -12,18 +13,19 @@ public interface IGroupService : IGenericService<GroupDto>
 public class GroupService : IGroupService
 {
     private readonly IGenericRepository<Group> _repository;
+    private readonly IMapper _mapper;
 
-    public GroupService(IGenericRepository<Group> Repository)
+    public GroupService(
+            IGenericRepository<Group> Repository,
+            IMapper Mapper)
     {
         _repository = Repository;
+        _mapper = Mapper;
     }
 
     public GroupDto? Create(GroupDto Dto)
     {
-        var group = new Group
-        {
-            Name = Dto.Name,
-        };
+        var group = _mapper.Map<GroupDto, Group>(Dto);
         _repository.Add(group);
         if (_repository.Commit())
         {

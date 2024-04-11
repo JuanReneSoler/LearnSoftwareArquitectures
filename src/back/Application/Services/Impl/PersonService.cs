@@ -2,6 +2,7 @@ using Application.Dtos;
 using Domain.Entities;
 using System.Linq.Expressions;
 using Domain.Repositories;
+using EasyMapper;
 
 namespace Application.Services;
 
@@ -12,18 +13,19 @@ public interface IPersonService : IGenericService<PersonDto>
 public class PersonService : IPersonService
 {
     private readonly IGenericRepository<Person> _repository;
+    private readonly IMapper _mapper;
 
-    public PersonService(IGenericRepository<Person> Repository)
+    public PersonService(
+            IGenericRepository<Person> Repository,
+            IMapper Mapper)
     {
         _repository = Repository;
+        _mapper = Mapper;
     }
 
     public PersonDto? Create(PersonDto Dto)
     {
-        var entity = new Person
-        {
-            Name = Dto.Name,
-        };
+        var entity = _mapper.Map<PersonDto, Person>(Dto);
         _repository.Add(entity);
         if (_repository.Commit())
         {
