@@ -8,7 +8,7 @@ namespace Application.Services;
 
 public interface ITaskService : IGenericService<TaskDto>
 {
-    void ReasignToGroup(int TaskId, int GroupId);
+    TaskDto ReasignToGroup(int TaskId, int GroupId);
 }
 
 public class TaskService : ITaskService
@@ -96,14 +96,18 @@ public class TaskService : ITaskService
         return result.Where(predicate).ToList();
     }
 
-    public void ReasignToGroup(int TaskId, int GroupId)
+    public TaskDto ReasignToGroup(int TaskId, int GroupId)
     {
-        var _work = _repository.Where(x => x.Id == TaskId, null, null).FirstOrDefault();
+        var work = _repository.Where(x => x.Id == TaskId, null, null).FirstOrDefault();
 
-        if(_work is null) throw new Exception("This task not exist!");
+        if(work is null) throw new Exception("This task not exist!");
 
-        _work.GroupId = GroupId;
+        work.GroupId = GroupId;
+
+        _repository.Update(work);
 
         _repository.Commit();
+
+        return _mapper.Map<Tasks, TaskDto>(work);
     }
 }

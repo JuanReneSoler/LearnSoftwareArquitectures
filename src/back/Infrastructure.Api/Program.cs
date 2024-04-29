@@ -4,6 +4,8 @@ using Domain.Repositories;
 using Infrastructure.Data.Contexts;
 using Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
+using EasyMapper;
+using Application.Dtos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,22 @@ builder.Services.AddDbContext<SqlServerContext>(options =>
 builder.Services.AddScoped<IGenericRepository<Tasks>, GenericRepository<Tasks>>();
 builder.Services.AddScoped<IGenericRepository<Person>, GenericRepository<Person>>();
 builder.Services.AddScoped<IGenericRepository<Group>, GenericRepository<Group>>();
+
+//mapper
+builder.Services.AddScoped(typeof(IMapper), (x =>
+{
+    var mapperConfig = new MapperConfiguration();
+    mapperConfig.SetMapperProfile(profile =>
+    {
+        profile.CreateMap<Group, GroupDto>();
+        profile.CreateMap<GroupDto, Group>();
+        profile.CreateMap<Person, PersonDto>();
+        profile.CreateMap<PersonDto, Person>();
+        profile.CreateMap<Tasks, TaskDto>();
+        profile.CreateMap<TaskDto, Tasks>();
+    });
+    return mapperConfig.CreateMapper();
+}));
 
 //services
 builder.Services.AddScoped<ITaskService, TaskService>();

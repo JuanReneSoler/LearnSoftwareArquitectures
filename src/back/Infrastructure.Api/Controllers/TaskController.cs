@@ -44,6 +44,13 @@ public class TaskController : ControllerBase
         return Ok(result);
     }
 
+    [HttpPut("{Id}/ChangeGroup")]
+    public IActionResult Update(int Id, int GroupId)
+    {
+        var result = _taskService.ReasignToGroup(Id, GroupId);
+        return Ok(result);
+    }
+
     [HttpDelete]
     public IActionResult Delete(int Id)
     {
