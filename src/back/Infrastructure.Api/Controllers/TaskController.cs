@@ -15,19 +15,18 @@ public class TaskController : ControllerBase
         _taskService = TaskService;
     }
 
-    [HttpGet]
-    public IActionResult Get(int? Id)
+    [HttpGet("{Id}")]
+    public IActionResult Get(int Id)
     {
-        if (Id is null)
-        {
-            var result = _taskService.Filter(x => x.Id > 0, null, null);
-            return Ok(result);
-        }
-        else
-        {
-            var entiry = _taskService.Filter(x => x.Id == Id, null, null).FirstOrDefault();
-            return Ok(entiry);
-        }
+        var entiry = _taskService.Filter(x => x.Id == Id, null, null).FirstOrDefault();
+        return Ok(entiry);
+    }
+
+    [HttpGet()]
+    public IActionResult List()
+    {
+        var result = _taskService.Filter(x => x.Id > 0, null, null);
+        return Ok(result);
     }
 
     [HttpPost]
@@ -44,7 +43,7 @@ public class TaskController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPut("{Id}/ChangeGroup")]
+    [HttpPut("{Id}/ChangeGroup/{GroupId}")]
     public IActionResult Update(int Id, int GroupId)
     {
         var result = _taskService.ReasignToGroup(Id, GroupId);

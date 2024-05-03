@@ -15,30 +15,29 @@ public class GroupController : ControllerBase
         _groupService = GroupService;
     }
 
-    [HttpGet]
-    public IActionResult Find(int? Id)
+    [HttpGet("{Id}")]
+    public IActionResult Find(int Id)
     {
-        if (Id is null)
-        {
-            var result = _groupService.Filter(x => x.Id > 0, null, null);
-            return Ok(result);
-        }
-        else
-        {
-            var entiry = _groupService.Filter(x => x.Id == Id, null, null).FirstOrDefault();
-            return Ok(entiry);
-        }
+        var entiry = _groupService.Filter(x => x.Id == Id, null, null).FirstOrDefault();
+        return Ok(entiry);
+    }
+
+    [HttpGet()]
+    public IActionResult List()
+    {
+        var result = _groupService.Filter(x => x.Id > 0, null, null);
+        return Ok(result);
     }
 
     [HttpPost]
-    public IActionResult Add(GroupDto Group)
+    public IActionResult Add([FromBody] GroupDto Group)
     {
         var result = _groupService.Create(Group);
         return Ok(result);
     }
 
     [HttpPut]
-    public IActionResult Update(GroupDto Group)
+    public IActionResult Update([FromBody] GroupDto Group)
     {
         var result = _groupService.Update(Group, Group.Id);
         return Ok(result);
