@@ -44,9 +44,9 @@ public class TasksServiceTest
     }
 
     [TestMethod]
-    public void Create()
+    public async Task Create()
     {
-        var person = _personService.Create(new PersonDto
+        var person = await _personService.Create(new PersonDto
         {
             Name = "Juan Soler"
         });
@@ -55,7 +55,7 @@ public class TasksServiceTest
 
         _person = person;
 
-        var group = _groupService.Create(new GroupDto
+        var group = await _groupService.Create(new GroupDto
         {
             Name = "Test"
         });
@@ -63,7 +63,7 @@ public class TasksServiceTest
         if (group is null) Assert.Fail();
         _group = group;
 
-        var task = _taskService.Create(new TaskDto
+        var task = await _taskService.Create(new TaskDto
         {
             Description = "Esta tarea es una prueba, XD",
             GroupId = group?.Id ?? 0,
@@ -80,20 +80,20 @@ public class TasksServiceTest
     }
 
     [TestMethod]
-    public void Read()
+    public async Task Read()
     {
-        var tasks = _taskService.Filter(x => x.Id == _task.Id, 0, 0);
+        var tasks = await _taskService.Filter(x => x.Id == _task.Id, 0, 0);
 
         if (tasks.Count() is 0) Assert.Fail();
     }
 
     [TestMethod]
-    public void Update()
+    public async Task Update()
     {
         _task.Description = "Esto es una prueba Editada";
         _task.Title = "Esto es una prueba (Edited)";
 
-        var task = _taskService.Update(_task, _task.Id);
+        var task = await _taskService.Update(_task, _task.Id);
 
         if (task is null) Assert.Fail();
 
@@ -101,11 +101,11 @@ public class TasksServiceTest
     }
 
     [TestMethod]
-    public void Delete()
+    public async Task Delete()
     {
-        var result = _taskService.Delete(_task.Id);
-        var result2 = _personService.Delete(_person.Id);
-        var result3 = _groupService.Delete(_group.Id);
+        var result = await _taskService.Delete(_task.Id);
+        var result2 = await _personService.Delete(_person.Id);
+        var result3 = await _groupService.Delete(_group.Id);
 
         if (result is 0) Assert.Fail();
         if (result2 is 0) Assert.Fail();

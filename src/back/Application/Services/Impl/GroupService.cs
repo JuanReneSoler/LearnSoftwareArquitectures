@@ -23,54 +23,54 @@ public class GroupService : IGroupService
         _mapper = Mapper;
     }
 
-    public GroupDto? Create(GroupDto Dto)
+    public async Task<GroupDto?> Create(GroupDto Dto)
     {
         var group = _mapper.Map<GroupDto, Group>(Dto);
-        _repository.Add(group);
-        if (_repository.Commit())
+        await _repository.Add(group);
+        if (await _repository.Commit())
         {
             Dto.Id = group.Id;
             return Dto;
         }
         else
         {
-            _repository.Rollback();
+            await _repository.Rollback();
             return default(GroupDto);
         }
     }
 
-    public int Delete(int Id)
+    public async Task<int> Delete(int Id)
     {
-        var item = _repository.Where(x => x.Id == Id, null, null).FirstOrDefault();
+        var item = (await _repository.Where(x => x.Id == Id, null, null)).FirstOrDefault();
 
         if (item is null) throw new NullReferenceException("Este Grupo no existe.");
 
-        _repository.Delete(Id);
-        return _repository.Commit() ? Id : 0;
+        await _repository.Delete(Id);
+        return await _repository.Commit() ? Id : 0;
     }
 
-    public GroupDto? Update(GroupDto Dto, int Id)
+    public async Task<GroupDto?> Update(GroupDto Dto, int Id)
     {
-        var entity = _repository.Where(x => x.Id == Id, null, null).FirstOrDefault();
+        var entity = (await _repository.Where(x => x.Id == Id, null, null)).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Este Grupo no existe.");
 
         entity.Name = Dto.Name;
-        _repository.Update(entity);
-        if (_repository.Commit())
+        await _repository.Update(entity);
+        if (await _repository.Commit())
         {
             return Dto;
         }
         else
         {
-            _repository.Rollback();
+            await _repository.Rollback();
             return default(GroupDto);
         }
     }
 
-    public IList<GroupDto> Filter(Expression<Func<GroupDto, bool>> predicate, int? skip, int? take)
+    public async Task<IList<GroupDto>> Filter(Expression<Func<GroupDto, bool>> predicate, int? skip, int? take)
     {
-        var result = _repository.Where(x => x.Id > 0, skip, take).Select(x => new GroupDto
+        var result = (await _repository.Where(x => x.Id > 0, skip, take)).Select(x => new GroupDto
         {
             Id = x.Id,
             Name = x.Name

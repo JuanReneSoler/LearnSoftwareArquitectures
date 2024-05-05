@@ -16,37 +16,37 @@ public class PersonController : ControllerBase
     }
 
     [HttpGet("{Id}")]
-    public IActionResult Find(int Id)
+    public async Task<IActionResult> Find(int Id, CancellationToken cancellationToken)
     {
-        var entiry = _personService.Filter(x => x.Id == Id, null, null).FirstOrDefault();
-        return Ok(entiry);
+        var entiry = await _personService.Filter(x => x.Id == Id, null, null);
+        return Ok(entiry.FirstOrDefault());
     }
 
     [HttpGet()]
-    public IActionResult List()
+    public async Task<IActionResult> List(CancellationToken cancellationToken)
     {
-        var result = _personService.Filter(x => x.Id > 0, null, null);
+        var result = await _personService.Filter(x => x.Id > 0, null, null);
         return Ok(result);
     }
 
     [HttpPost]
-    public IActionResult Add([FromBody] PersonDto Person)
+    public async Task<IActionResult> Add([FromBody] PersonDto Person, CancellationToken cancellationToken)
     {
-        var result = _personService.Create(Person);
+        var result = await _personService.Create(Person);
         return Ok(result);
     }
 
     [HttpPut]
-    public IActionResult Update([FromBody] PersonDto Person)
+    public async Task<IActionResult> Update([FromBody] PersonDto Person, CancellationToken cancellationToken)
     {
-        var result = _personService.Update(Person, Person.Id);
+        var result = await _personService.Update(Person, Person.Id);
         return Ok(result);
     }
 
     [HttpDelete]
-    public IActionResult Delete(int Id)
+    public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
     {
-        var result = _personService.Delete(Id);
+        var result = await _personService.Delete(Id);
         return Ok(result);
     }
 }

@@ -30,9 +30,9 @@ public class GroupServiceTest
     }
 
     [TestMethod]
-    public void Create()
+    public async Task Create()
     {
-        var group = _service.Create(new GroupDto
+        var group = await _service.Create(new GroupDto
         {
             Name = "Test"
         });
@@ -43,18 +43,18 @@ public class GroupServiceTest
     }
 
     [TestMethod]
-    public void Read()
+    public async Task Read()
     {
-        var groups = _service.Filter(x => x.Id == _group.Id, 0, 0);
+        var groups = await _service.Filter(x => x.Id == _group.Id, 0, 0);
 
         if (groups.Count() is 0) Assert.Fail();
     }
 
     [TestMethod]
-    public void Update()
+    public async Task Update()
     {
         _group.Name = "Test Edited";
-        var group = _service.Update(_group, _group.Id);
+        var group = await _service.Update(_group, _group.Id);
 
         if (group is null) Assert.Fail();
 
@@ -62,9 +62,9 @@ public class GroupServiceTest
     }
 
     [TestMethod]
-    public void Delete()
+    public async Task Delete()
     {
-        var result = _service.Delete(_group.Id);
+        var result =await _service.Delete(_group.Id);
 
         if (result is 0) Assert.Fail();
     }

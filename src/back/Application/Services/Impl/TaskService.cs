@@ -8,7 +8,7 @@ namespace Application.Services;
 
 public interface ITaskService : IGenericService<TaskDto>
 {
-    TaskDto ReasignToGroup(int TaskId, int GroupId);
+    Task<TaskDto> ReasignToGroup(int TaskId, int GroupId);
 }
 
 public class TaskService : ITaskService
@@ -24,35 +24,35 @@ public class TaskService : ITaskService
         _mapper = Mapper;
     }
 
-    public TaskDto? Create(TaskDto Dto)
+    public async Task<TaskDto?> Create(TaskDto Dto)
     {
         var entity = _mapper.Map<TaskDto, Tasks>(Dto);
-        _repository.Add(entity);
-        if (_repository.Commit())
+        await _repository.Add(entity);
+        if (await _repository.Commit())
         {
             Dto.Id = entity.Id;
             return Dto;
         }
         else
         {
-            _repository.Rollback();
+            await _repository.Rollback();
             return default(TaskDto);
         }
     }
 
-    public int Delete(int Id)
+    public async Task<int> Delete(int Id)
     {
-        var entity = _repository.Where(x => x.Id == Id, null, null).FirstOrDefault();
+        var entity = (await _repository.Where(x => x.Id == Id, null, null)).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Esta Tarea no existe.");
 
-        _repository.Delete(Id);
-        return _repository.Commit() ? Id : 0;
+        await _repository.Delete(Id);
+        return await _repository.Commit() ? Id : 0;
     }
 
-    public TaskDto? Update(TaskDto Dto, int Id)
+    public async Task<TaskDto?> Update(TaskDto Dto, int Id)
     {
-        var entity = _repository.Where(x => x.Id == Id, null, null).FirstOrDefault();
+        var entity = (await _repository.Where(x => x.Id == Id, null, null)).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Esta Persona no existe.");
 
@@ -61,21 +61,21 @@ public class TaskService : ITaskService
         entity.Title = Dto.Title;
         entity.GroupId = Dto.GroupId;
         entity.PersonId = Dto.PersonId;
-        _repository.Update(entity);
-        if (_repository.Commit())
+        await _repository.Update(entity);
+        if (await _repository.Commit())
         {
             return Dto;
         }
         else
         {
-            _repository.Rollback();
+            await _repository.Rollback();
             return default(TaskDto);
         }
     }
 
-    public IList<TaskDto> Filter(Expression<Func<TaskDto, bool>> predicate, int? skip, int? take)
+    public async Task<IList<TaskDto>> Filter(Expression<Func<TaskDto, bool>> predicate, int? skip, int? take)
     {
-        var result = _repository.Where(x => x.Id > 0, skip, take).Select(x => new TaskDto
+        var result = (await _repository.Where(x => x.Id > 0, skip, take)).Select(x => new TaskDto
         {
             Id = x.Id,
             Title = x.Title,
@@ -96,17 +96,17 @@ public class TaskService : ITaskService
         return result.Where(predicate).ToList();
     }
 
-    public TaskDto ReasignToGroup(int TaskId, int GroupId)
+    public async Task<TaskDto> ReasignToGroup(int TaskId, int GroupId)
     {
-        var work = _repository.Where(x => x.Id == TaskId, null, null).FirstOrDefault();
+        var work = (await _repository.Where(x => x.Id == TaskId, null, null)).FirstOrDefault();
 
-        if(work is null) throw new Exception("This task not exist!");
+        if (work is null) throw new Exception("This task not exist!");
 
         work.GroupId = GroupId;
 
-        _repository.Update(work);
+        await _repository.Update(work);
 
-        _repository.Commit();
+        await _repository.Commit();
 
         return _mapper.Map<Tasks, TaskDto>(work);
     }

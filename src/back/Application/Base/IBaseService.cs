@@ -5,8 +5,8 @@ namespace Application.Base;
 public interface IBaseService<TDto, TDtoID>
     where TDto : DtoBase<TDtoID>
 {
-    TDto? Create(TDto Dto);
-    TDtoID Delete(TDtoID Id);
-    TDto? Update(TDto Dto, TDtoID Id);
-    IList<TDto> Filter(Expression<Func<TDto, bool>> predicate, int? skip, int? take);
+    Task<TDto?> Create(TDto Dto);
+    Task<TDtoID> Delete(TDtoID Id);
+    Task<TDto?> Update(TDto Dto, TDtoID Id);
+    Task<IList<TDto>> Filter(Expression<Func<TDto, bool>> predicate, int? skip, int? take);
 }

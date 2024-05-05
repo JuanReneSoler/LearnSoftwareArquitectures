@@ -5,11 +5,11 @@ namespace Domain.Base;
 public interface IBaseRepository<TEntity, TEntityID>
     where TEntity : BaseEntity<TEntityID>
 {
-    void Add(TEntity Entity);
-    void Update(TEntity Entity);
-    void Delete(TEntityID Id);
-    IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> predicate, int? skip, int? take);
+    Task Add(TEntity Entity);
+    Task Update(TEntity Entity);
+    Task Delete(TEntityID Id);
+    Task<IQueryable<TEntity>> Where(Expression<Func<TEntity, bool>> predicate, int? skip, int? take);
     //
-    bool Commit();
-    void Rollback();
+    Task<bool> Commit();
+    Task Rollback();
 }

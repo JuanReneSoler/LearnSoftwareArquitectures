@@ -8,6 +8,7 @@ using EasyMapper;
 using Application.Dtos;
 
 var builder = WebApplication.CreateBuilder(args);
+const string allowOrigins = "AllowAnyOrigin";
 
 // Add services to the container.
 
@@ -48,6 +49,16 @@ builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IPersonService, PersonService>();
 
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy(allowOrigins, builder =>
+    {
+        builder.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -56,6 +67,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(allowOrigins);
+app.UseMiddleware<ExceptionsMiddleware>();
 
 app.UseHttpsRedirection();
 

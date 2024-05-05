@@ -16,37 +16,37 @@ public class GroupController : ControllerBase
     }
 
     [HttpGet("{Id}")]
-    public IActionResult Find(int Id)
+    public async Task<IActionResult> Find(int Id, CancellationToken cancellationToken)
     {
-        var entiry = _groupService.Filter(x => x.Id == Id, null, null).FirstOrDefault();
-        return Ok(entiry);
+        var entiry = await _groupService.Filter(x => x.Id == Id, null, null);
+        return Ok(entiry.FirstOrDefault());
     }
 
     [HttpGet()]
-    public IActionResult List()
+    public async Task<IActionResult> List(CancellationToken cancellationToken)
     {
-        var result = _groupService.Filter(x => x.Id > 0, null, null);
+        var result = await _groupService.Filter(x => x.Id > 0, null, null);
         return Ok(result);
     }
 
     [HttpPost]
-    public IActionResult Add([FromBody] GroupDto Group)
+    public async Task<IActionResult> Add([FromBody] GroupDto Group, CancellationToken cancellationToken)
     {
-        var result = _groupService.Create(Group);
+        var result = await _groupService.Create(Group);
         return Ok(result);
     }
 
     [HttpPut]
-    public IActionResult Update([FromBody] GroupDto Group)
+    public async Task<IActionResult> Update([FromBody] GroupDto Group)
     {
-        var result = _groupService.Update(Group, Group.Id);
+        var result = await _groupService.Update(Group, Group.Id);
         return Ok(result);
     }
 
     [HttpDelete]
-    public IActionResult Delete(int Id)
+    public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
     {
-        var result = _groupService.Delete(Id);
+        var result = await _groupService.Delete(Id);
         return Ok(result);
     }
 }

@@ -18,50 +18,62 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
         _table = Context.Set<TEntity>();
     }
 
-    public void Add(TEntity Entity) => _table.Add(Entity);
+    public async Task Add(TEntity Entity) => await _table.AddAsync(Entity);
 
-    public void Update(TEntity Entity)
+    public async Task Update(TEntity Entity)
     {
-        _table.Update(Entity);
-        _context.Entry(Entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-    }
-
-    public void Delete(int Id)
-    {
-        var entity = this.Where(x => x.Id == Id).FirstOrDefault();
-
-        if (entity is null) throw new NullReferenceException("El elemento no existe.");
-
-        _table.Remove(entity);
-    }
-
-    public IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> predicate, int? skip = null, int? take = null)
-    {
-        var entities = _table.Where(predicate);
-
-        if (skip != null && take != null)
-            entities.Take(take.Value).Skip(skip.Value);
-
-        return entities;
-    }
-
-    public bool Commit() => _context.SaveChanges() == 1;
-
-    public void Rollback()
-    {
-        foreach (var entry in _context.ChangeTracker.Entries()
-                .Where(e => e.State != EntityState.Unchanged))
+        await Task.Run(() =>
         {
-            switch (entry.State)
+            _table.Update(Entity);
+            _context.Entry(Entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+        });
+    }
+
+    public async Task Delete(int Id)
+    {
+        await Task.Run(async () =>
+        {
+            var entity = (await this.Where(x => x.Id == Id)).FirstOrDefault();
+
+            if (entity is null) throw new NullReferenceException("El elemento no existe.");
+
+            _table.Remove(entity);
+        });
+    }
+
+    public async Task<IQueryable<TEntity>> Where(Expression<Func<TEntity, bool>> predicate, int? skip = null, int? take = null)
+    {
+        return await Task.Run(() =>
+        {
+            var entities = _table.Where(predicate);
+
+            if (skip != null && take != null)
+                entities.Take(take.Value).Skip(skip.Value);
+
+            return entities;
+        });
+    }
+
+    public async Task<bool> Commit() => await _context.SaveChangesAsync() == 1;
+
+    public async Task Rollback()
+    {
+        await Task.Run(() =>
+        {
+            foreach (var entry in _context.ChangeTracker.Entries()
+                    .Where(e => e.State != EntityState.Unchanged))
             {
-                case EntityState.Added:
-                    entry.State = EntityState.Detached;
-                    break;
-                case EntityState.Modified:
-                case EntityState.Deleted:
-                    entry.Reload();
-                    break;
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.State = EntityState.Detached;
+                        break;
+                    case EntityState.Modified:
+                    case EntityState.Deleted:
+                        entry.Reload();
+                        break;
+                }
             }
-        }
+        });
     }
 }

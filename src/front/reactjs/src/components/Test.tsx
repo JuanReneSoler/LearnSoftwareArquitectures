@@ -1,13 +1,16 @@
 import { useEffect } from "react";
 import { TaskService } from "../services";
 
+const abort = new AbortController();
+
 function Test() {
   useEffect(() => {
     (async () => {
-      await TaskService.List().then((res) => {
+      await TaskService.List(abort).then((res) => {
         console.log(res);
       });
     })();
+    abort.abort();
   }, []);
 
   return (

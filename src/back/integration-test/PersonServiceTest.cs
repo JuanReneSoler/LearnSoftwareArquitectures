@@ -30,9 +30,9 @@ public class PersonServiceTest
     }
 
     [TestMethod]
-    public void Create()
+    public async Task Create()
     {
-        var person = _service.Create(new PersonDto
+        var person = await _service.Create(new PersonDto
         {
             Name = "Juan Soler"
         });
@@ -43,19 +43,19 @@ public class PersonServiceTest
     }
 
     [TestMethod]
-    public void Read()
+    public async Task Read()
     {
-        var persons = _service.Filter(x => x.Id == _person.Id, 0, 0);
+        var persons = await _service.Filter(x => x.Id == _person.Id, 0, 0);
 
         if (persons.Count() is 0) Assert.Fail();
     }
 
     [TestMethod]
-    public void Update()
+    public async Task Update()
     {
         _person.Name = "Juan René Soler";
 
-        var person = _service.Update(_person, _person.Id);
+        var person = await _service.Update(_person, _person.Id);
 
         if (person is null) Assert.Fail();
 
@@ -64,9 +64,9 @@ public class PersonServiceTest
     }
 
     [TestMethod]
-    public void Delete()
+    public async Task Delete()
     {
-        var result = _service.Delete(_person.Id);
+        var result = await _service.Delete(_person.Id);
 
         if (result is 0) Assert.Fail();
     }
