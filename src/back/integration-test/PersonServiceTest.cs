@@ -46,7 +46,7 @@ public class PersonServiceTest
     [TestMethod]
     public async Task Read()
     {
-        var persons = await _service.Filter(_token,x => x.Id == _person.Id, 0, 0);
+        var persons = await _service.Filter(x => x.Id == _person.Id, 0, 0, _token);
 
         if (persons.Count() is 0) Assert.Fail();
     }

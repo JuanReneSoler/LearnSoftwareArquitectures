@@ -41,7 +41,7 @@ public class PersonService : IPersonService
 
     public async Task<int> Delete(int Id, CancellationToken cancellationToken)
     {
-        var entity = (await _repository.Where(cancellationToken, x => x.Id == Id, null, null)).FirstOrDefault();
+        var entity = (await _repository.Where(x => x.Id == Id, null, null, cancellationToken)).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Esta Persona no existe.");
 
@@ -49,9 +49,9 @@ public class PersonService : IPersonService
         return await _repository.Commit(cancellationToken) ? Id : 0;
     }
 
-    public async Task<IList<PersonDto>> Filter(CancellationToken cancellationToken, Expression<Func<PersonDto, bool>> predicate, int? skip, int? take)
+    public async Task<IList<PersonDto>> Filter(Expression<Func<PersonDto, bool>> predicate, int? skip, int? take, CancellationToken cancellationToken)
     {
-        var result = (await _repository.Where(cancellationToken, x => x.Id > 0, skip, take)).Select(x => new PersonDto
+        var result = (await _repository.Where(x => x.Id > 0, skip, take, cancellationToken)).Select(x => new PersonDto
         {
             Id = x.Id,
             Name = x.Name,
@@ -61,7 +61,7 @@ public class PersonService : IPersonService
 
     public async Task<PersonDto?> Update(PersonDto Dto, int Id, CancellationToken cancellationToken)
     {
-        var entity = (await _repository.Where(cancellationToken, x => x.Id == Id, null, null)).FirstOrDefault();
+        var entity = (await _repository.Where(x => x.Id == Id, null, null, cancellationToken)).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Esta Persona no existe.");
 

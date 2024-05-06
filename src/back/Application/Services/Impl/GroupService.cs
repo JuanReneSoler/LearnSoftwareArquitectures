@@ -41,7 +41,7 @@ public class GroupService : IGroupService
 
     public async Task<int> Delete(int Id, CancellationToken cancellationToken)
     {
-        var item = (await _repository.Where(cancellationToken, x => x.Id == Id, null, null)).FirstOrDefault();
+        var item = (await _repository.Where(x => x.Id == Id, null, null, cancellationToken)).FirstOrDefault();
 
         if (item is null) throw new NullReferenceException("Este Grupo no existe.");
 
@@ -51,7 +51,7 @@ public class GroupService : IGroupService
 
     public async Task<GroupDto?> Update(GroupDto Dto, int Id, CancellationToken cancellationToken)
     {
-        var entity = (await _repository.Where(cancellationToken, x => x.Id == Id, null, null)).FirstOrDefault();
+        var entity = (await _repository.Where(x => x.Id == Id, null, null, cancellationToken)).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Este Grupo no existe.");
 
@@ -68,9 +68,9 @@ public class GroupService : IGroupService
         }
     }
 
-    public async Task<IList<GroupDto>> Filter(CancellationToken cancellationToken, Expression<Func<GroupDto, bool>> predicate, int? skip, int? take)
+    public async Task<IList<GroupDto>> Filter(Expression<Func<GroupDto, bool>> predicate, int? skip, int? take, CancellationToken cancellationToken)
     {
-        var result = (await _repository.Where(cancellationToken, x => x.Id > 0, skip, take)).Select(x => new GroupDto
+        var result = (await _repository.Where(x => x.Id > 0, skip, take, cancellationToken)).Select(x => new GroupDto
         {
             Id = x.Id,
             Name = x.Name

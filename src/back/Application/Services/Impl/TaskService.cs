@@ -42,7 +42,7 @@ public class TaskService : ITaskService
 
     public async Task<int> Delete(int Id, CancellationToken cancellationToken)
     {
-        var entity = (await _repository.Where(cancellationToken, x => x.Id == Id, null, null)).FirstOrDefault();
+        var entity = (await _repository.Where(x => x.Id == Id, null, null, cancellationToken)).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Esta Tarea no existe.");
 
@@ -52,7 +52,7 @@ public class TaskService : ITaskService
 
     public async Task<TaskDto?> Update(TaskDto Dto, int Id, CancellationToken cancellationToken)
     {
-        var entity = (await _repository.Where(cancellationToken, x => x.Id == Id, null, null)).FirstOrDefault();
+        var entity = (await _repository.Where(x => x.Id == Id, null, null, cancellationToken)).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Esta Persona no existe.");
 
@@ -73,9 +73,9 @@ public class TaskService : ITaskService
         }
     }
 
-    public async Task<IList<TaskDto>> Filter(CancellationToken cancellationToken, Expression<Func<TaskDto, bool>> predicate, int? skip, int? take)
+    public async Task<IList<TaskDto>> Filter(Expression<Func<TaskDto, bool>> predicate, int? skip, int? take, CancellationToken cancellationToken)
     {
-        var result = (await _repository.Where(cancellationToken, x => x.Id > 0, skip, take)).Select(x => new TaskDto
+        var result = (await _repository.Where(x => x.Id > 0, skip, take, cancellationToken)).Select(x => new TaskDto
         {
             Id = x.Id,
             Title = x.Title,
@@ -98,7 +98,7 @@ public class TaskService : ITaskService
 
     public async Task<TaskDto> ReasignToGroup(int TaskId, int GroupId, CancellationToken cancellationToken)
     {
-        var work = (await _repository.Where(cancellationToken, x => x.Id == TaskId, null, null)).FirstOrDefault();
+        var work = (await _repository.Where(x => x.Id == TaskId, null, null, cancellationToken)).FirstOrDefault();
 
         if (work is null) throw new Exception("This task not exist!");
 

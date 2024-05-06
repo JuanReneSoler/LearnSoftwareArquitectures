@@ -46,7 +46,7 @@ public class GroupServiceTest
     [TestMethod]
     public async Task Read()
     {
-        var groups = await _service.Filter(_token,x => x.Id == _group.Id, 0, 0);
+        var groups = await _service.Filter(x => x.Id == _group.Id, 0, 0, _token);
 
         if (groups.Count() is 0) Assert.Fail();
     }

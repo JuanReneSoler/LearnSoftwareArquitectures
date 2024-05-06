@@ -83,7 +83,7 @@ public class TasksServiceTest
     [TestMethod]
     public async Task Read()
     {
-        var tasks = await _taskService.Filter(_token,x => x.Id == _task.Id, 0, 0);
+        var tasks = await _taskService.Filter(x => x.Id == _task.Id, 0, 0, _token);
 
         if (tasks.Count() is 0) Assert.Fail();
     }

@@ -33,7 +33,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
     {
         await Task.Run(async () =>
         {
-            var entity = (await this.Where(cancellationToken, x => x.Id == Id)).FirstOrDefault();
+            var entity = (await this.Where(x => x.Id == Id, null, null, cancellationToken)).FirstOrDefault();
 
             if (entity is null) throw new NullReferenceException("El elemento no existe.");
 
@@ -41,7 +41,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
         }, cancellationToken);
     }
 
-    public async Task<IQueryable<TEntity>> Where(CancellationToken cancellationToken, Expression<Func<TEntity, bool>> predicate, int? skip = null, int? take = null)
+    public async Task<IQueryable<TEntity>> Where(Expression<Func<TEntity, bool>> predicate, int? skip, int? take, CancellationToken cancellationToken)
     {
         return await Task.Run(() =>
         {

@@ -18,14 +18,14 @@ public class PersonController : ControllerBase
     [HttpGet("{Id}")]
     public async Task<IActionResult> Find(int Id, CancellationToken cancellationToken)
     {
-        var entiry = await _personService.Filter(cancellationToken, x => x.Id == Id, null, null);
+        var entiry = await _personService.Filter(x => x.Id == Id, null, null, cancellationToken);
         return Ok(entiry.FirstOrDefault());
     }
 
     [HttpGet()]
     public async Task<IActionResult> List(CancellationToken cancellationToken)
     {
-        var result = await _personService.Filter(cancellationToken, x => x.Id > 0, null, null);
+        var result = await _personService.Filter(x => x.Id > 0, null, null, cancellationToken);
         return Ok(result);
     }
 
