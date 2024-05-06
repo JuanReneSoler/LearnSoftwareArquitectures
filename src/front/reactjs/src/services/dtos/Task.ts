@@ -1,22 +1,22 @@
 import { Group, Person } from ".";
 
 class Task {
-  Id: number;
-  Title: string;
-  Description: string;
-  GroupId: number;
-  Group: Group;
-  PersonId: number;
-  Person: Person;
+  id: number;
+  title: string;
+  description: string;
+  groupId: number;
+  group: Group;
+  personId: number;
+  person: Person;
 
   constructor() {
-    this.Id = 0;
-    this.Title = "";
-    this.Description = "";
-    this.GroupId = 0;
-    this.Group = new Group();
-    this.PersonId = 0;
-    this.Person = new Person();
+    this.id = 0;
+    this.title = "";
+    this.description = "";
+    this.groupId = 0;
+    this.group = new Group();
+    this.personId = 0;
+    this.person = new Person();
   }
 }
 export { Task };

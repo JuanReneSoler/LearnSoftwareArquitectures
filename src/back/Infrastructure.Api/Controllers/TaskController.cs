@@ -18,44 +18,42 @@ public class TaskController : ControllerBase
     [HttpGet("{Id}")]
     public async Task<IActionResult> Get(int Id, CancellationToken cancellationToken)
     {
-        var entiry = await _taskService.Filter(x => x.Id == Id, null, null);
+        var entiry = await _taskService.Filter(cancellationToken, x => x.Id == Id, null, null);
         return Ok(entiry.FirstOrDefault());
     }
 
     [HttpGet()]
     public async Task<IActionResult> List(CancellationToken cancellationToken)
     {
-        Console.WriteLine(cancellationToken.CanBeCanceled);
-        Console.ReadKey();
-        var result = await _taskService.Filter(x => x.Id > 0, null, null);
+        var result = await _taskService.Filter(cancellationToken, x => x.Id > 0, null, null);
         return Ok(result);
     }
 
     [HttpPost]
     public async Task<IActionResult> Add(TaskDto Task, CancellationToken cancellationToken)
     {
-        var result = await _taskService.Create(Task);
+        var result = await _taskService.Create(Task, cancellationToken);
         return Ok(result);
     }
 
     [HttpPut]
     public async Task<IActionResult> Update(TaskDto Task, CancellationToken cancellationToken)
     {
-        var result = await _taskService.Update(Task, Task.Id);
+        var result = await _taskService.Update(Task, Task.Id, cancellationToken);
         return Ok(result);
     }
 
     [HttpPut("{Id}/ChangeGroup/{GroupId}")]
     public async Task<IActionResult> Update(int Id, int GroupId, CancellationToken cancellationToken)
     {
-        var result = await _taskService.ReasignToGroup(Id, GroupId);
+        var result = await _taskService.ReasignToGroup(Id, GroupId, cancellationToken);
         return Ok(result);
     }
 
     [HttpDelete]
     public async Task<IActionResult> Delete(int Id, CancellationToken cancellationToken)
     {
-        var result = await _taskService.Delete(Id);
+        var result = await _taskService.Delete(Id, cancellationToken);
         return Ok(result);
     }
 }

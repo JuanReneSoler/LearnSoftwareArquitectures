@@ -23,35 +23,35 @@ public class PersonService : IPersonService
         _mapper = Mapper;
     }
 
-    public async Task<PersonDto?> Create(PersonDto Dto)
+    public async Task<PersonDto?> Create(PersonDto Dto, CancellationToken cancellationToken)
     {
         var entity = _mapper.Map<PersonDto, Person>(Dto);
-        await _repository.Add(entity);
-        if (await _repository.Commit())
+        await _repository.Add(entity, cancellationToken);
+        if (await _repository.Commit(cancellationToken))
         {
             Dto.Id = entity.Id;
             return Dto;
         }
         else
         {
-            await _repository.Rollback();
+            await _repository.Rollback(cancellationToken);
             return default(PersonDto);
         }
     }
 
-    public async Task<int> Delete(int Id)
+    public async Task<int> Delete(int Id, CancellationToken cancellationToken)
     {
-        var entity = (await _repository.Where(x => x.Id == Id, null, null)).FirstOrDefault();
+        var entity = (await _repository.Where(cancellationToken, x => x.Id == Id, null, null)).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Esta Persona no existe.");
 
-        await _repository.Delete(Id);
-        return await _repository.Commit() ? Id : 0;
+        await _repository.Delete(Id, cancellationToken);
+        return await _repository.Commit(cancellationToken) ? Id : 0;
     }
 
-    public async Task<IList<PersonDto>> Filter(Expression<Func<PersonDto, bool>> predicate, int? skip, int? take)
+    public async Task<IList<PersonDto>> Filter(CancellationToken cancellationToken, Expression<Func<PersonDto, bool>> predicate, int? skip, int? take)
     {
-        var result = (await _repository.Where(x => x.Id > 0, skip, take)).Select(x => new PersonDto
+        var result = (await _repository.Where(cancellationToken, x => x.Id > 0, skip, take)).Select(x => new PersonDto
         {
             Id = x.Id,
             Name = x.Name,
@@ -59,22 +59,22 @@ public class PersonService : IPersonService
         return result.Where(predicate).ToList();
     }
 
-    public async Task<PersonDto?> Update(PersonDto Dto, int Id)
+    public async Task<PersonDto?> Update(PersonDto Dto, int Id, CancellationToken cancellationToken)
     {
-        var entity = (await _repository.Where(x => x.Id == Id, null, null)).FirstOrDefault();
+        var entity = (await _repository.Where(cancellationToken, x => x.Id == Id, null, null)).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Esta Persona no existe.");
 
         entity.Name = Dto.Name;
-        await _repository.Update(entity);
-        if (await _repository.Commit())
+        await _repository.Update(entity, cancellationToken);
+        if (await _repository.Commit(cancellationToken))
         {
             Dto.Id = entity.Id;
             return Dto;
         }
         else
         {
-            await _repository.Rollback();
+            await _repository.Rollback(cancellationToken);
             return default(PersonDto);
         }
     }

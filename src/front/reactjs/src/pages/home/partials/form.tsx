@@ -1,0 +1,122 @@
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import {
+  Group,
+  GroupService,
+  Person,
+  PersonService,
+  Task,
+  TaskService,
+} from "../../../services";
+
+interface IProps {
+  onClose?: () => void;
+}
+
+const Form = ({ onClose }: IProps) => {
+  const [grupos, setGrupos] = useState([] as Array<Group>);
+  const [persons, setPersons] = useState([] as Array<Person>);
+  const [viewState, setViewState] = useState({
+    description: "",
+    title: "",
+    id: 0,
+    personId: 0,
+    groupId: 0,
+  } as Task);
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setViewState({
+      ...viewState,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement> | undefined) => {
+    e?.preventDefault();
+    await TaskService.Add(viewState).then(() => {
+      alert("tarea creada datisfactoriamente.");
+      if (onClose) onClose();
+    });
+  };
+
+  useEffect(() => {
+    (async () => {
+      await GroupService.List().then((res) => {
+        setGrupos(res);
+      });
+      await PersonService.List().then((res) => {
+        setPersons(res);
+      });
+    })();
+  }, []);
+
+  return (
+    <form id="formTarea" onSubmit={handleSubmit}>
+      <p>Tarea</p>
+      <input type="hidden" value={viewState.id} name="id" />
+      <div>
+        <label htmlFor="">Titulo</label>
+        <input
+          onChange={handleChange}
+          type="text"
+          placeholder="Titulo de la tarea"
+          name="title"
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="">Descripción</label>
+        <input
+          onChange={handleChange}
+          type="text"
+          placeholder="Descripción de la tarea"
+          name="description"
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="">A quien Pertenece</label>
+        <select
+          name="personId"
+          defaultValue={0}
+          onChange={handleChange}
+          required
+        >
+          <option value="0" disabled>
+            selecione una persona
+          </option>
+          {persons.map((person, i) => {
+            return (
+              <option key={i} value={person.id}>
+                {person.name}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+      <div>
+        <label htmlFor="">Grupo</label>
+        <select
+          name="groupId"
+          onChange={handleChange}
+          defaultValue={0}
+          required
+        >
+          <option value="0" disabled>
+            selecione un grupo
+          </option>
+          {grupos.map((grupo, i) => {
+            return (
+              <option key={i} value={grupo.id}>
+                {grupo.name}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+    </form>
+  );
+};
+export { Form };

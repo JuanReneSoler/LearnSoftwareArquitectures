@@ -1,9 +1,9 @@
-import { Task } from ".";
+import { Group } from ".";
 
-const api = import.meta.env.VITE_API + "Task";
+const api = import.meta.env.VITE_API + "Group";
 
-const TaskService = {
-  Add: async (dto: Task, abort?: AbortController) => {
+const GroupService = {
+  Add: async (dto: Group, abort?: AbortController) => {
     return await fetch(api, {
       method: "post",
       headers: {
@@ -31,7 +31,7 @@ const TaskService = {
       signal: abort?.signal,
     }).then((res) => res.json());
   },
-  Update: async (dto: Task, abort?: AbortController) => {
+  Update: async (dto: Group, abort?: AbortController) => {
     return await fetch(api, {
       method: "put",
       headers: {
@@ -42,4 +42,4 @@ const TaskService = {
     }).then((res) => res.json());
   },
 };
-export { TaskService };
+export { GroupService };

@@ -18,30 +18,30 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
         _table = Context.Set<TEntity>();
     }
 
-    public async Task Add(TEntity Entity) => await _table.AddAsync(Entity);
+    public async Task Add(TEntity Entity, CancellationToken cancellationToken) => await _table.AddAsync(Entity, cancellationToken);
 
-    public async Task Update(TEntity Entity)
+    public async Task Update(TEntity Entity, CancellationToken cancellationToken)
     {
         await Task.Run(() =>
         {
             _table.Update(Entity);
             _context.Entry(Entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-        });
+        }, cancellationToken);
     }
 
-    public async Task Delete(int Id)
+    public async Task Delete(int Id, CancellationToken cancellationToken)
     {
         await Task.Run(async () =>
         {
-            var entity = (await this.Where(x => x.Id == Id)).FirstOrDefault();
+            var entity = (await this.Where(cancellationToken, x => x.Id == Id)).FirstOrDefault();
 
             if (entity is null) throw new NullReferenceException("El elemento no existe.");
 
             _table.Remove(entity);
-        });
+        }, cancellationToken);
     }
 
-    public async Task<IQueryable<TEntity>> Where(Expression<Func<TEntity, bool>> predicate, int? skip = null, int? take = null)
+    public async Task<IQueryable<TEntity>> Where(CancellationToken cancellationToken, Expression<Func<TEntity, bool>> predicate, int? skip = null, int? take = null)
     {
         return await Task.Run(() =>
         {
@@ -51,12 +51,12 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
                 entities.Take(take.Value).Skip(skip.Value);
 
             return entities;
-        });
+        }, cancellationToken);
     }
 
-    public async Task<bool> Commit() => await _context.SaveChangesAsync() == 1;
+    public async Task<bool> Commit(CancellationToken cancellationToken) => await _context.SaveChangesAsync(cancellationToken) == 1;
 
-    public async Task Rollback()
+    public async Task Rollback(CancellationToken cancellationToken)
     {
         await Task.Run(() =>
         {
@@ -74,6 +74,6 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
                         break;
                 }
             }
-        });
+        }, cancellationToken);
     }
 }

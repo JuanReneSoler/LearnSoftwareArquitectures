@@ -8,7 +8,7 @@ namespace Application.Services;
 
 public interface ITaskService : IGenericService<TaskDto>
 {
-    Task<TaskDto> ReasignToGroup(int TaskId, int GroupId);
+    Task<TaskDto> ReasignToGroup(int TaskId, int GroupId, CancellationToken cancellationToken);
 }
 
 public class TaskService : ITaskService
@@ -24,35 +24,35 @@ public class TaskService : ITaskService
         _mapper = Mapper;
     }
 
-    public async Task<TaskDto?> Create(TaskDto Dto)
+    public async Task<TaskDto?> Create(TaskDto Dto, CancellationToken cancellationToken)
     {
         var entity = _mapper.Map<TaskDto, Tasks>(Dto);
-        await _repository.Add(entity);
-        if (await _repository.Commit())
+        await _repository.Add(entity, cancellationToken);
+        if (await _repository.Commit(cancellationToken))
         {
             Dto.Id = entity.Id;
             return Dto;
         }
         else
         {
-            await _repository.Rollback();
+            await _repository.Rollback(cancellationToken);
             return default(TaskDto);
         }
     }
 
-    public async Task<int> Delete(int Id)
+    public async Task<int> Delete(int Id, CancellationToken cancellationToken)
     {
-        var entity = (await _repository.Where(x => x.Id == Id, null, null)).FirstOrDefault();
+        var entity = (await _repository.Where(cancellationToken, x => x.Id == Id, null, null)).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Esta Tarea no existe.");
 
-        await _repository.Delete(Id);
-        return await _repository.Commit() ? Id : 0;
+        await _repository.Delete(Id, cancellationToken);
+        return await _repository.Commit(cancellationToken) ? Id : 0;
     }
 
-    public async Task<TaskDto?> Update(TaskDto Dto, int Id)
+    public async Task<TaskDto?> Update(TaskDto Dto, int Id, CancellationToken cancellationToken)
     {
-        var entity = (await _repository.Where(x => x.Id == Id, null, null)).FirstOrDefault();
+        var entity = (await _repository.Where(cancellationToken, x => x.Id == Id, null, null)).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Esta Persona no existe.");
 
@@ -61,21 +61,21 @@ public class TaskService : ITaskService
         entity.Title = Dto.Title;
         entity.GroupId = Dto.GroupId;
         entity.PersonId = Dto.PersonId;
-        await _repository.Update(entity);
-        if (await _repository.Commit())
+        await _repository.Update(entity, cancellationToken);
+        if (await _repository.Commit(cancellationToken))
         {
             return Dto;
         }
         else
         {
-            await _repository.Rollback();
+            await _repository.Rollback(cancellationToken);
             return default(TaskDto);
         }
     }
 
-    public async Task<IList<TaskDto>> Filter(Expression<Func<TaskDto, bool>> predicate, int? skip, int? take)
+    public async Task<IList<TaskDto>> Filter(CancellationToken cancellationToken, Expression<Func<TaskDto, bool>> predicate, int? skip, int? take)
     {
-        var result = (await _repository.Where(x => x.Id > 0, skip, take)).Select(x => new TaskDto
+        var result = (await _repository.Where(cancellationToken, x => x.Id > 0, skip, take)).Select(x => new TaskDto
         {
             Id = x.Id,
             Title = x.Title,
@@ -96,17 +96,17 @@ public class TaskService : ITaskService
         return result.Where(predicate).ToList();
     }
 
-    public async Task<TaskDto> ReasignToGroup(int TaskId, int GroupId)
+    public async Task<TaskDto> ReasignToGroup(int TaskId, int GroupId, CancellationToken cancellationToken)
     {
-        var work = (await _repository.Where(x => x.Id == TaskId, null, null)).FirstOrDefault();
+        var work = (await _repository.Where(cancellationToken, x => x.Id == TaskId, null, null)).FirstOrDefault();
 
         if (work is null) throw new Exception("This task not exist!");
 
         work.GroupId = GroupId;
 
-        await _repository.Update(work);
+        await _repository.Update(work, cancellationToken);
 
-        await _repository.Commit();
+        await _repository.Commit(cancellationToken);
 
         return _mapper.Map<Tasks, TaskDto>(work);
     }

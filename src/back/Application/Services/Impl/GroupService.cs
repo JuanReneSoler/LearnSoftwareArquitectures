@@ -23,54 +23,54 @@ public class GroupService : IGroupService
         _mapper = Mapper;
     }
 
-    public async Task<GroupDto?> Create(GroupDto Dto)
+    public async Task<GroupDto?> Create(GroupDto Dto, CancellationToken cancellationToken)
     {
         var group = _mapper.Map<GroupDto, Group>(Dto);
-        await _repository.Add(group);
-        if (await _repository.Commit())
+        await _repository.Add(group, cancellationToken);
+        if (await _repository.Commit(cancellationToken))
         {
             Dto.Id = group.Id;
             return Dto;
         }
         else
         {
-            await _repository.Rollback();
+            await _repository.Rollback(cancellationToken);
             return default(GroupDto);
         }
     }
 
-    public async Task<int> Delete(int Id)
+    public async Task<int> Delete(int Id, CancellationToken cancellationToken)
     {
-        var item = (await _repository.Where(x => x.Id == Id, null, null)).FirstOrDefault();
+        var item = (await _repository.Where(cancellationToken, x => x.Id == Id, null, null)).FirstOrDefault();
 
         if (item is null) throw new NullReferenceException("Este Grupo no existe.");
 
-        await _repository.Delete(Id);
-        return await _repository.Commit() ? Id : 0;
+        await _repository.Delete(Id, cancellationToken);
+        return await _repository.Commit(cancellationToken) ? Id : 0;
     }
 
-    public async Task<GroupDto?> Update(GroupDto Dto, int Id)
+    public async Task<GroupDto?> Update(GroupDto Dto, int Id, CancellationToken cancellationToken)
     {
-        var entity = (await _repository.Where(x => x.Id == Id, null, null)).FirstOrDefault();
+        var entity = (await _repository.Where(cancellationToken, x => x.Id == Id, null, null)).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Este Grupo no existe.");
 
         entity.Name = Dto.Name;
-        await _repository.Update(entity);
-        if (await _repository.Commit())
+        await _repository.Update(entity, cancellationToken);
+        if (await _repository.Commit(cancellationToken))
         {
             return Dto;
         }
         else
         {
-            await _repository.Rollback();
+            await _repository.Rollback(cancellationToken);
             return default(GroupDto);
         }
     }
 
-    public async Task<IList<GroupDto>> Filter(Expression<Func<GroupDto, bool>> predicate, int? skip, int? take)
+    public async Task<IList<GroupDto>> Filter(CancellationToken cancellationToken, Expression<Func<GroupDto, bool>> predicate, int? skip, int? take)
     {
-        var result = (await _repository.Where(x => x.Id > 0, skip, take)).Select(x => new GroupDto
+        var result = (await _repository.Where(cancellationToken, x => x.Id > 0, skip, take)).Select(x => new GroupDto
         {
             Id = x.Id,
             Name = x.Name

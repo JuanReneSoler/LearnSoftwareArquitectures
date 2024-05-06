@@ -1,10 +1,10 @@
 class Person {
-  Id: number;
-  Name: string;
+  id: number;
+  name: string;
 
   constructor() {
-    this.Id = 0;
-    this.Name = "";
+    this.id = 0;
+    this.name = "";
   }
 }
 export { Person };
