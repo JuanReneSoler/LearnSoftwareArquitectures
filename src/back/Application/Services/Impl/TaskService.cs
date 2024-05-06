@@ -75,25 +75,22 @@ public class TaskService : ITaskService
 
     public async Task<IList<TaskDto>> Filter(Expression<Func<TaskDto, bool>> predicate, int? skip, int? take, CancellationToken cancellationToken)
     {
-        var result = (await _repository.Where(x => x.Id > 0, skip, take, cancellationToken)).Select(x => new TaskDto
-        {
+        var result = await _repository.Select(x=> new TaskDto{
             Id = x.Id,
             Title = x.Title,
             Description = x.Description,
             GroupId = x.GroupId,
-            PersonId = x.PersonId,
-            Person = new PersonDto
-            {
-                Id = x.Person.Id,
-                Name = x.Person.Name
+            Group = new GroupDto{
+                Id = x.GroupId,
+                Name = x.Group.Name,
             },
-            Group = new GroupDto
-            {
-                Id = x.Group.Id,
-                Name = x.Group.Name
+            PersonId = x.PersonId,
+            Person = new PersonDto{
+                Id = x.PersonId,
+                Name = x.Person.Name
             }
-        });
-        return result.Where(predicate).ToList();
+        }, predicate, skip, take, cancellationToken);
+        return result.ToList();
     }
 
     public async Task<TaskDto> ReasignToGroup(int TaskId, int GroupId, CancellationToken cancellationToken)

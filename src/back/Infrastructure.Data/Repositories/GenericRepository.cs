@@ -48,7 +48,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
             var entities = _table.Where(predicate);
 
             if (skip != null && take != null)
-                entities.Take(take.Value).Skip(skip.Value);
+                entities = entities.Take(take.Value).Skip(skip.Value);
 
             return entities;
         }, cancellationToken);
@@ -74,6 +74,18 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
                         break;
                 }
             }
+        }, cancellationToken);
+    }
+
+    public async Task<IQueryable<TResult>> Select<TResult>(Expression<Func<TEntity, TResult>> selector, Expression<Func<TResult, bool>> where, int? skip, int? take, CancellationToken cancellationToken)
+    {
+        return await Task.Run(()=>{
+            var select = _table.Select(selector).Where(where);
+
+            if(skip != null && take != null)
+                select = select.Take(take.Value).Skip(skip.Value);
+            
+            return select;
         }, cancellationToken);
     }
 }

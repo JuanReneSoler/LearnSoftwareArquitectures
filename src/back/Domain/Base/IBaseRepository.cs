@@ -9,6 +9,12 @@ public interface IBaseRepository<TEntity, TEntityID>
     Task Update(TEntity Entity, CancellationToken cancellationToken);
     Task Delete(TEntityID Id, CancellationToken cancellationToken);
     Task<IQueryable<TEntity>> Where(Expression<Func<TEntity, bool>> predicate, int? skip, int? take, CancellationToken cancellationToken);
+    Task<IQueryable<TResult>> Select<TResult>(
+        Expression<Func<TEntity, TResult>> selector, 
+        Expression<Func<TResult, bool>> where, 
+        int? skip, 
+        int? take, 
+        CancellationToken cancellationToken);
     //
     Task<bool> Commit(CancellationToken cancellationToken);
     Task Rollback(CancellationToken cancellationToken);

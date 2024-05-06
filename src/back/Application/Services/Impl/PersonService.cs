@@ -51,12 +51,11 @@ public class PersonService : IPersonService
 
     public async Task<IList<PersonDto>> Filter(Expression<Func<PersonDto, bool>> predicate, int? skip, int? take, CancellationToken cancellationToken)
     {
-        var result = (await _repository.Where(x => x.Id > 0, skip, take, cancellationToken)).Select(x => new PersonDto
-        {
+        var query = await _repository.Select(x=> new PersonDto{
             Id = x.Id,
-            Name = x.Name,
-        });
-        return result.Where(predicate).ToList();
+            Name = x.Name
+        },predicate, skip, take, cancellationToken);
+        return query.ToList();
     }
 
     public async Task<PersonDto?> Update(PersonDto Dto, int Id, CancellationToken cancellationToken)

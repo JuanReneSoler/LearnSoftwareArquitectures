@@ -70,12 +70,11 @@ public class GroupService : IGroupService
 
     public async Task<IList<GroupDto>> Filter(Expression<Func<GroupDto, bool>> predicate, int? skip, int? take, CancellationToken cancellationToken)
     {
-        var result = (await _repository.Where(x => x.Id > 0, skip, take, cancellationToken)).Select(x => new GroupDto
-        {
+        var query = await _repository.Select(x=> new GroupDto{
             Id = x.Id,
             Name = x.Name
-        });
+        }, predicate, skip, take, cancellationToken);
 
-        return result.Where(predicate).ToList();
+        return query.ToList();
     }
 }
