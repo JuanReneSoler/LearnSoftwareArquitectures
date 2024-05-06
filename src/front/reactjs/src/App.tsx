@@ -1,11 +1,18 @@
-import { useContext, useEffect } from "react";
-import { SesionContext } from "./containers";
-import { Home, Login } from "./pages";
+import { useContext } from "react";
+import { Home, TaskProvider } from "./modules/tasks";
+import { Login, SesionContext } from "./modules/auth";
+
+const Tasks = ()=>{
+  return (
+  <TaskProvider>
+    <Home />
+  </TaskProvider>)
+}
 
 function App() {
   const { isLogged } = useContext(SesionContext);
 
-  return <>{isLogged ? <Home /> : <Login />}</>;
+  return <>{isLogged ? <Tasks /> : <Login />}</>;
 }
 
 export default App;

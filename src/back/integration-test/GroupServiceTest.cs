@@ -13,6 +13,7 @@ public class GroupServiceTest
     private readonly IMapper _mapper;
     private readonly GroupService _service;
     private static GroupDto _group = new GroupDto();
+    private static CancellationToken _token = new CancellationToken();
 
     public GroupServiceTest()
     {
@@ -35,7 +36,7 @@ public class GroupServiceTest
         var group = await _service.Create(new GroupDto
         {
             Name = "Test"
-        });
+        }, _token);
 
         if (group is null) Assert.Fail();
 
@@ -45,7 +46,7 @@ public class GroupServiceTest
     [TestMethod]
     public async Task Read()
     {
-        var groups = await _service.Filter(x => x.Id == _group.Id, 0, 0);
+        var groups = await _service.Filter(_token,x => x.Id == _group.Id, 0, 0);
 
         if (groups.Count() is 0) Assert.Fail();
     }
@@ -54,7 +55,7 @@ public class GroupServiceTest
     public async Task Update()
     {
         _group.Name = "Test Edited";
-        var group = await _service.Update(_group, _group.Id);
+        var group = await _service.Update(_group, _group.Id, _token);
 
         if (group is null) Assert.Fail();
 
@@ -64,7 +65,7 @@ public class GroupServiceTest
     [TestMethod]
     public async Task Delete()
     {
-        var result =await _service.Delete(_group.Id);
+        var result =await _service.Delete(_group.Id, _token);
 
         if (result is 0) Assert.Fail();
     }

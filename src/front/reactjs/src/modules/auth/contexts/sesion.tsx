@@ -7,6 +7,7 @@ interface IProps {
 interface Sesion {
   isLogged: boolean;
   logIn: (user: string, password: string) => void;
+  logOut:()=>void;
 }
 
 const SesionContext = createContext({
@@ -20,8 +21,11 @@ const SesionProvider = ({ children }: IProps) => {
       setIsLogged(true);
     }
   };
+  const logOut=()=>{
+    setIsLogged(false);
+  }
   return (
-    <SesionContext.Provider value={{ isLogged, logIn }}>
+    <SesionContext.Provider value={{ isLogged, logIn, logOut }}>
       {children}
     </SesionContext.Provider>
   );

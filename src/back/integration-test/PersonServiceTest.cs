@@ -13,6 +13,7 @@ public class PersonServiceTest
     private readonly IMapper _mapper;
     private readonly PersonService _service;
     private static PersonDto _person = new PersonDto();
+    private static CancellationToken _token = new CancellationToken();
 
     public PersonServiceTest()
     {
@@ -35,7 +36,7 @@ public class PersonServiceTest
         var person = await _service.Create(new PersonDto
         {
             Name = "Juan Soler"
-        });
+        }, _token);
 
         if (person is null) Assert.Fail();
 
@@ -45,7 +46,7 @@ public class PersonServiceTest
     [TestMethod]
     public async Task Read()
     {
-        var persons = await _service.Filter(x => x.Id == _person.Id, 0, 0);
+        var persons = await _service.Filter(_token,x => x.Id == _person.Id, 0, 0);
 
         if (persons.Count() is 0) Assert.Fail();
     }
@@ -55,7 +56,7 @@ public class PersonServiceTest
     {
         _person.Name = "Juan René Soler";
 
-        var person = await _service.Update(_person, _person.Id);
+        var person = await _service.Update(_person, _person.Id, _token);
 
         if (person is null) Assert.Fail();
 
@@ -66,7 +67,7 @@ public class PersonServiceTest
     [TestMethod]
     public async Task Delete()
     {
-        var result = await _service.Delete(_person.Id);
+        var result = await _service.Delete(_person.Id, _token);
 
         if (result is 0) Assert.Fail();
     }

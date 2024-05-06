@@ -17,6 +17,7 @@ public class TasksServiceTest
     private static PersonDto _person = new PersonDto();
     private static TaskDto _task = new TaskDto();
     private static GroupDto _group = new GroupDto();
+    private static CancellationToken _token = new CancellationToken();
 
     public TasksServiceTest()
     {
@@ -49,7 +50,7 @@ public class TasksServiceTest
         var person = await _personService.Create(new PersonDto
         {
             Name = "Juan Soler"
-        });
+        }, _token);
 
         if (person is null) Assert.Fail();
 
@@ -58,7 +59,7 @@ public class TasksServiceTest
         var group = await _groupService.Create(new GroupDto
         {
             Name = "Test"
-        });
+        }, _token);
 
         if (group is null) Assert.Fail();
         _group = group;
@@ -72,7 +73,7 @@ public class TasksServiceTest
             PersonId = person?.Id ?? 0,
             Person = _person,
             Title = "Tarea de prueba"
-        });
+        }, _token);
 
         if (task is null) Assert.Fail();
 
@@ -82,7 +83,7 @@ public class TasksServiceTest
     [TestMethod]
     public async Task Read()
     {
-        var tasks = await _taskService.Filter(x => x.Id == _task.Id, 0, 0);
+        var tasks = await _taskService.Filter(_token,x => x.Id == _task.Id, 0, 0);
 
         if (tasks.Count() is 0) Assert.Fail();
     }
@@ -93,7 +94,7 @@ public class TasksServiceTest
         _task.Description = "Esto es una prueba Editada";
         _task.Title = "Esto es una prueba (Edited)";
 
-        var task = await _taskService.Update(_task, _task.Id);
+        var task = await _taskService.Update(_task, _task.Id, _token);
 
         if (task is null) Assert.Fail();
 
@@ -103,9 +104,9 @@ public class TasksServiceTest
     [TestMethod]
     public async Task Delete()
     {
-        var result = await _taskService.Delete(_task.Id);
-        var result2 = await _personService.Delete(_person.Id);
-        var result3 = await _groupService.Delete(_group.Id);
+        var result = await _taskService.Delete(_task.Id, _token);
+        var result2 = await _personService.Delete(_person.Id, _token);
+        var result3 = await _groupService.Delete(_group.Id, _token);
 
         if (result is 0) Assert.Fail();
         if (result2 is 0) Assert.Fail();

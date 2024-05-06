@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useContext, useEffect, useState } from "react";
 import {
   Group,
   GroupService,
@@ -7,14 +7,18 @@ import {
   Task,
   TaskService,
 } from "../../../services";
+import { TaskContext } from "../contexts";
 
 interface IProps {
   onClose?: () => void;
+  readonly?:boolean;
+  id:string;
 }
 
-const Form = ({ onClose }: IProps) => {
+const Form = ({ onClose, readonly=false, id }: IProps) => {
   const [grupos, setGrupos] = useState([] as Array<Group>);
   const [persons, setPersons] = useState([] as Array<Person>);
+  const {selectedTask} = useContext(TaskContext);
   const [viewState, setViewState] = useState({
     description: "",
     title: "",
@@ -41,6 +45,10 @@ const Form = ({ onClose }: IProps) => {
     });
   };
 
+  useEffect(()=>{
+    if(selectedTask) setViewState(selectedTask);
+  },[selectedTask]);
+
   useEffect(() => {
     (async () => {
       await GroupService.List().then((res) => {
@@ -53,7 +61,7 @@ const Form = ({ onClose }: IProps) => {
   }, []);
 
   return (
-    <form id="formTarea" onSubmit={handleSubmit}>
+    <form id={id} onSubmit={handleSubmit}>
       <p>Tarea</p>
       <input type="hidden" value={viewState.id} name="id" />
       <div>
@@ -64,6 +72,8 @@ const Form = ({ onClose }: IProps) => {
           placeholder="Titulo de la tarea"
           name="title"
           required
+          value={viewState.title}
+          disabled={readonly}
         />
       </div>
       <div>
@@ -74,15 +84,18 @@ const Form = ({ onClose }: IProps) => {
           placeholder="Descripción de la tarea"
           name="description"
           required
+          value={viewState.description}
+          disabled={readonly}
         />
       </div>
       <div>
         <label htmlFor="">A quien Pertenece</label>
         <select
           name="personId"
-          defaultValue={0}
           onChange={handleChange}
           required
+          value={viewState.personId}
+          disabled={readonly}
         >
           <option value="0" disabled>
             selecione una persona
@@ -101,8 +114,9 @@ const Form = ({ onClose }: IProps) => {
         <select
           name="groupId"
           onChange={handleChange}
-          defaultValue={0}
           required
+          value={viewState.groupId}
+          disabled={readonly}
         >
           <option value="0" disabled>
             selecione un grupo
