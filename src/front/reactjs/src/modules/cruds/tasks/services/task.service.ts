@@ -1,9 +1,9 @@
-import { Person } from ".";
+import { Task } from "../dtos";
 
-const api = import.meta.env.VITE_API + "Person";
+const api = import.meta.env.VITE_API + "Task";
 
-const PersonService = {
-  Add: async (dto: Person, abort?: AbortController) => {
+const TaskService = {
+  Add: async (dto: Task, abort?: AbortController) => {
     return await fetch(api, {
       method: "post",
       headers: {
@@ -31,7 +31,7 @@ const PersonService = {
       signal: abort?.signal,
     }).then((res) => res.json());
   },
-  Update: async (dto: Person, abort?: AbortController) => {
+  Update: async (dto: Task, abort?: AbortController) => {
     return await fetch(api, {
       method: "put",
       headers: {
@@ -42,4 +42,4 @@ const PersonService = {
     }).then((res) => res.json());
   },
 };
-export { PersonService };
+export { TaskService };

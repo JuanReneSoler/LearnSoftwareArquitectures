@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { SesionContext } from "../contexts";
+import { SesionContext } from "../modules/auth";
 
 const Login = () => {
   const { logIn } = useContext(SesionContext);

@@ -1,4 +1,4 @@
-import { Group } from ".";
+import { Group } from "../dtos";
 
 const api = import.meta.env.VITE_API + "Group";
 

@@ -1,24 +1,20 @@
 import { ChangeEvent, FormEvent, useContext, useEffect, useState } from "react";
-import {
-  Group,
-  GroupService,
-  Person,
-  PersonService,
-  Task,
-  TaskService,
-} from "../../../services";
 import { TaskContext } from "../contexts";
+import { Group, GroupService } from "../../groups";
+import { Person, PersonService } from "../../people";
+import { Task } from "../dtos";
+import { TaskService } from "../services";
 
 interface IProps {
   onClose?: () => void;
-  readonly?:boolean;
-  id:string;
+  readonly?: boolean;
+  id: string;
 }
 
-const Form = ({ onClose, readonly=false, id }: IProps) => {
+const Form = ({ onClose, readonly = false, id }: IProps) => {
   const [grupos, setGrupos] = useState([] as Array<Group>);
   const [persons, setPersons] = useState([] as Array<Person>);
-  const {selectedTask} = useContext(TaskContext);
+  const { selectedTask } = useContext(TaskContext);
   const [viewState, setViewState] = useState({
     description: "",
     title: "",
@@ -45,9 +41,9 @@ const Form = ({ onClose, readonly=false, id }: IProps) => {
     });
   };
 
-  useEffect(()=>{
-    if(selectedTask) setViewState(selectedTask);
-  },[selectedTask]);
+  useEffect(() => {
+    if (selectedTask) setViewState(selectedTask);
+  }, [selectedTask]);
 
   useEffect(() => {
     (async () => {
