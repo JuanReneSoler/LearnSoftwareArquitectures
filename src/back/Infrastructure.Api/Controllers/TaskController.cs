@@ -1,6 +1,7 @@
 using Application.Services;
 using Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 
 namespace Infrastructure.Api.Controllers;
 
@@ -25,15 +26,14 @@ public class TaskController : ControllerBase
     [HttpGet()]
     public async Task<IActionResult> List(int? GroupId, CancellationToken cancellationToken)
     {
-        var result = default(IList<TaskDto>);
+        Expression<Func<TaskDto, bool>> expression = (x) => x.Id > 0;
+
         if (GroupId > 0)
         {
-            result = await _taskService.Filter(x => x.GroupId == GroupId, null, null, cancellationToken);
+            expression = x => x.GroupId == GroupId;
         }
-        else
-        {
-            result = await _taskService.Filter(x => x.Id > 0, null, null, cancellationToken);
-        }
+
+        var result = await _taskService.Filter(expression, null, null, cancellationToken);
         return Ok(result);
     }
 
