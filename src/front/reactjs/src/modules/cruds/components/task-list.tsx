@@ -4,7 +4,7 @@ import { TaskService } from "../services";
 import { Task } from "../dtos";
 
 interface IProps {
-  groupId: number | null;
+  groupId?: number | null;
 }
 
 const TaskList = ({ groupId }: IProps) => {
@@ -13,7 +13,7 @@ const TaskList = ({ groupId }: IProps) => {
 
   useEffect(() => {
     (async () => {
-      await TaskService.List(groupId).then((res) => {
+      await TaskService.List(groupId ?? null).then((res) => {
         setTaks(res);
       });
     })();

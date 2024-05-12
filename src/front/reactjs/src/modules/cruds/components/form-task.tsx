@@ -1,9 +1,7 @@
 import { ChangeEvent, FormEvent, useContext, useEffect, useState } from "react";
 import { TaskContext } from "../contexts";
-import { Group, GroupService } from "../../groups";
-import { Person, PersonService } from "../../people";
-import { Task } from "../dtos";
-import { TaskService } from "../services";
+import { Group, Person, Task } from "../dtos";
+import { GroupService, PersonService, TaskService } from "../services";
 
 interface IProps {
   onClose?: () => void;
@@ -11,7 +9,7 @@ interface IProps {
   id: string;
 }
 
-const Form = ({ onClose, readonly = false, id }: IProps) => {
+const FormTask = ({ onClose, readonly = false, id }: IProps) => {
   const [grupos, setGrupos] = useState([] as Array<Group>);
   const [persons, setPersons] = useState([] as Array<Person>);
   const { selectedTask } = useContext(TaskContext);
@@ -129,4 +127,4 @@ const Form = ({ onClose, readonly = false, id }: IProps) => {
     </form>
   );
 };
-export { Form };
+export { FormTask };

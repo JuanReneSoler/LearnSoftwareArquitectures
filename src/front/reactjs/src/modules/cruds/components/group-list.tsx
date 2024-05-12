@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Group } from "../dtos";
 import { GroupService } from "../services";
-import { TaskList } from "../../tasks";
+import { TaskList } from "./task-list";
 
 function GroupList() {
   const [list, setList] = useState(Array<Group>);

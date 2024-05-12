@@ -1,19 +1,95 @@
 import { useContext, useEffect, useState } from "react";
 import { SesionContext } from "../modules/auth";
-import { Form, PeopleList, TaskContext, TaskList } from "../modules/cruds";
-import { GroupList } from "../modules/cruds/groups/components";
+import {
+  FormGroup,
+  FormPerson,
+  FormTask,
+  GroupList,
+  PeopleList,
+  TaskContext,
+  TaskList,
+} from "../modules/cruds";
 
 function Main() {
-  const [showForm, setShowForm] = useState(false);
+  const [showFormTask, setShowFormTask] = useState(false);
+  const [showFormGroup, setShowFormGroup] = useState(false);
+  const [showFormPerson, setShowFormPerson] = useState(false);
   const { logOut } = useContext(SesionContext);
   const { selectedTask, shareSelectedTask } = useContext(TaskContext);
   const [isReadOnly, setIsReadOnly] = useState(true);
   const formName = "formTask";
+  const [viewGroups, setViewGrups] = useState(false);
+  const [viewTasks, setViewTasks] = useState(true);
+  const [viewPeople, setViewPeople] = useState(false);
 
   useEffect(() => {
-    setShowForm(selectedTask !== null && selectedTask.id > 0);
+    setShowFormTask(selectedTask !== null && selectedTask.id > 0);
     setIsReadOnly(true);
   }, [selectedTask]);
+
+  const viewTaskList = () => {
+    setViewGrups(false);
+    setViewTasks(true);
+    setViewPeople(false);
+    setIsReadOnly(true);
+    setShowFormTask(false);
+    setShowFormGroup(false);
+    setShowFormPerson(false);
+  };
+
+  const viewGroupsList = () => {
+    setViewGrups(true);
+    setViewTasks(false);
+    setViewPeople(false);
+    setIsReadOnly(true);
+    setShowFormTask(false);
+    setShowFormGroup(false);
+    setShowFormPerson(false);
+  };
+
+  const viewPeopleList = () => {
+    setViewGrups(false);
+    setViewTasks(false);
+    setViewPeople(true);
+    setIsReadOnly(true);
+    setShowFormTask(false);
+    setShowFormGroup(false);
+    setShowFormPerson(false);
+  };
+
+  const editarTask = () => {
+    setIsReadOnly(false);
+    setShowFormTask(true);
+  };
+
+  const cancel = () => {
+    setIsReadOnly(true);
+    setShowFormTask(false);
+    setShowFormGroup(false);
+    setShowFormPerson(false);
+  };
+
+  const newTask = () => {
+    setIsReadOnly(false);
+    setShowFormTask(true);
+    shareSelectedTask(null);
+    setShowFormGroup(false);
+    setShowFormPerson(false);
+  };
+
+  const newGroup = () => {
+    setIsReadOnly(true);
+    setShowFormGroup(true);
+    setShowFormPerson(false);
+    setShowFormTask(false);
+  };
+
+  const newPeople = () => {
+    setIsReadOnly(true);
+    setShowFormPerson(true);
+    setShowFormGroup(false);
+    setShowFormTask(false);
+  };
 
   return (
     <>
@@ -21,51 +97,57 @@ function Main() {
         loguot
       </button>
 
-      {showForm && (
-        <button
-          onClick={() => {
-            setShowForm(false);
-            setIsReadOnly(true);
-            shareSelectedTask(null);
-          }}
-          type="button"
-        >
+      {showFormTask && (
+        <button type="button" onClick={cancel}>
           Cancelar
         </button>
       )}
 
-      {!showForm && (
-        <button
-          onClick={() => {
-            setShowForm(true);
-            setIsReadOnly(false);
-            shareSelectedTask(null);
-          }}
-          type="button"
-        >
-          Crear Nueva Tarea
+      {viewTasks && !showFormTask && (
+        <button type="button" onClick={newTask}>
+          Crear nueva tarea
         </button>
       )}
 
-      {isReadOnly && showForm && (
-        <button
-          type="button"
-          onClick={() => {
-            setIsReadOnly(!isReadOnly);
-          }}
-        >
+      {viewGroups && (
+        <button type="button" onClick={newGroup}>
+          Crear nuevo grupo
+        </button>
+      )}
+      {viewPeople && (
+        <button type="button" onClick={newPeople}>
+          Crear nueva persona
+        </button>
+      )}
+
+      {isReadOnly && showFormTask && (
+        <button type="button" onClick={editarTask}>
           Editar
         </button>
       )}
 
-      {!isReadOnly && showForm && <button form={formName}>Guardar</button>}
+      {!isReadOnly && showFormTask && <button form={formName}>Guardar</button>}
 
-      <TaskList />
-      <PeopleList />
-      <GroupList />
+      <div>
+        <a href="#" onClick={viewTaskList}>
+          Lista de Tareas {viewTasks ? "*" : ""}
+        </a>
+        <br />
+        <a href="#" onClick={viewGroupsList}>
+          Lista de Grupos {viewGroups ? "*" : ""}
+        </a>
+        <br />
+        <a href="#" onClick={viewPeopleList}>
+          Lista de Personas {viewPeople ? "*" : ""}
+        </a>
+      </div>
 
-      {showForm && (
-        <Form
+      {viewTasks && <TaskList />}
+      {viewPeople && <PeopleList />}
+      {viewGroups && <GroupList />}
+
+      {showFormTask && (
+        <FormTask
           id={formName}
           readonly={isReadOnly}
           onClose={() => {
@@ -73,6 +155,8 @@ function Main() {
           }}
         />
       )}
+      {showFormGroup && <FormGroup />}
+      {showFormPerson && <FormPerson />}
     </>
   );
 }

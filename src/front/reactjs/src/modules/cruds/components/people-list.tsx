@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
-import { PersonService } from "../services";
 import { Person } from "../dtos";
+import { PersonService } from "../services";
 
 function PeopleList() {
   const [list, setList] = useState(Array<Person>);
 
   useEffect(() => {
     (async () => {
-      await PersonService.List().then((res) => {
+      PersonService.List().then((res) => {
         setList(res);
       });
     })();
   }, []);
-
   return (
     <>
       <p>Lista de Personas</p>
@@ -21,6 +20,7 @@ function PeopleList() {
           return (
             <li key={i}>
               {item.name}
+
               <a href="#">( ver )</a>
               <a href="#">( eliminar )</a>
             </li>
