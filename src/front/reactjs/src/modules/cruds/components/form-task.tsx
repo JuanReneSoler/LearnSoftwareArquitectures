@@ -33,10 +33,18 @@ const FormTask = ({ onClose, readonly = false, id }: IProps) => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement> | undefined) => {
     e?.preventDefault();
-    await TaskService.Add(viewState).then(() => {
-      alert("tarea creada datisfactoriamente.");
-      if (onClose) onClose();
-    });
+
+    if (viewState.id === 0) {
+      await TaskService.Add(viewState).then(() => {
+        alert("tarea creada datisfactoriamente.");
+        if (onClose) onClose();
+      });
+    } else {
+      await TaskService.Update(viewState).then(() => {
+        alert("tarea actualizada datisfactoriamente.");
+        if (onClose) onClose();
+      });
+    }
   };
 
   useEffect(() => {
