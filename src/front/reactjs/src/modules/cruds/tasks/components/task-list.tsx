@@ -3,17 +3,21 @@ import { TaskContext } from "../contexts";
 import { TaskService } from "../services";
 import { Task } from "../dtos";
 
-const TaskList = () => {
+interface IProps {
+  groupId: number | null;
+}
+
+const TaskList = ({ groupId }: IProps) => {
   const [tasks, setTaks] = useState([] as Array<Task>);
   const { shareSelectedTask } = useContext(TaskContext);
 
   useEffect(() => {
     (async () => {
-      await TaskService.List().then((res) => {
+      await TaskService.List(groupId).then((res) => {
         setTaks(res);
       });
     })();
-  }, []);
+  }, [groupId]);
 
   const eliminar = (id: number) => {
     if (confirm("esta segudo de eliminar esta tarea?")) {

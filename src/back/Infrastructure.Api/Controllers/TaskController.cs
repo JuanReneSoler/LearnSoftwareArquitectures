@@ -23,9 +23,17 @@ public class TaskController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<IActionResult> List(CancellationToken cancellationToken)
+    public async Task<IActionResult> List(int? GroupId, CancellationToken cancellationToken)
     {
-        var result = await _taskService.Filter(x => x.Id > 0, null, null, cancellationToken);
+        var result = default(IList<TaskDto>);
+        if (GroupId > 0)
+        {
+            result = await _taskService.Filter(x => x.GroupId == GroupId, null, null, cancellationToken);
+        }
+        else
+        {
+            result = await _taskService.Filter(x => x.Id > 0, null, null, cancellationToken);
+        }
         return Ok(result);
     }
 

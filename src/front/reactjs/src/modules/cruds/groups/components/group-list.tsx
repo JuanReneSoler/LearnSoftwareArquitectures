@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Group } from "../dtos";
 import { GroupService } from "../services";
+import { TaskList } from "../../tasks";
 
 function GroupList() {
   const [list, setList] = useState(Array<Group>);
@@ -24,6 +25,7 @@ function GroupList() {
               <a href="#">( ver )</a>
               <a href="#">( eliminar )</a>
               <a href="#">( ver tareas )</a>
+              <TaskList groupId={item.id} />
             </li>
           );
         })}
