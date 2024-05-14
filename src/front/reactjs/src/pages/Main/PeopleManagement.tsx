@@ -39,7 +39,7 @@ function PeopleManagement() {
       if (result.id > 0) {
         await peopleService.update(transform(result)).then(async () => {
           await loadPersonList();
-          alert("persona creada satisfactoriamente!");
+          alert("persona modificada satisfactoriamente!");
         });
       } else {
         await peopleService.create(transform(result)).then(async () => {

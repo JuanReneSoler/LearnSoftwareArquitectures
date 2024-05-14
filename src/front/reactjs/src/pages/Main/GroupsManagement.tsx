@@ -39,7 +39,7 @@ function GroupsManagement() {
       if (result.id > 0) {
         await groupService.update(transform(result)).then(async () => {
           await loadGroupList();
-          alert("grupo creado satisfactoriamente!");
+          alert("grupo modificado satisfactoriamente!");
         });
       } else {
         await groupService.create(transform(result)).then(async () => {

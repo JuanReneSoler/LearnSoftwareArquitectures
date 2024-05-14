@@ -57,7 +57,7 @@ const TasksManagement = () => {
       if (result.id > 0) {
         await taskService.update(transform(result)).then(async () => {
           await loadTaskList();
-          alert("tarea creada satisfactoriamente!");
+          alert("tarea modificada satisfactoriamente!");
         });
       } else {
         await taskService.create(transform(result)).then(async () => {
