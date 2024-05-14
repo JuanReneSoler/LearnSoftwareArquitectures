@@ -9,9 +9,10 @@ interface IProps {
   id: string;
   viewModel: GroupViewModel;
   submitEvent: (viewModel: GroupViewModel) => void;
+  readonly?: boolean;
 }
 
-function GroupForm({ id, viewModel, submitEvent }: IProps) {
+function GroupForm({ id, viewModel, submitEvent, readonly }: IProps) {
   const [vModel, setViewModel] = useState(viewModel);
 
   const handlerSubmit = async (e: FormEvent) => {
@@ -37,6 +38,7 @@ function GroupForm({ id, viewModel, submitEvent }: IProps) {
         name="id"
         onChange={handlerChange}
         value={vModel.id}
+        disabled={readonly}
       />
       <div>
         <label htmlFor="">Nombre:</label>
@@ -46,6 +48,7 @@ function GroupForm({ id, viewModel, submitEvent }: IProps) {
           onChange={handlerChange}
           value={vModel.name}
           id=""
+          disabled={readonly}
         />
       </div>
     </form>

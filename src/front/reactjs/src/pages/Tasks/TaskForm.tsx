@@ -91,7 +91,7 @@ function TaskForm({ viewModel, id, submitEvent, readonly }: IProps) {
           name="personId"
           value={vModel.personId}
           onChange={handlerChange}
-          defaultValue={0}
+          //defaultValue={0}
           disabled={readonly}
         >
           <option value="0">Selecione una persona</option>
@@ -110,7 +110,7 @@ function TaskForm({ viewModel, id, submitEvent, readonly }: IProps) {
           name="groupId"
           value={vModel.groupId}
           onChange={handlerChange}
-          defaultValue={0}
+          //defaultValue={0}
           disabled={readonly}
         >
           <option value="0">Selecione un grupo</option>

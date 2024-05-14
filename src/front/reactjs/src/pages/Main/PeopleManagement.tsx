@@ -19,6 +19,7 @@ function PeopleManagement() {
   const [personList, setPersonList] = useState([] as Array<Person>);
   const [showForm, setShowForm] = useState(false);
   const [personForm, setPersonForm] = useState(initialState);
+  const [isReadOnly, setIsReadOnly] = useState(true);
   const formId = "group";
 
   useEffect(() => {
@@ -35,16 +36,25 @@ function PeopleManagement() {
 
   const handlerSubmit = (result: PersonViewModel) => {
     (async () => {
-      await peopleService.create(transform(result)).then(async () => {
-        await loadPersonList();
-        alert("grupo creado satisfactoriamente!");
-      });
+      if (result.id > 0) {
+        await peopleService.update(transform(result)).then(async () => {
+          await loadPersonList();
+          alert("persona creada satisfactoriamente!");
+        });
+      } else {
+        await peopleService.create(transform(result)).then(async () => {
+          await loadPersonList();
+          alert("persona creada satisfactoriamente!");
+        });
+      }
     })();
   };
 
   const handlerSelect = (id: number) => {
     const item = personList.filter((x) => x.id === id)[0];
     setPersonForm(transform(item));
+    setShowForm(true);
+    setIsReadOnly(true);
   };
 
   const handlerDelete = (id: number) => {
@@ -60,17 +70,35 @@ function PeopleManagement() {
       <br />
       <br />
       {!showForm && (
-        <button type="button" onClick={() => setShowForm(true)}>
-          crear persona
+        <button
+          type="button"
+          onClick={() => {
+            setShowForm(true);
+            setIsReadOnly(false);
+            setPersonForm(initialState);
+          }}
+        >
+          crear neeva persona
         </button>
       )}
-      {showForm && (
+      {showForm && !isReadOnly && (
         <button type="submit" form={formId}>
           guardar
         </button>
       )}
+      {isReadOnly && showForm && (
+        <button type="button" onClick={() => setIsReadOnly(false)}>
+          editar
+        </button>
+      )}
       {showForm && (
-        <button type="button" onClick={() => setShowForm(false)}>
+        <button
+          type="button"
+          onClick={() => {
+            setShowForm(false);
+            setIsReadOnly(true);
+          }}
+        >
           cancelar
         </button>
       )}
@@ -79,6 +107,7 @@ function PeopleManagement() {
           id={formId}
           viewModel={personForm}
           submitEvent={handlerSubmit}
+          readonly={isReadOnly}
         />
       )}
       <PeopleList

@@ -54,10 +54,17 @@ const TasksManagement = () => {
 
   const handlerSubmit = (result: TaskFormViewModel) => {
     (async () => {
-      await taskService.create(transform(result)).then(async () => {
-        await loadTaskList();
-        alert("tarea creada satisfactoriamente!");
-      });
+      if (result.id > 0) {
+        await taskService.update(transform(result)).then(async () => {
+          await loadTaskList();
+          alert("tarea creada satisfactoriamente!");
+        });
+      } else {
+        await taskService.create(transform(result)).then(async () => {
+          await loadTaskList();
+          alert("tarea creada satisfactoriamente!");
+        });
+      }
     })();
   };
 
@@ -73,6 +80,7 @@ const TasksManagement = () => {
       })
     );
     setShowForm(true);
+    setIsReadOnly(true);
   };
 
   const handlerDelete = (id: number) => {
@@ -93,14 +101,20 @@ const TasksManagement = () => {
           onClick={() => {
             setShowForm(true);
             setIsReadOnly(false);
+            setTaskForm(formInitialState);
           }}
         >
           crear nueva tarea
         </button>
       )}
-      {showForm && (
+      {showForm && !isReadOnly && (
         <button type="submit" form={formId}>
           guardar
+        </button>
+      )}
+      {isReadOnly && showForm && (
+        <button type="button" onClick={() => setIsReadOnly(false)}>
+          editar
         </button>
       )}
       {showForm && (

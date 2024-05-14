@@ -19,6 +19,7 @@ function GroupsManagement() {
   const [groupList, setGroupList] = useState([] as Array<Group>);
   const [showForm, setShowForm] = useState(false);
   const [groupForm, setGroupForm] = useState(initialState);
+  const [isReadOnly, setIsReadOnly] = useState(true);
   const formId = "group";
 
   useEffect(() => {
@@ -35,16 +36,25 @@ function GroupsManagement() {
 
   const handlerSubmit = (result: GroupViewModel) => {
     (async () => {
-      await groupService.create(transform(result)).then(async () => {
-        await loadGroupList();
-        alert("grupo creado satisfactoriamente!");
-      });
+      if (result.id > 0) {
+        await groupService.update(transform(result)).then(async () => {
+          await loadGroupList();
+          alert("grupo creado satisfactoriamente!");
+        });
+      } else {
+        await groupService.create(transform(result)).then(async () => {
+          await loadGroupList();
+          alert("grupo creado satisfactoriamente!");
+        });
+      }
     })();
   };
 
   const handlerSelect = (id: number) => {
     const item = groupList.filter((x) => x.id === id)[0];
     setGroupForm(transform(item));
+    setShowForm(true);
+    setIsReadOnly(true);
   };
 
   const handlerDelete = (id: number) => {
@@ -60,17 +70,35 @@ function GroupsManagement() {
       <br />
       <br />
       {!showForm && (
-        <button type="button" onClick={() => setShowForm(true)}>
+        <button
+          type="button"
+          onClick={() => {
+            setShowForm(true);
+            setIsReadOnly(false);
+            setGroupForm(initialState);
+          }}
+        >
           crear nuevo grupo
         </button>
       )}
-      {showForm && (
+      {showForm && !isReadOnly && (
         <button type="submit" form={formId}>
           guardar
         </button>
       )}
+      {isReadOnly && showForm && (
+        <button type="button" onClick={() => setIsReadOnly(false)}>
+          editar
+        </button>
+      )}
       {showForm && (
-        <button type="button" onClick={() => setShowForm(false)}>
+        <button
+          type="button"
+          onClick={() => {
+            setShowForm(false);
+            setIsReadOnly(true);
+          }}
+        >
           cancelar
         </button>
       )}
@@ -79,6 +107,7 @@ function GroupsManagement() {
           id={formId}
           viewModel={groupForm}
           submitEvent={handlerSubmit}
+          readonly={isReadOnly}
         />
       )}
       <GroupsList

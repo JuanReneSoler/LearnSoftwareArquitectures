@@ -9,9 +9,10 @@ interface IProps {
   id: string;
   viewModel: PersonViewModel;
   submitEvent: (viewModel: PersonViewModel) => void;
+  readonly?: boolean;
 }
 
-function PersonForm({ id, viewModel, submitEvent }: IProps) {
+function PersonForm({ id, viewModel, submitEvent, readonly }: IProps) {
   const [vModel, setViewModel] = useState(viewModel);
 
   const handlerSubmit = async (e: FormEvent) => {
@@ -36,6 +37,7 @@ function PersonForm({ id, viewModel, submitEvent }: IProps) {
         name="id"
         onChange={handlerChange}
         value={vModel.id}
+        disabled={readonly}
       />
       <div>
         <label htmlFor="">Nombre:</label>
@@ -45,6 +47,7 @@ function PersonForm({ id, viewModel, submitEvent }: IProps) {
           onChange={handlerChange}
           value={vModel.name}
           id=""
+          disabled={readonly}
         />
       </div>
     </form>
