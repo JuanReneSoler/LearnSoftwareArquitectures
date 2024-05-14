@@ -9,6 +9,8 @@ export interface Group {
 
 interface IProps {
   items: Array<Group>;
+  selectEvent?: (id: number) => void;
+  deleteEvent?: (id: number) => void;
 }
 
 interface TasksProps {
@@ -24,10 +26,17 @@ const Tasks = ({ groupId }: TasksProps) => {
     })();
   }, [groupId]);
 
-  return <TasksList items={items} />;
+  return <TasksList readonly={true} items={items} />;
 };
 
-function GroupsList({ items }: IProps) {
+function GroupsList({ items, deleteEvent, selectEvent }: IProps) {
+  const handlerDelete = (id: number) => {
+    if (deleteEvent) deleteEvent(id);
+  };
+
+  const handlerSelect = (id: number) => {
+    if (selectEvent) selectEvent(id);
+  };
   return (
     <>
       <p>Lista de Grupos</p>
@@ -36,7 +45,19 @@ function GroupsList({ items }: IProps) {
           items.map((item, i) => {
             return (
               <li key={i}>
-                {item.name}-<a href="">( ver )</a>-<a href="">( eliminar )</a>
+                {item.name}-
+                <a
+                  href="#"
+                  onClick={() => {
+                    handlerSelect(item.id);
+                  }}
+                >
+                  ( ver )
+                </a>
+                -
+                <a href="#" onClick={() => handlerDelete(item.id)}>
+                  ( eliminar )
+                </a>
                 <Tasks groupId={item.id ?? 0} />
                 <br />
               </li>

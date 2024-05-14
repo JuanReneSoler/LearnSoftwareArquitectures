@@ -10,8 +10,9 @@ interface IProps {
   items: Array<Task>;
   deleteEvent?: (id: number) => void;
   selectEvent?: (id: number) => void;
+  readonly?: boolean;
 }
-function TasksList({ items, deleteEvent, selectEvent }: IProps) {
+function TasksList({ items, deleteEvent, selectEvent, readonly }: IProps) {
   const handlerDelete = (id: number) => {
     if (deleteEvent) deleteEvent(id);
   };
@@ -27,14 +28,19 @@ function TasksList({ items, deleteEvent, selectEvent }: IProps) {
         {items.length > 0 ? (
           items.map((item, i) => (
             <li key={i}>
-              {item.title}-
-              <a href="#" onClick={() => handlerSelect(item.id)}>
-                (ver)
-              </a>
-              -
-              <a href="#" onClick={() => handlerDelete(item.id)}>
-                (eliminar)
-              </a>
+              {item.title}
+              {!readonly && (
+                <>
+                  -
+                  <a href="#" onClick={() => handlerSelect(item.id)}>
+                    (ver)
+                  </a>
+                  -
+                  <a href="#" onClick={() => handlerDelete(item.id)}>
+                    (eliminar)
+                  </a>
+                </>
+              )}
             </li>
           ))
         ) : (

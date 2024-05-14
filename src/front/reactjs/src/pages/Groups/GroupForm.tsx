@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 export interface GroupViewModel {
   id: number;
@@ -7,19 +7,46 @@ export interface GroupViewModel {
 
 interface IProps {
   id: string;
-  viewmodel: GroupViewModel;
+  viewModel: GroupViewModel;
+  submitEvent: (viewModel: GroupViewModel) => void;
 }
 
-function GroupForm({ id, viewmodel }: IProps) {
-  const [vModel, setViewModel] = useState(viewmodel);
+function GroupForm({ id, viewModel, submitEvent }: IProps) {
+  const [vModel, setViewModel] = useState(viewModel);
+
+  const handlerSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    submitEvent(vModel);
+    setViewModel(viewModel);
+  };
+
+  const handlerChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setViewModel({ ...vModel, [name]: value });
+  };
+
+  useEffect(() => {
+    setViewModel(viewModel);
+  }, [viewModel]);
 
   return (
-    <form id={id}>
+    <form id={id} onSubmit={handlerSubmit}>
       <p>Grupo</p>
-      <input type="hidden" name="id" value={vModel.id} />
+      <input
+        type="hidden"
+        name="id"
+        onChange={handlerChange}
+        value={vModel.id}
+      />
       <div>
         <label htmlFor="">Nombre:</label>
-        <input type="text" name="name" value={vModel.name} id="" />
+        <input
+          type="text"
+          name="name"
+          onChange={handlerChange}
+          value={vModel.name}
+          id=""
+        />
       </div>
     </form>
   );

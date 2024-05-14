@@ -77,8 +77,8 @@ const TasksManagement = () => {
 
   const handlerDelete = (id: number) => {
     (async () => {
-      await taskService.delete(id).then(() => {
-        loadTaskList();
+      await taskService.delete(id).then(async () => {
+        await loadTaskList();
       });
     })();
   };
