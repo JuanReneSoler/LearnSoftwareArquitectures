@@ -1,0 +1,12 @@
+<button (click)="viewTaskList()">
+  Lista de tareas {{ showTaskList ? "*" : "" }}
+</button>
+<button (click)="viewGroupsList()">
+  Lista de grupos {{ showGroupList ? "*" : "" }}
+</button>
+<button (click)="viewPeopleList()">
+  Lista de personas {{ showPersonList ? "*" : "" }}
+</button>
+<app-groups-management *ngIf="showGroupList"></app-groups-management>
+<app-people-management *ngIf="showPersonList"></app-people-management>
+<app-tasks-management *ngIf="showTaskList"></app-tasks-management>
