@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Task } from './dtos/Task';
-import { env } from '../../../env.json';
+import { apiUrl } from '../../../env.json';
+import { Person } from './dtos/Person';
 
-const api = env.apiUrl + 'Task';
+const api = apiUrl + 'Person';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TasksService {
+export class PeopleService {
   constructor() {}
-  async create(group: Task): Promise<Task> {
+  async create(group: Person) {
     return await fetch(api, {
       method: 'POST',
       headers: {
@@ -18,17 +18,17 @@ export class TasksService {
       body: JSON.stringify(group),
     }).then((res) => res.json());
   }
-  async filter(): Promise<Array<Task>> {
-    return await fetch(api, {
+  async filter() {
+    await fetch(api, {
       method: 'GET',
     }).then((res) => res.json());
   }
-  async delete(id: number): Promise<number> {
-    return await fetch(api, {
+  async delete(id: number) {
+    await fetch(api, {
       method: 'GET',
     }).then((res) => res.json());
   }
-  async update(group: Task): Promise<Task> {
+  async update(group: Person) {
     return await fetch(api, {
       method: 'PUT',
       headers: {
