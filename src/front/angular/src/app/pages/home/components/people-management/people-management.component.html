@@ -1,0 +1,6 @@
+<br>
+<br>
+<button *ngIf="!showForm" (click)="showForm=true">nueva persona</button>
+<button *ngIf="showForm" (click)="showForm=false">cancelar</button>
+<app-person-form *ngIf="showForm"> </app-person-form>
+<app-people-list [peopleList]="peopleList"> </app-people-list>

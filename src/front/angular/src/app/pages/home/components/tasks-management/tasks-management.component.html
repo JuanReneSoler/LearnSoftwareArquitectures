@@ -1,0 +1,6 @@
+<br>
+<br>
+<button *ngIf="!showForm" type="button" (click)="showForm = true">nueva tarea</button>
+<button *ngIf="showForm" (click)="showForm=false">cancelar</button>
+<app-task-form *ngIf="showForm"> </app-task-form>
+<app-task-list [tasksList]="taskList"> </app-task-list>

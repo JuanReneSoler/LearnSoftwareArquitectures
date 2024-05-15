@@ -1,0 +1,10 @@
+<p>Lista de Grupos</p>
+<ul>
+  <li *ngFor="let group of groupsList">
+    {{ group.name }}
+    -<a href="#">( ver )</a> -<a href="#">( eliminar )</a>
+    <app-task-list></app-task-list>
+    <br>
+  </li>
+  <li *ngIf="groupsList.length == 0">No hay elementos para mostrar</li>
+</ul>

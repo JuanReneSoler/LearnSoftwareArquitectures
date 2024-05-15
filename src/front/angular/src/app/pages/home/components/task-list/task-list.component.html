@@ -1,0 +1,8 @@
+<p>Lista de Tareas</p>
+<ul>
+  <li *ngFor="let task of tasksList">
+    {{ task.title }}
+    -<a href="#">( ver )</a> -<a href="#">( eliminar )</a>
+  </li>
+  <li *ngIf="tasksList.length == 0">No hay elementos para mostrar</li>
+</ul>
