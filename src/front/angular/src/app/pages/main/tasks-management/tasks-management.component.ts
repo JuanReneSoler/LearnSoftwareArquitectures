@@ -13,8 +13,7 @@ export class TasksManagementComponent implements OnInit {
   }
   async ngOnInit() {
     await this.service.filter().then((res) => {
-      //this.taskList = res;
-      console.log(res);
+      this.taskList = res;
     });
   }
   //

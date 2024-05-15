@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Task } from './dtos/Task';
-import { env } from '../../../env.json';
+import { env } from '../../../env';
 
 const api = env.apiUrl + 'Task';
 

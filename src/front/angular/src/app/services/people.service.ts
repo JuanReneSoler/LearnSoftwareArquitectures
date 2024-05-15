@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
-import { apiUrl } from '../../../env.json';
 import { Person } from './dtos/Person';
+import { env } from '../../../env';
 
-const api = apiUrl + 'Person';
+const api = env.apiUrl + 'Person';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PeopleService {
-  constructor() {}
-  async create(group: Person) {
+  async create(group: Person): Promise<Person> {
     return await fetch(api, {
       method: 'POST',
       headers: {
@@ -18,17 +17,17 @@ export class PeopleService {
       body: JSON.stringify(group),
     }).then((res) => res.json());
   }
-  async filter() {
-    await fetch(api, {
+  async filter(): Promise<Array<Person>> {
+    return await fetch(api, {
       method: 'GET',
     }).then((res) => res.json());
   }
-  async delete(id: number) {
-    await fetch(api, {
+  async delete(id: number): Promise<Person> {
+    return await fetch(api, {
       method: 'GET',
     }).then((res) => res.json());
   }
-  async update(group: Person) {
+  async update(group: Person): Promise<Person> {
     return await fetch(api, {
       method: 'PUT',
       headers: {

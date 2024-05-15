@@ -1,1 +1,8 @@
-<p>people-list works!</p>
+<p>Lista de Personas</p>
+<ul>
+  <li *ngFor="let person of peopleList">
+    {{ person.name }}
+    -<a href="#">( ver )</a> -<a href="#">( imprimir )</a>
+  </li>
+  <li *ngIf="peopleList.length == 0">No hay elementos para mostrar</li>
+</ul>
