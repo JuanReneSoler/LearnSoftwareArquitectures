@@ -20,13 +20,32 @@ interface TasksProps {
 const Tasks = ({ groupId }: TasksProps) => {
   const [items, setItems] = useState([] as Array<Task>);
 
+  const loadDataList = async (_groupId: number) => {
+    await taskService.filter(_groupId).then((res) => setItems(res));
+  };
+
   useEffect(() => {
     (async () => {
-      await taskService.filter(groupId).then((res) => setItems(res));
+      await loadDataList(groupId ?? 0);
     })();
   }, [groupId]);
 
-  return <TasksList readonly={true} items={items} />;
+  const handlerDropEvent = (task: Task) => {
+    (async () => {
+      await taskService.changeGroup(task.id, groupId ?? 0).then(async () => {
+        await loadDataList(groupId ?? 0);
+      });
+    })();
+  };
+
+  return (
+    <TasksList
+      draggable={true}
+      onDrop={handlerDropEvent}
+      readonly={true}
+      items={items}
+    />
+  );
 };
 
 function GroupsList({ items, deleteEvent, selectEvent }: IProps) {

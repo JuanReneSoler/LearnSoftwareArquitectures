@@ -34,5 +34,14 @@ const taskService = {
       body: JSON.stringify(task),
     }).then((res) => res.json());
   },
+
+  changeGroup: async (idTask: number, idGroup: number) => {
+    return await fetch(api + `/${idTask}/changeGroup/${idGroup}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => res.json());
+  },
 };
 export { taskService };

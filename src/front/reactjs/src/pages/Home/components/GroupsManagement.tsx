@@ -118,4 +118,4 @@ function GroupsManagement() {
   );
 }
 
-export {GroupsManagement};
+export { GroupsManagement };
