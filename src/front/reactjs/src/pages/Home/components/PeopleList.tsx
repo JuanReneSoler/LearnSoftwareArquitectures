@@ -1,7 +1,28 @@
+import { useEffect, useState } from "react";
+import { Task, TasksList } from ".";
+import { taskService } from "../../../services";
+
 export interface Person {
   id: number;
   name: string;
 }
+
+interface TasksProps {
+  personId: number;
+}
+
+const Tasks = ({ personId }: TasksProps) => {
+  const [items, setItems] = useState([] as Array<Task>);
+  useEffect(() => {
+    (async () => {
+      await taskService.filter({ PersonId: personId }).then((res) => {
+        setItems(res);
+      });
+    })();
+  }, [personId]);
+
+  return <TasksList items={items} readonly={true} />;
+};
 
 interface IProps {
   items: Array<Person>;
@@ -38,6 +59,7 @@ function PeopleList({ items, deleteEvent, selectEvent }: IProps) {
                 <a href="#" onClick={() => handlerDelete(item.id)}>
                   ( eliminar )
                 </a>
+                <Tasks personId={item.id} />
                 <br />
               </li>
             );

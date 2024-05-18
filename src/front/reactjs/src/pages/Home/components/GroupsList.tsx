@@ -21,7 +21,9 @@ const Tasks = ({ groupId }: TasksProps) => {
   const [items, setItems] = useState([] as Array<Task>);
 
   const loadDataList = async (_groupId: number) => {
-    await taskService.filter(_groupId).then((res) => setItems(res));
+    await taskService
+      .filter({ GroupId: _groupId })
+      .then((res) => setItems(res));
   };
 
   useEffect(() => {

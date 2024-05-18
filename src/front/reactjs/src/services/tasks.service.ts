@@ -1,10 +1,18 @@
+import { buildUrl } from "../utils";
 import { Task } from "./dtos";
 
 const api = import.meta.env.VITE_API + "Task";
 
+interface IFilterParams {
+  GroupId?: number;
+  PersonId?: number;
+}
+
 const taskService = {
-  filter: async (grupoId?: number): Promise<Array<Task>> => {
-    return await fetch(api + `/${grupoId ? `?GroupId=${grupoId}` : ""}`, {
+  filter: async (params?: IFilterParams): Promise<Array<Task>> => {
+    const url = buildUrl(api, params);
+
+    return await fetch(url, {
       method: "GET",
     }).then((res) => res.json());
   },
