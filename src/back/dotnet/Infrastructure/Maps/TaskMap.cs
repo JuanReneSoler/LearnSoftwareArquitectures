@@ -2,7 +2,7 @@ using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Data.Maps;
+namespace Infrastructure.Data;
 
 public class TaskMap : IEntityTypeConfiguration<Tasks>
 {

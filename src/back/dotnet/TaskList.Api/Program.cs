@@ -1,8 +1,7 @@
 using Application.Services;
 using Domain.Entities;
 using Domain.Repositories;
-using Infrastructure.Data.Contexts;
-using Infrastructure.Data.Repositories;
+using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using EasyMapper;
 using Application.Dtos;

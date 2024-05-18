@@ -2,8 +2,10 @@ using Application.Services;
 using Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
+using Infrastructure.Extentions;
 
 namespace Infrastructure.Api.Controllers;
+
 
 [ApiController]
 [Route("[controller]")]
@@ -24,14 +26,13 @@ public class TaskController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<IActionResult> List(int? GroupId, CancellationToken cancellationToken)
+    public async Task<IActionResult> List(int? GroupId, int? PersonId, CancellationToken cancellationToken)
     {
         Expression<Func<TaskDto, bool>> expression = (x) => x.Id > 0;
 
-        if (GroupId > 0)
-        {
-            expression = x => x.GroupId == GroupId;
-        }
+        if (GroupId > 0) expression = expression.And(x => x.GroupId == GroupId);
+
+        if (PersonId > 0) expression = expression.And(x => x.PersonId == PersonId);
 
         var result = await _taskService.Filter(expression, null, null, cancellationToken);
         return Ok(result);

@@ -1,10 +1,9 @@
 using System.Linq.Expressions;
 using Domain.Base;
 using Microsoft.EntityFrameworkCore;
-using Infrastructure.Data.Contexts;
 using Domain.Repositories;
 
-namespace Infrastructure.Data.Repositories;
+namespace Infrastructure.Data;
 
 public class GenericRepository<TEntity> : IGenericRepository<TEntity>
     where TEntity : BaseEntity<int>
@@ -79,12 +78,13 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
 
     public async Task<IQueryable<TResult>> Select<TResult>(Expression<Func<TEntity, TResult>> selector, Expression<Func<TResult, bool>> where, int? skip, int? take, CancellationToken cancellationToken)
     {
-        return await Task.Run(()=>{
+        return await Task.Run(() =>
+        {
             var select = _table.Select(selector).Where(where);
 
-            if(skip != null && take != null)
+            if (skip != null && take != null)
                 select = select.Take(take.Value).Skip(skip.Value);
-            
+
             return select;
         }, cancellationToken);
     }

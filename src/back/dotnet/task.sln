@@ -7,11 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{46477DE7-6B11-4D07-97D8-F313BEF8A144}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Data", "Infrastructure.Data\Infrastructure.Data.csproj", "{50163DEA-AA55-451D-9875-D42EFEA19E27}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{50163DEA-AA55-451D-9875-D42EFEA19E27}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "integration-test", "integration-test\integration-test.csproj", "{9CFADD4F-A0B6-4B47-B047-C8CCEFF18DDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Api", "Infrastructure.Api\Infrastructure.Api.csproj", "{4E757E03-26ED-43C9-AA1D-51BA668015BE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskList.Api", "TaskList.Api\TaskList.Api.csproj", "{4E757E03-26ED-43C9-AA1D-51BA668015BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

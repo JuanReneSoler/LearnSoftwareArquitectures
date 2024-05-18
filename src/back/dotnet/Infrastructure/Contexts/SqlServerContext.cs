@@ -1,8 +1,7 @@
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Infrastructure.Data.Maps;
 
-namespace Infrastructure.Data.Contexts;
+namespace Infrastructure.Data;
 
 public class SqlServerContext : DbContext
 {

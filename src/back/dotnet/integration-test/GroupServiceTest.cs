@@ -1,7 +1,6 @@
 ﻿using Application.Services;
 using Domain.Entities;
-using Infrastructure.Data.Contexts;
-using Infrastructure.Data.Repositories;
+using Infrastructure.Data;
 using EasyMapper;
 using Application.Dtos;
 
@@ -65,6 +64,10 @@ public class GroupServiceTest
     [TestMethod]
     public async Task Delete()
     {
+ 
+ 
+ 
+ 
         var result =await _service.Delete(_group.Id, _token);
 
         if (result is 0) Assert.Fail();
