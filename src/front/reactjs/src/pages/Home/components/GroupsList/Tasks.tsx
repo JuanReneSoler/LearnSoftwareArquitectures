@@ -11,8 +11,8 @@ export const Tasks = ({ groupId }: IProps) => {
 
   const loadDataList = async (_groupId: number) => {
     await taskService
-      .filter({ GroupId: _groupId })
-      .then((res) => setItems(res));
+      .filter({ GroupId: _groupId, page: 1, size: 10 })
+      .then((res) => setItems(res.items));
   };
 
   useEffect(() => {

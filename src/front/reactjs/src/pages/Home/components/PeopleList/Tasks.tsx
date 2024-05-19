@@ -10,9 +10,11 @@ export const Tasks = ({ personId }: IProps) => {
   const [items, setItems] = useState([] as Array<ITask>);
   useEffect(() => {
     (async () => {
-      await taskService.filter({ PersonId: personId }).then((res) => {
-        setItems(res);
-      });
+      await taskService
+        .filter({ PersonId: personId, page: 1, size: 10 })
+        .then((res) => {
+          setItems(res.items);
+        });
     })();
   }, [personId]);
 

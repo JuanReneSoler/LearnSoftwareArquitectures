@@ -28,8 +28,8 @@ function PeopleManagement() {
   }, []);
 
   const loadPersonList = async () => {
-    await peopleService.filter().then((res) => {
-      setPersonList(res);
+    await peopleService.filter({ page: 1, size: 10 }).then((res) => {
+      setPersonList(res.items);
     });
   };
 

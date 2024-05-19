@@ -28,8 +28,8 @@ function GroupsManagement() {
   }, []);
 
   const loadGroupList = async () => {
-    await groupService.filter().then((res) => {
-      setGroupList(res);
+    await groupService.filter({ page: 1, size: 10 }).then((res) => {
+      setGroupList(res.items);
     });
   };
 

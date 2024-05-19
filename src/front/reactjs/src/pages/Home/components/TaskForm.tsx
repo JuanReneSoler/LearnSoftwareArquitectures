@@ -26,16 +26,16 @@ function TaskForm({ viewModel, id, submitEvent, readonly }: IProps) {
 
   useEffect(() => {
     (async () => {
-      await groupService.filter().then((res) => {
+      await groupService.filter({ page: 1, size: 10 }).then((res) => {
         setGroupList(
-          res.map((item) => {
+          res.items.map((item) => {
             return { id: item.id, name: item.name };
           })
         );
       });
-      await peopleService.filter().then((res) => {
+      await peopleService.filter({ page: 1, size: 10 }).then((res) => {
         setPeopleList(
-          res.map((item) => {
+          res.items.map((item) => {
             return { id: item.id, name: item.name };
           })
         );

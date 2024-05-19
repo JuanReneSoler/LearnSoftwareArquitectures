@@ -1,10 +1,18 @@
+import { buildUrl } from "../utils";
 import { Group } from "./dtos";
+import { IResponse } from "./interfaces/IResponse";
 
 const api = import.meta.env.VITE_API + "Group";
 
+interface IFilterParams {
+  page: number;
+  size: number;
+}
+
 const groupService = {
-  filter: async (): Promise<Array<Group>> => {
-    return await fetch(api, {
+  filter: async (params: IFilterParams): Promise<IResponse<Group>> => {
+    const url = buildUrl(api, params);
+    return await fetch(url, {
       method: "GET",
     }).then((res) => res.json());
   },

@@ -1,15 +1,18 @@
 import { buildUrl } from "../utils";
 import { Task } from "./dtos";
+import { IResponse } from "./interfaces/IResponse";
 
 const api = import.meta.env.VITE_API + "Task";
 
 interface IFilterParams {
   GroupId?: number;
   PersonId?: number;
+  page: number;
+  size: number;
 }
 
 const taskService = {
-  filter: async (params?: IFilterParams): Promise<Array<Task>> => {
+  filter: async (params: IFilterParams): Promise<IResponse<Task>> => {
     const url = buildUrl(api, params);
 
     return await fetch(url, {

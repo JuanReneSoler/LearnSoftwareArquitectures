@@ -1,10 +1,18 @@
+import { buildUrl } from "../utils";
 import { Person } from "./dtos";
+import { IResponse } from "./interfaces/IResponse";
 
 const api = import.meta.env.VITE_API + "Person";
 
+interface IFilterParams {
+  page: number;
+  size: number;
+}
+
 const peopleService = {
-  filter: async (): Promise<Array<Person>> => {
-    return await fetch(api, {
+  filter: async (params: IFilterParams): Promise<IResponse<Person>> => {
+    const url = buildUrl(api, params);
+    return await fetch(url, {
       method: "GET",
     }).then((res) => res.json());
   },

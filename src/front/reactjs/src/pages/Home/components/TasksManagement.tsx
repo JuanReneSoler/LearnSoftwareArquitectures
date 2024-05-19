@@ -28,9 +28,9 @@ const TasksManagement = () => {
   const formId = "task";
 
   const loadTaskList = async () => {
-    await taskService.filter().then((res) => {
+    await taskService.filter({ page: 1, size: 10 }).then((res) => {
       setTaskList(
-        res.map((i) => {
+        res.items.map((i) => {
           return {
             id: i.id,
             title: i.title,
