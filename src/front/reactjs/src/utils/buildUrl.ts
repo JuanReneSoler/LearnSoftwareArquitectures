@@ -1,8 +1,8 @@
 const buildUrl = (baseUrl: string, params?: { [key: string]: any }): string => {
   const filteredParams: { [key: string]: any } = {};
 
-  for (const entries of Object.entries(params ?? {})) {
-    filteredParams[entries[0]] = entries[1];
+  for (const entry of Object.entries(params ?? {})) {
+    if (entry[0]) filteredParams[entry[0]] = entry[1];
   }
 
   const queryString = Object.keys(filteredParams)
@@ -11,6 +11,6 @@ const buildUrl = (baseUrl: string, params?: { [key: string]: any }): string => {
         `${encodeURIComponent(key)}=${encodeURIComponent(filteredParams[key])}`
     )
     .join("&");
-  return `${baseUrl}?${queryString}`;
+  return `${baseUrl}${queryString !== "" ? "?" + queryString : ""}`;
 };
 export { buildUrl };
