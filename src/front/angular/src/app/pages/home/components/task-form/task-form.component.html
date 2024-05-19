@@ -1,24 +1,30 @@
 <form action="">
-    <p>Tarea</p>
-    <input type="hidden" name="id">
-    <div>
-        <label for="">Title</label>
-        <input type="text" name="title">
-    </div>
-    <div>
-        <label for="">Description</label>
-        <input type="text" name="description">
-    </div>
-    <div>
-        <label for="">Propietario</label>
-        <select name="personId">
-            <option value="0" selected>Selecione una persona</option>
-        </select>
-    </div>
-    <div>
-        <label for="">Grupo</label>
-        <select name="groupId">
-            <option value="0" selected>Selecione un grupo</option>
-        </select>
-    </div>
+  <p>Tarea</p>
+  <input type="hidden" name="id" />
+  <div>
+    <label for="">Title</label>
+    <input type="text" name="title" placeholder="Titulo" />
+  </div>
+  <div>
+    <label for="">Description</label>
+    <input type="text" name="description" placeholder="Descripción" />
+  </div>
+  <div>
+    <label for="">Propietario</label>
+    <select name="personId">
+      <option value="0" selected>Selecione una persona</option>
+      <option *ngFor="let person of peopleList" value="{{ person.id }}">
+        {{ person.name }}
+      </option>
+    </select>
+  </div>
+  <div>
+    <label for="">Grupo</label>
+    <select name="groupId">
+      <option value="0" selected>Selecione un grupo</option>
+      <option *ngFor="let group of groupsList" value="{{ group.id }}">
+        {{ group.name }}
+      </option>
+    </select>
+  </div>
 </form>

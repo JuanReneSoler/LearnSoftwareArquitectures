@@ -1,14 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Task } from './dtos/Task';
 import { env } from '../../../env';
+import { buildUrl } from '../utils/buildUrl';
 
 const api = env.apiUrl + 'Task';
+
+interface IFilterProps {
+  groupId?: number;
+  personId?: number;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class TasksService {
-  constructor() {}
   async create(group: Task): Promise<Task> {
     return await fetch(api, {
       method: 'POST',
@@ -18,13 +23,14 @@ export class TasksService {
       body: JSON.stringify(group),
     }).then((res) => res.json());
   }
-  async filter(): Promise<Array<Task>> {
-    return await fetch(api, {
+  async filter(params?: IFilterProps): Promise<Array<Task>> {
+    const url = buildUrl(api, params);
+    return await fetch(url, {
       method: 'GET',
     }).then((res) => res.json());
   }
   async delete(id: number): Promise<number> {
-    return await fetch(api, {
+    return await fetch(api + `/${id}`, {
       method: 'GET',
     }).then((res) => res.json());
   }
