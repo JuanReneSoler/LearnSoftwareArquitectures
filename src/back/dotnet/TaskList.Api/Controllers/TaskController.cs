@@ -3,6 +3,7 @@ using Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 using Infrastructure.Extentions;
+using System.ComponentModel.DataAnnotations;
 
 namespace TaskList.Api.Controllers;
 
@@ -25,7 +26,7 @@ public class TaskController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<IActionResult> List(int? GroupId, int? PersonId, CancellationToken cancellationToken)
+    public async Task<IActionResult> List([FromQuery] int GroupId, [FromQuery] int PersonId, [FromQuery, Required] int page, [FromQuery, Required] int size, CancellationToken cancellationToken)
     {
         Expression<Func<TaskDto, bool>> expression = (x) => x.Id > 0;
 
@@ -33,19 +34,19 @@ public class TaskController : ControllerBase
 
         if (PersonId > 0) expression = expression.And(x => x.PersonId == PersonId);
 
-        var result = await _taskService.Filter(expression, null, null, cancellationToken);
+        var result = await _taskService.Filter(expression, page, size, cancellationToken);
         return Ok(result);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Add(TaskDto Task, CancellationToken cancellationToken)
+    public async Task<IActionResult> Add([FromBody] TaskDto Task, CancellationToken cancellationToken)
     {
         var result = await _taskService.Create(Task, cancellationToken);
         return Ok(result);
     }
 
     [HttpPut]
-    public async Task<IActionResult> Update(TaskDto Task, CancellationToken cancellationToken)
+    public async Task<IActionResult> Update([FromBody] TaskDto Task, CancellationToken cancellationToken)
     {
         var result = await _taskService.Update(Task, Task.Id, cancellationToken);
         return Ok(result);

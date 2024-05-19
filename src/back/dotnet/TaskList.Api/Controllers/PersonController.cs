@@ -1,6 +1,7 @@
 using Application.Services;
 using Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace TaskList.Api.Controllers;
 
@@ -23,9 +24,9 @@ public class PersonController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<IActionResult> List(CancellationToken cancellationToken)
+    public async Task<IActionResult> List([FromQuery, Required] int page, [FromQuery, Required] int size, CancellationToken cancellationToken)
     {
-        var result = await _personService.Filter(x => x.Id > 0, null, null, cancellationToken);
+        var result = await _personService.Filter(x => x.Id > 0, page, size, cancellationToken);
         return Ok(result);
     }
 
