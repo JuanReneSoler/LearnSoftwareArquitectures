@@ -3,7 +3,7 @@ using Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 using Infrastructure.Extentions;
-using System.ComponentModel.DataAnnotations;
+using TaskList.Api.Dtos;
 
 namespace TaskList.Api.Controllers;
 
@@ -18,23 +18,16 @@ public class TaskController : ControllerBase
         _taskService = TaskService;
     }
 
-    //[HttpGet("{Id}")]
-    //public async Task<IActionResult> Get(int Id, CancellationToken cancellationToken)
-    //{
-    //var entiry = await _taskService.Filter(x => x.Id == Id, null, null, cancellationToken);
-    //return Ok(entiry.FirstOrDefault());
-    //}
-
     [HttpGet()]
-    public async Task<IActionResult> List([FromQuery] int GroupId, [FromQuery] int PersonId, [FromQuery, Required] int page, [FromQuery, Required] int size, CancellationToken cancellationToken)
+    public async Task<IActionResult> List([FromQuery] TasksFilter Filter)
     {
         Expression<Func<TaskDto, bool>> expression = (x) => x.Id > 0;
 
-        if (GroupId > 0) expression = expression.And(x => x.GroupId == GroupId);
+        if (Filter.GroupId > 0) expression = expression.And(x => x.GroupId == Filter.GroupId);
 
-        if (PersonId > 0) expression = expression.And(x => x.PersonId == PersonId);
+        if (Filter.PersonId > 0) expression = expression.And(x => x.PersonId == Filter.PersonId);
 
-        var result = await _taskService.Filter(expression, page, size, cancellationToken);
+        var result = await _taskService.Filter(expression, Filter.page, Filter.size, Filter.cancellationToken);
         return Ok(result);
     }
 
