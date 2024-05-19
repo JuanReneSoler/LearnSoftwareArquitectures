@@ -49,14 +49,14 @@ public sealed class PersonService : IPersonService
         return await _repository.Commit(cancellationToken) ? Id : 0;
     }
 
-    public async Task<IBasePagination<PersonDto, int>> Filter(Expression<Func<PersonDto, bool>> predicate, int page, int size, CancellationToken cancellationToken)
+    public async Task<IBasePagination<PersonDto>> Filter(Expression<Func<PersonDto, bool>> predicate, int page, int size, CancellationToken cancellationToken)
     {
         var query = await _repository.Select(x => new PersonDto
         {
             Id = x.Id,
             Name = x.Name
         }, predicate, cancellationToken);
-        return query.ToGenericPagination(page, size);
+        return query.Paginate(page, size);
     }
 
     public async Task<PersonDto?> Update(PersonDto Dto, int Id, CancellationToken cancellationToken)

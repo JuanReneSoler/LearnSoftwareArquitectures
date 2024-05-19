@@ -1,9 +1,7 @@
-﻿using Application.Dtos;
+﻿namespace Application.Services;
 
-namespace Application.Services;
-
-public sealed class GenericPagination<TDto> : IBasePagination<TDto, int>
-    where TDto : DtoBase<int>
+public sealed class GenericPagination<TDto> : IBasePagination<TDto>
+    where TDto : class
 {
     private readonly IQueryable<TDto> _query;
     private readonly int _size;
@@ -13,7 +11,7 @@ public sealed class GenericPagination<TDto> : IBasePagination<TDto, int>
     public int TotalPages { get => (_query.Count() / _size) + 1; }
     public int CurrentPage { get => _page; }
 
-    public GenericPagination(IQueryable<TDto> Query, int Page, int Size)
+    internal GenericPagination(IQueryable<TDto> Query, int Page, int Size)
     {
         this._query = Query;
         this._page = Page;

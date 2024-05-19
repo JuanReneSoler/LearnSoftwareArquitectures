@@ -73,7 +73,7 @@ public sealed class TaskService : ITaskService
         }
     }
 
-    public async Task<IBasePagination<TaskDto, int>> Filter(Expression<Func<TaskDto, bool>> predicate, int page, int size, CancellationToken cancellationToken)
+    public async Task<IBasePagination<TaskDto>> Filter(Expression<Func<TaskDto, bool>> predicate, int page, int size, CancellationToken cancellationToken)
     {
         var result = await _repository.Select(x => new TaskDto
         {
@@ -93,7 +93,7 @@ public sealed class TaskService : ITaskService
                 Name = x.Person.Name
             }
         }, predicate, cancellationToken);
-        return result.ToGenericPagination(page, size);
+        return result.Paginate(page, size);
     }
 
     public async Task<TaskDto> ReasignToGroup(int TaskId, int GroupId, CancellationToken cancellationToken)

@@ -68,7 +68,7 @@ public sealed class GroupService : IGroupService
         }
     }
 
-    public async Task<IBasePagination<GroupDto, int>> Filter(Expression<Func<GroupDto, bool>> predicate, int page, int size, CancellationToken cancellationToken)
+    public async Task<IBasePagination<GroupDto>> Filter(Expression<Func<GroupDto, bool>> predicate, int page, int size, CancellationToken cancellationToken)
     {
         var query = await _repository.Select(x => new GroupDto
         {
@@ -76,6 +76,6 @@ public sealed class GroupService : IGroupService
             Name = x.Name
         }, predicate, cancellationToken);
 
-        return query.ToGenericPagination(page, size);
+        return query.Paginate(page, size);
     }
 }

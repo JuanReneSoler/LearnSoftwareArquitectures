@@ -1,11 +1,10 @@
-using Application.Dtos;
 
 namespace Application.Services;
 
-public interface IBasePagination<TDto, TDtoID>
-where TDto : DtoBase<TDtoID>
+public interface IBasePagination<T>
+where T : class
 {
-    public IList<TDto>? Items { get; }
+    public IList<T>? Items { get; }
     public int TotalPages { get; }
     public int CurrentPage { get; }
 }
