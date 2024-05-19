@@ -42,7 +42,7 @@ public sealed class TaskService : ITaskService
 
     public async Task<int> Delete(int Id, CancellationToken cancellationToken)
     {
-        var entity = (await _repository.Where(x => x.Id == Id, null, null, cancellationToken)).FirstOrDefault();
+        var entity = (await _repository.Where(x => x.Id == Id, cancellationToken)).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Esta Tarea no existe.");
 
@@ -52,7 +52,7 @@ public sealed class TaskService : ITaskService
 
     public async Task<TaskDto?> Update(TaskDto Dto, int Id, CancellationToken cancellationToken)
     {
-        var entity = (await _repository.Where(x => x.Id == Id, null, null, cancellationToken)).FirstOrDefault();
+        var entity = (await _repository.Where(x => x.Id == Id, cancellationToken)).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Esta Persona no existe.");
 
@@ -73,7 +73,7 @@ public sealed class TaskService : ITaskService
         }
     }
 
-    public async Task<IList<TaskDto>> Filter(Expression<Func<TaskDto, bool>> predicate, int? skip, int? take, CancellationToken cancellationToken)
+    public async Task<IBasePagination<TaskDto, int>> Filter(Expression<Func<TaskDto, bool>> predicate, int page, int size, CancellationToken cancellationToken)
     {
         var result = await _repository.Select(x => new TaskDto
         {
@@ -92,13 +92,13 @@ public sealed class TaskService : ITaskService
                 Id = x.PersonId,
                 Name = x.Person.Name
             }
-        }, predicate, skip, take, cancellationToken);
-        return result.ToList();
+        }, predicate, cancellationToken);
+        return result.ToGenericPagination(page, size);
     }
 
     public async Task<TaskDto> ReasignToGroup(int TaskId, int GroupId, CancellationToken cancellationToken)
     {
-        var work = (await _repository.Where(x => x.Id == TaskId, null, null, cancellationToken)).FirstOrDefault();
+        var work = (await _repository.Where(x => x.Id == TaskId, cancellationToken)).FirstOrDefault();
 
         if (work is null) throw new Exception("This task not exist!");
 

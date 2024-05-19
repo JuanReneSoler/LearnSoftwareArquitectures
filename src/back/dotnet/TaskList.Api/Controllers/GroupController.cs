@@ -16,12 +16,12 @@ public class GroupController : ControllerBase
         _groupService = GroupService;
     }
 
-    [HttpGet("{Id}")]
-    public async Task<IActionResult> Find(int Id, CancellationToken cancellationToken)
-    {
-        var entiry = await _groupService.Filter(x => x.Id == Id, null, null, cancellationToken);
-        return Ok(entiry.FirstOrDefault());
-    }
+    //[HttpGet("{Id}")]
+    //public async Task<IActionResult> Find(int Id, CancellationToken cancellationToken)
+    //{
+    //var entiry = await _groupService.Filter(x => x.Id == Id, null, null, cancellationToken);
+    //return Ok(entiry.FirstOrDefault());
+    //}
 
     [HttpGet()]
     public async Task<IActionResult> List([FromQuery, Required] int page, [FromQuery, Required] int size, CancellationToken cancellationToken)

@@ -18,12 +18,12 @@ public class TaskController : ControllerBase
         _taskService = TaskService;
     }
 
-    [HttpGet("{Id}")]
-    public async Task<IActionResult> Get(int Id, CancellationToken cancellationToken)
-    {
-        var entiry = await _taskService.Filter(x => x.Id == Id, null, null, cancellationToken);
-        return Ok(entiry.FirstOrDefault());
-    }
+    //[HttpGet("{Id}")]
+    //public async Task<IActionResult> Get(int Id, CancellationToken cancellationToken)
+    //{
+    //var entiry = await _taskService.Filter(x => x.Id == Id, null, null, cancellationToken);
+    //return Ok(entiry.FirstOrDefault());
+    //}
 
     [HttpGet()]
     public async Task<IActionResult> List([FromQuery] int GroupId, [FromQuery] int PersonId, [FromQuery, Required] int page, [FromQuery, Required] int size, CancellationToken cancellationToken)

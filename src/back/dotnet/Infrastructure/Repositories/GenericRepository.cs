@@ -32,7 +32,7 @@ public sealed class GenericRepository<TEntity> : IGenericRepository<TEntity>
     {
         await Task.Run(async () =>
         {
-            var entity = (await this.Where(x => x.Id == Id, null, null, cancellationToken)).FirstOrDefault();
+            var entity = (await this.Where(x => x.Id == Id, cancellationToken)).FirstOrDefault();
 
             if (entity is null) throw new NullReferenceException("El elemento no existe.");
 
@@ -40,16 +40,11 @@ public sealed class GenericRepository<TEntity> : IGenericRepository<TEntity>
         }, cancellationToken);
     }
 
-    public async Task<IQueryable<TEntity>> Where(Expression<Func<TEntity, bool>> predicate, int? skip, int? take, CancellationToken cancellationToken)
+    public async Task<IQueryable<TEntity>> Where(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
     {
         return await Task.Run(() =>
         {
-            var entities = _table.Where(predicate);
-
-            if (skip != null && take != null)
-                entities = entities.Take(take.Value).Skip(skip.Value);
-
-            return entities;
+            return _table.Where(predicate);
         }, cancellationToken);
     }
 
@@ -76,16 +71,11 @@ public sealed class GenericRepository<TEntity> : IGenericRepository<TEntity>
         }, cancellationToken);
     }
 
-    public async Task<IQueryable<TResult>> Select<TResult>(Expression<Func<TEntity, TResult>> selector, Expression<Func<TResult, bool>> where, int? skip, int? take, CancellationToken cancellationToken)
+    public async Task<IQueryable<TResult>> Select<TResult>(Expression<Func<TEntity, TResult>> selector, Expression<Func<TResult, bool>> where, CancellationToken cancellationToken)
     {
         return await Task.Run(() =>
         {
-            var select = _table.Select(selector).Where(where);
-
-            if (skip != null && take != null)
-                select = select.Take(take.Value).Skip(skip.Value);
-
-            return select;
+            return _table.Select(selector).Where(where);
         }, cancellationToken);
     }
 }

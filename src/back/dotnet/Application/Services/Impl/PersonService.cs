@@ -41,7 +41,7 @@ public sealed class PersonService : IPersonService
 
     public async Task<int> Delete(int Id, CancellationToken cancellationToken)
     {
-        var entity = (await _repository.Where(x => x.Id == Id, null, null, cancellationToken)).FirstOrDefault();
+        var entity = (await _repository.Where(x => x.Id == Id, cancellationToken)).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Esta Persona no existe.");
 
@@ -49,19 +49,19 @@ public sealed class PersonService : IPersonService
         return await _repository.Commit(cancellationToken) ? Id : 0;
     }
 
-    public async Task<IList<PersonDto>> Filter(Expression<Func<PersonDto, bool>> predicate, int? skip, int? take, CancellationToken cancellationToken)
+    public async Task<IBasePagination<PersonDto, int>> Filter(Expression<Func<PersonDto, bool>> predicate, int page, int size, CancellationToken cancellationToken)
     {
         var query = await _repository.Select(x => new PersonDto
         {
             Id = x.Id,
             Name = x.Name
-        }, predicate, skip, take, cancellationToken);
-        return query.ToList();
+        }, predicate, cancellationToken);
+        return query.ToGenericPagination(page, size);
     }
 
     public async Task<PersonDto?> Update(PersonDto Dto, int Id, CancellationToken cancellationToken)
     {
-        var entity = (await _repository.Where(x => x.Id == Id, null, null, cancellationToken)).FirstOrDefault();
+        var entity = (await _repository.Where(x => x.Id == Id, cancellationToken)).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Esta Persona no existe.");
 

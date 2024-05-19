@@ -41,7 +41,7 @@ public sealed class GroupService : IGroupService
 
     public async Task<int> Delete(int Id, CancellationToken cancellationToken)
     {
-        var item = (await _repository.Where(x => x.Id == Id, null, null, cancellationToken)).FirstOrDefault();
+        var item = (await _repository.Where(x => x.Id == Id, cancellationToken)).FirstOrDefault();
 
         if (item is null) throw new NullReferenceException("Este Grupo no existe.");
 
@@ -51,7 +51,7 @@ public sealed class GroupService : IGroupService
 
     public async Task<GroupDto?> Update(GroupDto Dto, int Id, CancellationToken cancellationToken)
     {
-        var entity = (await _repository.Where(x => x.Id == Id, null, null, cancellationToken)).FirstOrDefault();
+        var entity = (await _repository.Where(x => x.Id == Id, cancellationToken)).FirstOrDefault();
 
         if (entity is null) throw new NullReferenceException("Este Grupo no existe.");
 
@@ -68,14 +68,14 @@ public sealed class GroupService : IGroupService
         }
     }
 
-    public async Task<IList<GroupDto>> Filter(Expression<Func<GroupDto, bool>> predicate, int? skip, int? take, CancellationToken cancellationToken)
+    public async Task<IBasePagination<GroupDto, int>> Filter(Expression<Func<GroupDto, bool>> predicate, int page, int size, CancellationToken cancellationToken)
     {
         var query = await _repository.Select(x => new GroupDto
         {
             Id = x.Id,
             Name = x.Name
-        }, predicate, skip, take, cancellationToken);
+        }, predicate, cancellationToken);
 
-        return query.ToList();
+        return query.ToGenericPagination(page, size);
     }
 }
