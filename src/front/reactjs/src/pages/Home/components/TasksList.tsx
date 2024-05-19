@@ -1,4 +1,5 @@
 import { DragEvent, useEffect, useState } from "react";
+import { Pagination } from "../../../components";
 
 export interface ITask {
   id: number;
@@ -15,6 +16,9 @@ interface IProps {
   readonly?: boolean;
   draggable?: boolean;
   onDrop?: (task: ITask) => void;
+  totalPages: number;
+  currentPage: number;
+  changePagination: (newPage: number) => void;
 }
 function TasksList({
   items,
@@ -23,6 +27,9 @@ function TasksList({
   readonly,
   draggable,
   onDrop,
+  totalPages,
+  currentPage,
+  changePagination,
 }: IProps) {
   const dragTask = "dragTask";
 
@@ -95,6 +102,11 @@ function TasksList({
           <li>No hay elementos para mostrar </li>
         )}
       </ul>
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        changeCurrentPage={(newPage) => changePagination(newPage)}
+      />
     </>
   );
 }

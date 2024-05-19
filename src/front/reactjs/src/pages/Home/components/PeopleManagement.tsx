@@ -20,15 +20,19 @@ function PeopleManagement() {
   const [personForm, setPersonForm] = useState(initialState);
   const [isReadOnly, setIsReadOnly] = useState(true);
   const formId = "group";
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     (async () => {
       await loadPersonList();
     })();
-  }, []);
+  }, [currentPage]);
 
   const loadPersonList = async () => {
-    await peopleService.filter({ page: 1, size: 10 }).then((res) => {
+    await peopleService.filter({ page: currentPage, size: 10 }).then((res) => {
+      setTotalPages(res.totalPages);
+      setCurrentPage(res.currentPage);
       setPersonList(res.items);
     });
   };
@@ -110,9 +114,12 @@ function PeopleManagement() {
         />
       )}
       <PeopleList
+        currentPage={currentPage}
+        totalPages={totalPages}
         items={personList}
         selectEvent={handlerSelect}
         deleteEvent={handlerDelete}
+        changePagination={(page) => setCurrentPage(page)}
       />
     </>
   );

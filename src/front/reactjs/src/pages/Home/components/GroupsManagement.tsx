@@ -20,15 +20,19 @@ function GroupsManagement() {
   const [groupForm, setGroupForm] = useState(initialState);
   const [isReadOnly, setIsReadOnly] = useState(true);
   const formId = "group";
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     (async () => {
       await loadGroupList();
     })();
-  }, []);
+  }, [currentPage]);
 
   const loadGroupList = async () => {
-    await groupService.filter({ page: 1, size: 10 }).then((res) => {
+    await groupService.filter({ page: currentPage, size: 10 }).then((res) => {
+      setTotalPages(res.totalPages);
+      setCurrentPage(res.currentPage);
       setGroupList(res.items);
     });
   };
@@ -110,9 +114,12 @@ function GroupsManagement() {
         />
       )}
       <GroupsList
+        currentPage={currentPage}
+        totalPages={totalPages}
         items={groupList}
         selectEvent={handlerSelect}
         deleteEvent={handlerDelete}
+        changePagination={(page) => setCurrentPage(page)}
       />
     </>
   );

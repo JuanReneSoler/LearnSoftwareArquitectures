@@ -26,9 +26,13 @@ const TasksManagement = () => {
   const [taskForm, setTaskForm] = useState(formInitialState);
   const [isReadOnly, setIsReadOnly] = useState(true);
   const formId = "task";
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const loadTaskList = async () => {
-    await taskService.filter({ page: 1, size: 10 }).then((res) => {
+    await taskService.filter({ page: currentPage, size: 10 }).then((res) => {
+      setTotalPages(res.totalPages);
+      setCurrentPage(res.currentPage);
       setTaskList(
         res.items.map((i) => {
           return {
@@ -49,7 +53,7 @@ const TasksManagement = () => {
     (async () => {
       await loadTaskList();
     })();
-  }, []);
+  }, [currentPage]);
 
   const handlerSubmit = (result: ITaskFormViewModel) => {
     (async () => {
@@ -136,9 +140,12 @@ const TasksManagement = () => {
         />
       )}
       <TasksList
+        currentPage={currentPage}
+        totalPages={totalPages}
         items={taskList}
         selectEvent={handlerSelect}
         deleteEvent={handlerDelete}
+        changePagination={(page) => setCurrentPage(page)}
       />
     </>
   );

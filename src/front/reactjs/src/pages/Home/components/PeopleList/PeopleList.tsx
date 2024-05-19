@@ -1,3 +1,4 @@
+import { Pagination } from "../../../../components";
 import { CustonLi } from "./CustomLi";
 
 export interface IPerson {
@@ -9,9 +10,19 @@ interface IProps {
   items: Array<IPerson>;
   selectEvent?: (id: number) => void;
   deleteEvent?: (id: number) => void;
+  totalPages: number;
+  currentPage: number;
+  changePagination: (newPage: number) => void;
 }
 
-function PeopleList({ items, deleteEvent, selectEvent }: IProps) {
+function PeopleList({
+  items,
+  deleteEvent,
+  selectEvent,
+  totalPages,
+  currentPage,
+  changePagination,
+}: IProps) {
   const handlerDelete = (id: number) => {
     if (deleteEvent) deleteEvent(id);
   };
@@ -38,6 +49,11 @@ function PeopleList({ items, deleteEvent, selectEvent }: IProps) {
           <li>No hay datos para mostrar </li>
         )}
       </ul>
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        changeCurrentPage={(newPage) => changePagination(newPage)}
+      />
     </>
   );
 }
