@@ -7,4 +7,5 @@ import { Component, Input } from '@angular/core';
 })
 export class TaskListComponent {
   @Input() tasksList: any[] = [];
+  @Input() readonly: boolean = false;
 }

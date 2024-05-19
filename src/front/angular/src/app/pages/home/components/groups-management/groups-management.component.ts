@@ -8,8 +8,10 @@ import { GroupService } from 'src/app/services/group.service';
 })
 export class GroupsManagementComponent implements OnInit {
   groupsList: any[] = [];
-  showForm=false;
+  showForm = false;
+
   constructor(private service: GroupService) {}
+
   async ngOnInit() {
     await this.service.filter().then((res) => {
       this.groupsList = res;

@@ -1,6 +1,6 @@
-<br>
-<br>
-<button *ngIf="!showForm" (click)="showForm=true">nuevo grupo</button>
-<button *ngIf="showForm" (click)="showForm=false">cancelar</button>
+<br />
+<br />
+<button *ngIf="!showForm" (click)="showForm = true">nuevo grupo</button>
+<button *ngIf="showForm" (click)="showForm = false">cancelar</button>
 <app-group-form *ngIf="showForm"></app-group-form>
 <app-groups-list [groupsList]="groupsList"> </app-groups-list>

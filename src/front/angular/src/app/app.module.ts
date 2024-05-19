@@ -17,6 +17,7 @@ import { PersonFormComponent } from './pages/home/components/person-form/person-
 import { PeopleManagementComponent } from './pages/home/components/people-management/people-management.component';
 import { TasksManagementComponent } from './pages/home/components/tasks-management/tasks-management.component';
 import { GroupsManagementComponent } from './pages/home/components/groups-management/groups-management.component';
+import { TasksComponent } from './pages/home/components/groups-list/tasks/tasks.component';
 
 const routes: Routes = [
   {
@@ -44,6 +45,7 @@ const routes: Routes = [
     PeopleManagementComponent,
     TasksManagementComponent,
     GroupsManagementComponent,
+    TasksComponent,
   ],
   exports: [RouterModule],
   imports: [

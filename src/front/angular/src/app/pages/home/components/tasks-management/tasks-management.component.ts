@@ -8,7 +8,7 @@ import { TasksService } from 'src/app/services/tasks.service';
 })
 export class TasksManagementComponent implements OnInit {
   taskList = [] as any[];
-  showForm=false;
+  showForm = false;
 
   constructor(private service: TasksService) {
     //
