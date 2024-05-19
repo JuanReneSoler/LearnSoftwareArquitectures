@@ -17,16 +17,19 @@ export class PeopleService {
       body: JSON.stringify(group),
     }).then((res) => res.json());
   }
+
   async filter(): Promise<Array<Person>> {
     return await fetch(api, {
       method: 'GET',
     }).then((res) => res.json());
   }
+
   async delete(id: number): Promise<Person> {
-    return await fetch(api, {
+    return await fetch(api + `/${id}`, {
       method: 'GET',
     }).then((res) => res.json());
   }
+
   async update(group: Person): Promise<Person> {
     return await fetch(api, {
       method: 'PUT',

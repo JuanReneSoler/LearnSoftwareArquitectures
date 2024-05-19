@@ -17,16 +17,19 @@ export class GroupService {
       body: JSON.stringify(group),
     }).then((res) => res.json());
   }
+
   async filter(): Promise<Array<Group>> {
     return await fetch(api, {
       method: 'GET',
     }).then((res) => res.json());
   }
+
   async delete(id: number): Promise<number> {
-    return await fetch(api, {
+    return await fetch(api + `/${id}`, {
       method: 'GET',
     }).then((res) => res.json());
   }
+
   async update(group: Group): Promise<Array<Group>> {
     return await fetch(api, {
       method: 'PUT',
