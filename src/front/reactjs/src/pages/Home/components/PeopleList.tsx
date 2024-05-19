@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
-import { Task, TasksList } from ".";
+import { ITask, TasksList } from ".";
 import { taskService } from "../../../services";
 
-export interface Person {
+export interface IPerson {
   id: number;
   name: string;
 }
 
-interface TasksProps {
+interface ITasksProps {
   personId: number;
 }
 
-const Tasks = ({ personId }: TasksProps) => {
-  const [items, setItems] = useState([] as Array<Task>);
+const Tasks = ({ personId }: ITasksProps) => {
+  const [items, setItems] = useState([] as Array<ITask>);
   useEffect(() => {
     (async () => {
       await taskService.filter({ PersonId: personId }).then((res) => {
@@ -25,7 +25,7 @@ const Tasks = ({ personId }: TasksProps) => {
 };
 
 interface IProps {
-  items: Array<Person>;
+  items: Array<IPerson>;
   selectEvent?: (id: number) => void;
   deleteEvent?: (id: number) => void;
 }

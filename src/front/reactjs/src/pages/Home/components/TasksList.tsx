@@ -1,6 +1,6 @@
 import { DragEvent, useEffect, useState } from "react";
 
-export interface Task {
+export interface ITask {
   id: number;
   title: string;
   description: string;
@@ -9,12 +9,12 @@ export interface Task {
 }
 
 interface IProps {
-  items: Array<Task>;
+  items: Array<ITask>;
   deleteEvent?: (id: number) => void;
   selectEvent?: (id: number) => void;
   readonly?: boolean;
   draggable?: boolean;
-  onDrop?: (task: Task) => void;
+  onDrop?: (task: ITask) => void;
 }
 function TasksList({
   items,
@@ -26,7 +26,7 @@ function TasksList({
 }: IProps) {
   const dragTask = "dragTask";
 
-  const [tasks, setTasks] = useState([] as Array<Task>);
+  const [tasks, setTasks] = useState([] as Array<ITask>);
 
   useEffect(() => {
     setTasks(items);
@@ -57,7 +57,7 @@ function TasksList({
 
   const handleDrop = (e: DragEvent<HTMLUListElement>) => {
     e.preventDefault();
-    const item = JSON.parse(e.dataTransfer.getData(dragTask)) as Task;
+    const item = JSON.parse(e.dataTransfer.getData(dragTask)) as ITask;
 
     if (tasks.filter((x) => x.id === item.id).length === 0) {
       if (onDrop) onDrop(item);

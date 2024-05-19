@@ -1,5 +1,9 @@
-import React, { useState } from "react";
-import { TasksManagement, PeopleManagement, GroupsManagement } from './components';
+import { useState } from "react";
+import {
+  TasksManagement,
+  PeopleManagement,
+  GroupsManagement,
+} from "./components";
 
 function Home() {
   const [showTasks, setShowTasks] = useState(true);

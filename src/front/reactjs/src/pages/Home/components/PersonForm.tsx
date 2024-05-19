@@ -1,14 +1,14 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
-export interface PersonViewModel {
+export interface IPersonViewModel {
   id: number;
   name: string;
 }
 
 interface IProps {
   id: string;
-  viewModel: PersonViewModel;
-  submitEvent: (viewModel: PersonViewModel) => void;
+  viewModel: IPersonViewModel;
+  submitEvent: (viewModel: IPersonViewModel) => void;
   readonly?: boolean;
 }
 

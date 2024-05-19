@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { PeopleList, Person, PersonForm, PersonViewModel } from ".";
+import { PeopleList, IPerson, PersonForm, IPersonViewModel } from ".";
 import { Person as PersonDto, peopleService } from "../../../services";
 
 const initialState = {
   id: 0,
   name: "",
-} as PersonViewModel;
+} as IPersonViewModel;
 
-const transform = (group: PersonViewModel): PersonDto => {
+const transform = (group: IPersonViewModel): PersonDto => {
   return {
     id: group.id,
     name: group.name,
@@ -15,7 +15,7 @@ const transform = (group: PersonViewModel): PersonDto => {
 };
 
 function PeopleManagement() {
-  const [personList, setPersonList] = useState([] as Array<Person>);
+  const [personList, setPersonList] = useState([] as Array<IPerson>);
   const [showForm, setShowForm] = useState(false);
   const [personForm, setPersonForm] = useState(initialState);
   const [isReadOnly, setIsReadOnly] = useState(true);
@@ -33,7 +33,7 @@ function PeopleManagement() {
     });
   };
 
-  const handlerSubmit = (result: PersonViewModel) => {
+  const handlerSubmit = (result: IPersonViewModel) => {
     (async () => {
       if (result.id > 0) {
         await peopleService.update(transform(result)).then(async () => {
@@ -118,4 +118,4 @@ function PeopleManagement() {
   );
 }
 
-export {PeopleManagement};
+export { PeopleManagement };

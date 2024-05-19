@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Task, TaskForm, TaskFormViewModel, TasksList } from ".";
+import { ITask, TaskForm, ITaskFormViewModel, TasksList } from ".";
 import { Task as TaskDto, taskService } from "../../../services";
 
 const formInitialState = {
@@ -8,9 +8,9 @@ const formInitialState = {
   description: "",
   groupId: 0,
   personId: 0,
-} as TaskFormViewModel;
+} as ITaskFormViewModel;
 
-const transform = (task: TaskFormViewModel) => {
+const transform = (task: ITaskFormViewModel) => {
   return {
     id: task.id,
     title: task.title,
@@ -22,7 +22,7 @@ const transform = (task: TaskFormViewModel) => {
 
 const TasksManagement = () => {
   const [showForm, setShowForm] = useState(false);
-  const [taskList, setTaskList] = useState([] as Array<Task>);
+  const [taskList, setTaskList] = useState([] as Array<ITask>);
   const [taskForm, setTaskForm] = useState(formInitialState);
   const [isReadOnly, setIsReadOnly] = useState(true);
   const formId = "task";
@@ -51,7 +51,7 @@ const TasksManagement = () => {
     })();
   }, []);
 
-  const handlerSubmit = (result: TaskFormViewModel) => {
+  const handlerSubmit = (result: ITaskFormViewModel) => {
     (async () => {
       if (result.id > 0) {
         await taskService.update(transform(result)).then(async () => {

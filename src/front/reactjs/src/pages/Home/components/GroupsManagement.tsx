@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { Group, GroupForm, GroupViewModel, GroupsList } from ".";
+import { IGroup, GroupForm, IGroupViewModel, GroupsList } from ".";
 import { Group as GroupDto, groupService } from "../../../services";
 
 const initialState = {
   id: 0,
   name: "",
-} as GroupViewModel;
+} as IGroupViewModel;
 
-const transform = (group: GroupViewModel): GroupDto => {
+const transform = (group: IGroupViewModel): GroupDto => {
   return {
     id: group.id,
     name: group.name,
@@ -15,7 +15,7 @@ const transform = (group: GroupViewModel): GroupDto => {
 };
 
 function GroupsManagement() {
-  const [groupList, setGroupList] = useState([] as Array<Group>);
+  const [groupList, setGroupList] = useState([] as Array<IGroup>);
   const [showForm, setShowForm] = useState(false);
   const [groupForm, setGroupForm] = useState(initialState);
   const [isReadOnly, setIsReadOnly] = useState(true);
@@ -33,7 +33,7 @@ function GroupsManagement() {
     });
   };
 
-  const handlerSubmit = (result: GroupViewModel) => {
+  const handlerSubmit = (result: IGroupViewModel) => {
     (async () => {
       if (result.id > 0) {
         await groupService.update(transform(result)).then(async () => {

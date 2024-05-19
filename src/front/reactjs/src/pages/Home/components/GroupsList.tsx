@@ -1,24 +1,24 @@
 import { taskService } from "../../../services";
-import { Task, TasksList } from ".";
+import { ITask, TasksList } from ".";
 import { useEffect, useState } from "react";
 
-export interface Group {
+export interface IGroup {
   id: number;
   name: string;
 }
 
 interface IProps {
-  items: Array<Group>;
+  items: Array<IGroup>;
   selectEvent?: (id: number) => void;
   deleteEvent?: (id: number) => void;
 }
 
-interface TasksProps {
+interface ITasksProps {
   groupId?: number;
 }
 
-const Tasks = ({ groupId }: TasksProps) => {
-  const [items, setItems] = useState([] as Array<Task>);
+const Tasks = ({ groupId }: ITasksProps) => {
+  const [items, setItems] = useState([] as Array<ITask>);
 
   const loadDataList = async (_groupId: number) => {
     await taskService
@@ -32,7 +32,7 @@ const Tasks = ({ groupId }: TasksProps) => {
     })();
   }, [groupId]);
 
-  const handlerDropEvent = (task: Task) => {
+  const handlerDropEvent = (task: ITask) => {
     (async () => {
       await taskService.changeGroup(task.id, groupId ?? 0).then(async () => {
         await loadDataList(groupId ?? 0);
