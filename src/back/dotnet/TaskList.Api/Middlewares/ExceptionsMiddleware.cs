@@ -1,3 +1,5 @@
+namespace TaskList.Api.Middleware;
+
 public class ExceptionsMiddleware
 {
     private readonly RequestDelegate _next;
@@ -13,7 +15,7 @@ public class ExceptionsMiddleware
         {
             await _next(context);
         }
-        catch(OperationCanceledException)
+        catch (OperationCanceledException)
         {
             await context.Response.WriteAsync("La solicitud fue cancelada.");
             context.Response.StatusCode = StatusCodes.Status499ClientClosedRequest;

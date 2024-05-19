@@ -1,4 +1,4 @@
-namespace Domain.Base;
+namespace Domain.Models;
 
 public abstract class BaseEntity<TEntityID>
 {

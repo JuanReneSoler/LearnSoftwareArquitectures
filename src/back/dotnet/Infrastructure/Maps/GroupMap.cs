@@ -1,10 +1,10 @@
-using Domain.Entities;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Data;
 
-public class GroupMap : IEntityTypeConfiguration<Group>
+public sealed class GroupMap : IEntityTypeConfiguration<Group>
 {
     public void Configure(EntityTypeBuilder<Group> builder)
     {

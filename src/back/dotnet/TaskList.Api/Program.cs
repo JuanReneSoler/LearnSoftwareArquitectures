@@ -5,6 +5,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using EasyMapper;
 using Application.Dtos;
+using TaskList.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 const string allowOrigins = "AllowAnyOrigin";

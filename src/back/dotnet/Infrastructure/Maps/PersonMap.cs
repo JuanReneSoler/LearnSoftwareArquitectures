@@ -1,10 +1,10 @@
-using Domain.Entities;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Data;
 
-public class PersonMap : IEntityTypeConfiguration<Person>
+public sealed class PersonMap : IEntityTypeConfiguration<Person>
 {
     public void Configure(EntityTypeBuilder<Person> builder)
     {

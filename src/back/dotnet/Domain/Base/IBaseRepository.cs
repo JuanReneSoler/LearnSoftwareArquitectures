@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
+using Domain.Models;
 
-namespace Domain.Base;
+namespace Domain.Repositories;
 
 public interface IBaseRepository<TEntity, TEntityID>
     where TEntity : BaseEntity<TEntityID>
@@ -10,10 +11,10 @@ public interface IBaseRepository<TEntity, TEntityID>
     Task Delete(TEntityID Id, CancellationToken cancellationToken);
     Task<IQueryable<TEntity>> Where(Expression<Func<TEntity, bool>> predicate, int? skip, int? take, CancellationToken cancellationToken);
     Task<IQueryable<TResult>> Select<TResult>(
-        Expression<Func<TEntity, TResult>> selector, 
-        Expression<Func<TResult, bool>> where, 
-        int? skip, 
-        int? take, 
+        Expression<Func<TEntity, TResult>> selector,
+        Expression<Func<TResult, bool>> where,
+        int? skip,
+        int? take,
         CancellationToken cancellationToken);
     //
     Task<bool> Commit(CancellationToken cancellationToken);

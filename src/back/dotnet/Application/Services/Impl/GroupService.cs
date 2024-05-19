@@ -1,6 +1,6 @@
-using Domain.Entities;
 using System.Linq.Expressions;
 using Application.Dtos;
+using Domain.Models;
 using Domain.Repositories;
 using EasyMapper;
 
@@ -10,7 +10,7 @@ public interface IGroupService : IGenericService<GroupDto>
 {
 }
 
-public class GroupService : IGroupService
+public sealed class GroupService : IGroupService
 {
     private readonly IGenericRepository<Group> _repository;
     private readonly IMapper _mapper;
@@ -70,7 +70,8 @@ public class GroupService : IGroupService
 
     public async Task<IList<GroupDto>> Filter(Expression<Func<GroupDto, bool>> predicate, int? skip, int? take, CancellationToken cancellationToken)
     {
-        var query = await _repository.Select(x=> new GroupDto{
+        var query = await _repository.Select(x => new GroupDto
+        {
             Id = x.Id,
             Name = x.Name
         }, predicate, skip, take, cancellationToken);

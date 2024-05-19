@@ -1,9 +1,9 @@
-using Domain.Entities;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
 
-public class SqlServerContext : DbContext
+public sealed class SqlServerContext : DbContext
 {
     public DbSet<Group>? Groups { get; set; }
     public DbSet<Tasks>? Tasks { get; set; }

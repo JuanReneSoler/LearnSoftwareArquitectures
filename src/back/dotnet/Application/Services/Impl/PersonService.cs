@@ -1,5 +1,5 @@
 using Application.Dtos;
-using Domain.Entities;
+using Domain.Models;
 using System.Linq.Expressions;
 using Domain.Repositories;
 using EasyMapper;
@@ -10,7 +10,7 @@ public interface IPersonService : IGenericService<PersonDto>
 {
 }
 
-public class PersonService : IPersonService
+public sealed class PersonService : IPersonService
 {
     private readonly IGenericRepository<Person> _repository;
     private readonly IMapper _mapper;
@@ -51,10 +51,11 @@ public class PersonService : IPersonService
 
     public async Task<IList<PersonDto>> Filter(Expression<Func<PersonDto, bool>> predicate, int? skip, int? take, CancellationToken cancellationToken)
     {
-        var query = await _repository.Select(x=> new PersonDto{
+        var query = await _repository.Select(x => new PersonDto
+        {
             Id = x.Id,
             Name = x.Name
-        },predicate, skip, take, cancellationToken);
+        }, predicate, skip, take, cancellationToken);
         return query.ToList();
     }
 

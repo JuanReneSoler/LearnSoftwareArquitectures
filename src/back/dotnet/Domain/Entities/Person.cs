@@ -1,8 +1,6 @@
-using Domain.Base;
+namespace Domain.Models;
 
-namespace Domain.Entities;
-
-public class Person : BaseEntity<int>
+public sealed class Person : BaseEntity<int>
 {
     public string Name { get; set; }
 

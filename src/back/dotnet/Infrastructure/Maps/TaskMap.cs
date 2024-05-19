@@ -1,10 +1,10 @@
-using Domain.Entities;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Data;
 
-public class TaskMap : IEntityTypeConfiguration<Tasks>
+public sealed class TaskMap : IEntityTypeConfiguration<Tasks>
 {
     public void Configure(EntityTypeBuilder<Tasks> builder)
     {

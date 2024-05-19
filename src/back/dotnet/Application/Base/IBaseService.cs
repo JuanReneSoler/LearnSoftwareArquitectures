@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
+using Application.Dtos;
 
-namespace Application.Base;
+namespace Application.Services;
 
 public interface IBaseService<TDto, TDtoID>
     where TDto : DtoBase<TDtoID>

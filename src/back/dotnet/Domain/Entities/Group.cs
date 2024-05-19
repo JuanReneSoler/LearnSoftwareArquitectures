@@ -1,8 +1,6 @@
-using Domain.Base;
+namespace Domain.Models;
 
-namespace Domain.Entities;
-
-public class Group : BaseEntity<int>
+public sealed class Group : BaseEntity<int>
 {
     public String Name { get; set; }
 

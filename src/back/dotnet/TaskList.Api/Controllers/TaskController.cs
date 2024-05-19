@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 using Infrastructure.Extentions;
 
-namespace Infrastructure.Api.Controllers;
-
+namespace TaskList.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]

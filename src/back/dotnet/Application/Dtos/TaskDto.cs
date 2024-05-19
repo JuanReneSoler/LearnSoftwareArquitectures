@@ -1,5 +1,3 @@
-using Application.Base;
-
 namespace Application.Dtos;
 
 public class TaskDto : DtoBase<int>
