@@ -1,8 +1,8 @@
-﻿using Application.Services;
-using Domain.Entities;
+﻿using Domain.Models;
+using Application.Services;
+using Application.Dtos;
 using Infrastructure.Data;
 using EasyMapper;
-using Application.Dtos;
 
 namespace integration_test;
 
@@ -64,11 +64,11 @@ public class GroupServiceTest
     [TestMethod]
     public async Task Delete()
     {
- 
- 
- 
- 
-        var result =await _service.Delete(_group.Id, _token);
+
+
+
+
+        var result = await _service.Delete(_group.Id, _token);
 
         if (result is 0) Assert.Fail();
     }

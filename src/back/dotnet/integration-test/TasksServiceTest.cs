@@ -1,8 +1,8 @@
+using Domain.Models;
+using Application.Dtos;
 using Application.Services;
-using Domain.Entities;
 using Infrastructure.Data;
 using EasyMapper;
-using Application.Dtos;
 
 namespace integration_test;
 
