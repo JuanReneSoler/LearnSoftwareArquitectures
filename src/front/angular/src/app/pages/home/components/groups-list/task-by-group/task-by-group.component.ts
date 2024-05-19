@@ -2,19 +2,19 @@ import { Component, Input, OnInit } from '@angular/core';
 import { TasksService } from 'src/app/services/tasks.service';
 
 @Component({
-  selector: 'app-tasks',
-  templateUrl: './tasks.component.html',
-  styleUrls: ['./tasks.component.css'],
+  selector: 'app-task-by-group',
+  templateUrl: './task-by-group.component.html',
+  styleUrls: ['./task-by-group.component.css'],
 })
-export class TasksComponent implements OnInit {
+export class TaskByGroupComponent implements OnInit {
   @Input() groupId: number = 0;
-  taskList: any[] = [];
+  tasksList: any[] = [];
 
   constructor(private service: TasksService) {}
 
   async ngOnInit() {
     await this.service.filter({ groupId: this.groupId }).then((res) => {
-      this.taskList = res;
+      this.tasksList = res;
     });
   }
 }

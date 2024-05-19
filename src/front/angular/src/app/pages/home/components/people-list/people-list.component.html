@@ -2,9 +2,9 @@
 <ul>
   <li *ngFor="let person of peopleList">
     {{ person.name }}
-    <span *ngIf="readonly">
-      -<a href="#">( ver )</a> -<a href="#">( eliminar )</a>
-    </span>
+    -<a href="#">( ver )</a> -<a href="#">( eliminar )</a>
+    <app-tasks-by-person [personId]="person.id"></app-tasks-by-person>
+    <br />
   </li>
   <li *ngIf="peopleList.length == 0">No hay elementos para mostrar</li>
 </ul>

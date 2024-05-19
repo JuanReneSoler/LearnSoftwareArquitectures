@@ -7,5 +7,4 @@ import { Component, Input } from '@angular/core';
 })
 export class PeopleListComponent {
   @Input() peopleList: any[] = [];
-  @Input() readonly: boolean = false;
 }

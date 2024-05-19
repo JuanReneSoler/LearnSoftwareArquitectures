@@ -17,7 +17,8 @@ import { PersonFormComponent } from './pages/home/components/person-form/person-
 import { PeopleManagementComponent } from './pages/home/components/people-management/people-management.component';
 import { TasksManagementComponent } from './pages/home/components/tasks-management/tasks-management.component';
 import { GroupsManagementComponent } from './pages/home/components/groups-management/groups-management.component';
-import { TasksComponent } from './pages/home/components/groups-list/tasks/tasks.component';
+import { TaskByGroupComponent } from './pages/home/components/groups-list/task-by-group/task-by-group.component';
+import { TasksByPersonComponent } from './pages/home/components/people-list/tasks-by-person/tasks-by-person.component';
 
 const routes: Routes = [
   {
@@ -45,7 +46,8 @@ const routes: Routes = [
     PeopleManagementComponent,
     TasksManagementComponent,
     GroupsManagementComponent,
-    TasksComponent,
+    TaskByGroupComponent,
+    TasksByPersonComponent,
   ],
   exports: [RouterModule],
   imports: [

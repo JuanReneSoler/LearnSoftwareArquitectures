@@ -3,7 +3,7 @@
   <li *ngFor="let group of groupsList">
     {{ group.name }}
     -<a href="#">( ver )</a> -<a href="#">( eliminar )</a>
-    <app-tasks [groupId]="group.id"></app-tasks>
+    <app-task-by-group [groupId]="group.id"></app-task-by-group>
     <br />
   </li>
   <li *ngIf="groupsList.length == 0">No hay elementos para mostrar</li>
