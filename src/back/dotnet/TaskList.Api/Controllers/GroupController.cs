@@ -1,6 +1,8 @@
 using Application.UsesCases;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
+using Application.Extensions;
+using TaskList.Api.Dtos;
 
 namespace TaskList.Api.Controllers;
 
@@ -16,9 +18,16 @@ public class GroupController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<IActionResult> List([FromQuery, Required] int page, [FromQuery, Required] int size, CancellationToken cancellationToken)
+    public async Task<IActionResult> List(GroupFilter Filter)
     {
-        var result = await _groupService.Filter(x => x.Id > 0, page, size, cancellationToken);
+        Expression<Func<GroupDto, bool>> expression = x => x.Id > 0;
+
+        if (!string.IsNullOrEmpty(Filter.Search) && !string.IsNullOrWhiteSpace(Filter.Search))
+        {
+            expression = expression.And(x => x.Name.Contains(Filter.Search));
+        }
+
+        var result = await _groupService.Filter(expression, Filter.page, Filter.size, Filter.cancellationToken);
         return Ok(result);
     }
 
