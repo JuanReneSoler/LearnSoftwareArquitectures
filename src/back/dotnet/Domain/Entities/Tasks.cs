@@ -9,4 +9,14 @@ public sealed class Tasks : BaseEntity<int>
 
     public Person Person { get; set; }
     public Group Group { get; set; }
+
+    public Tasks() : base(0)
+    {
+        this.Title = string.Empty;
+        this.Description = string.Empty;
+        this.GroupId = 0;
+        this.PersonId = 0;
+        this.Person = new Person();
+        this.Group = new Group();
+    }
 }
