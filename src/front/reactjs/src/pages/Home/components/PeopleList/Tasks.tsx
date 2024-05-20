@@ -8,15 +8,27 @@ interface IProps {
 
 export const Tasks = ({ personId }: IProps) => {
   const [items, setItems] = useState([] as Array<ITask>);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+
   useEffect(() => {
     (async () => {
       await taskService
-        .filter({ PersonId: personId, page: 1, size: 10 })
+        .filter({ PersonId: personId, page: currentPage, size: 10 })
         .then((res) => {
+          setTotalPages(res.totalPages);
           setItems(res.items);
         });
     })();
-  }, [personId]);
+  }, [currentPage]);
 
-  return <TasksList items={items} readonly={true} />;
+  return (
+    <TasksList
+      totalPages={totalPages}
+      currentPage={currentPage}
+      changePagination={(page) => setCurrentPage(page)}
+      items={items}
+      readonly={true}
+    />
+  );
 };

@@ -32,7 +32,6 @@ function PeopleManagement() {
   const loadPersonList = async () => {
     await peopleService.filter({ page: currentPage, size: 10 }).then((res) => {
       setTotalPages(res.totalPages);
-      setCurrentPage(res.currentPage);
       setPersonList(res.items);
     });
   };

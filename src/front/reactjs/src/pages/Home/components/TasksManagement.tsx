@@ -32,7 +32,6 @@ const TasksManagement = () => {
   const loadTaskList = async () => {
     await taskService.filter({ page: currentPage, size: 10 }).then((res) => {
       setTotalPages(res.totalPages);
-      setCurrentPage(res.currentPage);
       setTaskList(
         res.items.map((i) => {
           return {

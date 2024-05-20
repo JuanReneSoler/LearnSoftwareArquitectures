@@ -8,29 +8,37 @@ interface IProps {
 
 export const Tasks = ({ groupId }: IProps) => {
   const [items, setItems] = useState([] as Array<ITask>);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
-  const loadDataList = async (_groupId: number) => {
+  const loadDataList = async () => {
     await taskService
-      .filter({ GroupId: _groupId, page: 1, size: 10 })
-      .then((res) => setItems(res.items));
+      .filter({ GroupId: groupId, page: currentPage, size: 10 })
+      .then((res) => {
+        setItems(res.items);
+        setTotalPages(res.totalPages);
+      });
   };
 
   useEffect(() => {
     (async () => {
-      await loadDataList(groupId ?? 0);
+      await loadDataList();
     })();
-  }, [groupId]);
+  }, [currentPage]);
 
   const handlerDropEvent = (task: ITask) => {
     (async () => {
       await taskService.changeGroup(task.id, groupId ?? 0).then(async () => {
-        await loadDataList(groupId ?? 0);
+        await loadDataList();
       });
     })();
   };
 
   return (
     <TasksList
+      totalPages={totalPages}
+      currentPage={currentPage}
+      changePagination={(page) => setCurrentPage(page)}
       draggable={true}
       onDrop={handlerDropEvent}
       readonly={true}
