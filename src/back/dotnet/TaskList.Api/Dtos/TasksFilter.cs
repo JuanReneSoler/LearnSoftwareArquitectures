@@ -8,6 +8,8 @@ public class TasksFilter
 
     public int PersonId { get; set; }
 
+    public string Search { get; set; } = string.Empty;
+
     [Required]
     public int page { get; set; }
 

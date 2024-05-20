@@ -26,6 +26,14 @@ public class TaskController : ControllerBase
 
         if (Filter.PersonId > 0) expression = expression.And(x => x.PersonId == Filter.PersonId);
 
+        if (!string.IsNullOrEmpty(Filter.Search) && !string.IsNullOrWhiteSpace(Filter.Search))
+        {
+            Expression<Func<TaskDto, bool>> expressionByTitle = (x) => x.Title.Contains(Filter.Search);
+            Expression<Func<TaskDto, bool>> expressionByDescription = (x) => x.Description.Contains(Filter.Search);
+            var combineOrExpression = expressionByTitle.Or(expressionByDescription);
+            expression = expression.And(combineOrExpression);
+        }
+
         var result = await _taskService.Filter(expression, Filter.page, Filter.size, Filter.cancellationToken);
         return Ok(result);
     }
