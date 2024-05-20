@@ -1,5 +1,4 @@
-﻿using Application.Dtos;
-using Domain.Entities;
+﻿using Domain.Entities;
 using System.Linq.Expressions;
 using Domain.Repositories;
 using EasyMapper;

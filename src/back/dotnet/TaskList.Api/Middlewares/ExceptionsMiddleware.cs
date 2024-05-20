@@ -1,4 +1,4 @@
-namespace TaskList.Api.Middleware;
+namespace TaskList.Api.Middlewares;
 
 public class ExceptionsMiddleware
 {

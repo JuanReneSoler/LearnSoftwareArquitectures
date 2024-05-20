@@ -1,4 +1,4 @@
-namespace Application.Dtos;
+namespace Application.UsesCases;
 
 public abstract class DtoBase<TDtoID>
 {

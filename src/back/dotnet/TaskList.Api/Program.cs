@@ -4,8 +4,7 @@ using Domain.Repositories;
 using Infrastructure.EF;
 using Microsoft.EntityFrameworkCore;
 using EasyMapper;
-using Application.Dtos;
-using TaskList.Api.Middleware;
+using TaskList.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 const string allowOrigins = "AllowAnyOrigin";

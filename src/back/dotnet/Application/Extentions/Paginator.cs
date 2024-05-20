@@ -1,4 +1,4 @@
-using Application.Dtos;
+using Application.UsesCases;
 using Application.Utils;
 
 namespace Application.Extensions;

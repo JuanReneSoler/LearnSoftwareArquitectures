@@ -1,6 +1,5 @@
 ﻿using Domain.Entities;
 using Application.UsesCases;
-using Application.Dtos;
 using Infrastructure.EF;
 using EasyMapper;
 
