@@ -1,8 +1,8 @@
-using Application.Services;
+using Application.UsesCases;
 using Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
-using Infrastructure.Extentions;
+using Application.Extensions;
 using TaskList.Api.Dtos;
 
 namespace TaskList.Api.Controllers;
@@ -11,9 +11,9 @@ namespace TaskList.Api.Controllers;
 [Route("[controller]")]
 public class TaskController : ControllerBase
 {
-    private readonly ITaskService _taskService;
+    private readonly ITaskUseCase _taskService;
 
-    public TaskController(ITaskService TaskService)
+    public TaskController(ITaskUseCase TaskService)
     {
         _taskService = TaskService;
     }

@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using Domain.Models;
+using Domain.Entities;
 
 namespace Domain.Repositories;
 

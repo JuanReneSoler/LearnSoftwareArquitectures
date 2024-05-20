@@ -1,7 +1,6 @@
-
 using System.Linq.Expressions;
 
-namespace Infrastructure.Extentions;
+namespace Application.Extensions;
 
 public static class ExtentionsExpressions
 {

@@ -1,7 +1,7 @@
-﻿using Domain.Models;
-using Application.Services;
+﻿using Domain.Entities;
+using Application.UsesCases;
 using Application.Dtos;
-using Infrastructure.Data;
+using Infrastructure.EF;
 using EasyMapper;
 
 namespace integration_test;
@@ -10,7 +10,7 @@ namespace integration_test;
 public class GroupServiceTest
 {
     private readonly IMapper _mapper;
-    private readonly GroupService _service;
+    private readonly GroupsUseCase _uc;
     private static GroupDto _group = new GroupDto();
     private static CancellationToken _token = new CancellationToken();
 
@@ -26,13 +26,13 @@ public class GroupServiceTest
         });
         _mapper = mapperConfig.CreateMapper();
         var repository = new GenericRepository<Group>(context);
-        _service = new GroupService(repository, _mapper);
+        _uc = new GroupsUseCase(repository, _mapper);
     }
 
     [TestMethod]
     public async Task Create()
     {
-        var group = await _service.Create(new GroupDto
+        var group = await _uc.Create(new GroupDto
         {
             Name = "Test"
         }, _token);
@@ -45,16 +45,16 @@ public class GroupServiceTest
     [TestMethod]
     public async Task Read()
     {
-        var groups = await _service.Filter(x => x.Id == _group.Id, 0, 0, _token);
+        var groups = await _uc.Filter(x => x.Id == _group.Id, 0, 0, _token);
 
-        if (groups.Count() is 0) Assert.Fail();
+        if (groups.Items?.Count() is 0) Assert.Fail();
     }
 
     [TestMethod]
     public async Task Update()
     {
         _group.Name = "Test Edited";
-        var group = await _service.Update(_group, _group.Id, _token);
+        var group = await _uc.Update(_group, _group.Id, _token);
 
         if (group is null) Assert.Fail();
 
@@ -68,7 +68,7 @@ public class GroupServiceTest
 
 
 
-        var result = await _service.Delete(_group.Id, _token);
+        var result = await _uc.Delete(_group.Id, _token);
 
         if (result is 0) Assert.Fail();
     }

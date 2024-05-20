@@ -1,7 +1,7 @@
-using Domain.Models;
+using Domain.Entities;
 using Application.Dtos;
-using Application.Services;
-using Infrastructure.Data;
+using Application.UsesCases;
+using Infrastructure.EF;
 using EasyMapper;
 
 namespace integration_test;
@@ -10,7 +10,7 @@ namespace integration_test;
 public class PersonServiceTest
 {
     private readonly IMapper _mapper;
-    private readonly PersonService _service;
+    private readonly PersonUseCase _uc;
     private static PersonDto _person = new PersonDto();
     private static CancellationToken _token = new CancellationToken();
 
@@ -26,13 +26,13 @@ public class PersonServiceTest
         });
         _mapper = mapperConfig.CreateMapper();
         var repository2 = new GenericRepository<Person>(context);
-        _service = new PersonService(repository2, _mapper);
+        _uc = new PersonUseCase(repository2, _mapper);
     }
 
     [TestMethod]
     public async Task Create()
     {
-        var person = await _service.Create(new PersonDto
+        var person = await _uc.Create(new PersonDto
         {
             Name = "Juan Soler"
         }, _token);
@@ -45,9 +45,9 @@ public class PersonServiceTest
     [TestMethod]
     public async Task Read()
     {
-        var persons = await _service.Filter(x => x.Id == _person.Id, 0, 0, _token);
+        var persons = await _uc.Filter(x => x.Id == _person.Id, 0, 0, _token);
 
-        if (persons.Count() is 0) Assert.Fail();
+        if (persons.Items?.Count() is 0) Assert.Fail();
     }
 
     [TestMethod]
@@ -55,7 +55,7 @@ public class PersonServiceTest
     {
         _person.Name = "Juan René Soler";
 
-        var person = await _service.Update(_person, _person.Id, _token);
+        var person = await _uc.Update(_person, _person.Id, _token);
 
         if (person is null) Assert.Fail();
 
@@ -66,7 +66,7 @@ public class PersonServiceTest
     [TestMethod]
     public async Task Delete()
     {
-        var result = await _service.Delete(_person.Id, _token);
+        var result = await _uc.Delete(_person.Id, _token);
 
         if (result is 0) Assert.Fail();
     }

@@ -1,4 +1,4 @@
-﻿namespace Application.Services;
+﻿namespace Application.Utils;
 
 public sealed class GenericPagination<TDto> : IBasePagination<TDto>
     where TDto : class

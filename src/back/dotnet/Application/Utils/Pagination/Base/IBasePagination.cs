@@ -1,5 +1,4 @@
-
-namespace Application.Services;
+namespace Application.Utils;
 
 public interface IBasePagination<T>
 where T : class

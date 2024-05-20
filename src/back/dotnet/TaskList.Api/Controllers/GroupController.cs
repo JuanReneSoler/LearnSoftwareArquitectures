@@ -1,4 +1,4 @@
-using Application.Services;
+using Application.UsesCases;
 using Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -9,9 +9,9 @@ namespace TaskList.Api.Controllers;
 [Route("[controller]")]
 public class GroupController : ControllerBase
 {
-    private readonly IGroupService _groupService;
+    private readonly IGroupUseCase _groupService;
 
-    public GroupController(IGroupService GroupService)
+    public GroupController(IGroupUseCase GroupService)
     {
         _groupService = GroupService;
     }

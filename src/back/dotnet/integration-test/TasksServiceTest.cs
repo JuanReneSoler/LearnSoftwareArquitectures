@@ -1,7 +1,7 @@
-using Domain.Models;
+using Domain.Entities;
 using Application.Dtos;
-using Application.Services;
-using Infrastructure.Data;
+using Application.UsesCases;
+using Infrastructure.EF;
 using EasyMapper;
 
 namespace integration_test;
@@ -10,9 +10,9 @@ namespace integration_test;
 public class TasksServiceTest
 {
     private readonly IMapper _mapper;
-    private readonly TaskService _taskService;
-    private readonly GroupService _groupService;
-    private readonly PersonService _personService;
+    private readonly TaskUseCase _taskUC;
+    private readonly GroupsUseCase _groupUC;
+    private readonly PersonUseCase _personUC;
     private static PersonDto _person = new PersonDto();
     private static TaskDto _task = new TaskDto();
     private static GroupDto _group = new GroupDto();
@@ -38,15 +38,15 @@ public class TasksServiceTest
         var repositoryTask = new GenericRepository<Tasks>(context);
         var repositoryGroup = new GenericRepository<Group>(context);
         var repositoryPerson = new GenericRepository<Person>(context);
-        _taskService = new TaskService(repositoryTask, _mapper);
-        _groupService = new GroupService(repositoryGroup, _mapper);
-        _personService = new PersonService(repositoryPerson, _mapper);
+        _taskUC = new TaskUseCase(repositoryTask, _mapper);
+        _groupUC = new GroupsUseCase(repositoryGroup, _mapper);
+        _personUC = new PersonUseCase(repositoryPerson, _mapper);
     }
 
     [TestMethod]
     public async Task Create()
     {
-        var person = await _personService.Create(new PersonDto
+        var person = await _personUC.Create(new PersonDto
         {
             Name = "Juan Soler"
         }, _token);
@@ -55,7 +55,7 @@ public class TasksServiceTest
 
         _person = person;
 
-        var group = await _groupService.Create(new GroupDto
+        var group = await _groupUC.Create(new GroupDto
         {
             Name = "Test"
         }, _token);
@@ -63,7 +63,7 @@ public class TasksServiceTest
         if (group is null) Assert.Fail();
         _group = group;
 
-        var task = await _taskService.Create(new TaskDto
+        var task = await _taskUC.Create(new TaskDto
         {
             Description = "Esta tarea es una prueba, XD",
             GroupId = group?.Id ?? 0,
@@ -82,9 +82,9 @@ public class TasksServiceTest
     [TestMethod]
     public async Task Read()
     {
-        var tasks = await _taskService.Filter(x => x.Id == _task.Id, 0, 0, _token);
+        var tasks = await _taskUC.Filter(x => x.Id == _task.Id, 0, 0, _token);
 
-        if (tasks.Count() is 0) Assert.Fail();
+        if (tasks.Items?.Count() is 0) Assert.Fail();
     }
 
     [TestMethod]
@@ -93,7 +93,7 @@ public class TasksServiceTest
         _task.Description = "Esto es una prueba Editada";
         _task.Title = "Esto es una prueba (Edited)";
 
-        var task = await _taskService.Update(_task, _task.Id, _token);
+        var task = await _taskUC.Update(_task, _task.Id, _token);
 
         if (task is null) Assert.Fail();
 
@@ -103,9 +103,9 @@ public class TasksServiceTest
     [TestMethod]
     public async Task Delete()
     {
-        var result = await _taskService.Delete(_task.Id, _token);
-        var result2 = await _personService.Delete(_person.Id, _token);
-        var result3 = await _groupService.Delete(_group.Id, _token);
+        var result = await _taskUC.Delete(_task.Id, _token);
+        var result2 = await _personUC.Delete(_person.Id, _token);
+        var result3 = await _groupUC.Delete(_group.Id, _token);
 
         if (result is 0) Assert.Fail();
         if (result2 is 0) Assert.Fail();

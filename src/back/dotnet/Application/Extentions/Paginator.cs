@@ -1,6 +1,7 @@
 using Application.Dtos;
+using Application.Utils;
 
-namespace Application.Services;
+namespace Application.Extensions;
 
 public static class Paginator
 {

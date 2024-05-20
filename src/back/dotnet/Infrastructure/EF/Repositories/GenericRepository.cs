@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Domain.Repositories;
-using Domain.Models;
+using Domain.Entities;
 
-namespace Infrastructure.Data;
+namespace Infrastructure.EF;
 
 public sealed class GenericRepository<TEntity> : IGenericRepository<TEntity>
     where TEntity : BaseEntity<int>

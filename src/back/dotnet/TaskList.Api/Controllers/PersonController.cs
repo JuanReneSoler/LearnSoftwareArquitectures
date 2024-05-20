@@ -1,4 +1,4 @@
-using Application.Services;
+using Application.UsesCases;
 using Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -9,9 +9,9 @@ namespace TaskList.Api.Controllers;
 [Route("[controller]")]
 public class PersonController : ControllerBase
 {
-    private readonly IPersonService _personService;
+    private readonly IPersonUseCase _personService;
 
-    public PersonController(IPersonService PersonService)
+    public PersonController(IPersonUseCase PersonService)
     {
         _personService = PersonService;
     }

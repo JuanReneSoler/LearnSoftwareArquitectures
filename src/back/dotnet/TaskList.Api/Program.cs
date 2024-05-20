@@ -1,7 +1,7 @@
-using Application.Services;
-using Domain.Models;
+using Application.UsesCases;
+using Domain.Entities;
 using Domain.Repositories;
-using Infrastructure.Data;
+using Infrastructure.EF;
 using Microsoft.EntityFrameworkCore;
 using EasyMapper;
 using Application.Dtos;
@@ -45,9 +45,9 @@ builder.Services.AddScoped(typeof(IMapper), (x =>
 }));
 
 //services
-builder.Services.AddScoped<ITaskService, TaskService>();
-builder.Services.AddScoped<IGroupService, GroupService>();
-builder.Services.AddScoped<IPersonService, PersonService>();
+builder.Services.AddScoped<ITaskUseCase, TaskUseCase>();
+builder.Services.AddScoped<IGroupUseCase, GroupsUseCase>();
+builder.Services.AddScoped<IPersonUseCase, PersonUseCase>();
 
 builder.Services.AddCors(opt =>
 {
