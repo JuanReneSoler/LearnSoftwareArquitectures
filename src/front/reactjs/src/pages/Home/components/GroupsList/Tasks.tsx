@@ -17,6 +17,7 @@ export const Tasks = ({ groupId }: IProps) => {
       .then((res) => {
         setItems(res.items);
         setTotalPages(res.totalPages);
+        setCurrentPage(res.currentPage);
       });
   };
 
@@ -28,11 +29,18 @@ export const Tasks = ({ groupId }: IProps) => {
 
   const handlerDropEvent = (task: ITask) => {
     (async () => {
-      await taskService.changeGroup(task.id, groupId ?? 0).then(async () => {
-        await loadDataList();
+      await taskService.changeGroup(task.id, groupId ?? 0).then(() => {
+        //
       });
+      await loadDataList();
     })();
   };
+
+  const handlerDragEvent =()=>{
+    (async () => {
+      await loadDataList();
+    })();
+  }
 
   return (
     <TasksList
@@ -41,6 +49,7 @@ export const Tasks = ({ groupId }: IProps) => {
       changePagination={(page) => setCurrentPage(page)}
       draggable={true}
       onDrop={handlerDropEvent}
+      onDrag={handlerDragEvent}
       readonly={true}
       items={items}
     />

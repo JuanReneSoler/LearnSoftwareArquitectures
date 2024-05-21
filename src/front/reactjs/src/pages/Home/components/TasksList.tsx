@@ -16,6 +16,7 @@ interface IProps {
   readonly?: boolean;
   draggable?: boolean;
   onDrop?: (task: ITask) => void;
+  onDrag?:()=>void;
   totalPages: number;
   currentPage: number;
   changePagination: (newPage: number) => void;
@@ -27,17 +28,12 @@ function TasksList({
   readonly,
   draggable,
   onDrop,
+  onDrag,
   totalPages,
   currentPage,
   changePagination,
 }: IProps) {
   const dragTask = "dragTask";
-
-  const [tasks, setTasks] = useState([] as Array<ITask>);
-
-  useEffect(() => {
-    setTasks(items);
-  }, [items]);
 
   const handlerDelete = (id: number) => {
     if (deleteEvent) deleteEvent(id);
@@ -48,14 +44,13 @@ function TasksList({
   };
 
   const handleDragStart = (e: DragEvent<HTMLLIElement>, tagId: number) => {
-    const item = tasks.filter((x) => x.id === tagId)[0];
+    const item = items.filter((x) => x.id === tagId)[0];
     e.dataTransfer.setData(dragTask, JSON.stringify(item));
   };
 
   const handleDragEndCapture = (e: DragEvent<HTMLLIElement>, tagId: number) => {
     e.preventDefault();
-    const result = tasks.filter((x) => x.id !== tagId);
-    setTasks([...result]);
+    if(onDrag)onDrag();
   };
 
   const handleDragOver = (e: DragEvent<HTMLUListElement>) => {
@@ -66,7 +61,7 @@ function TasksList({
     e.preventDefault();
     const item = JSON.parse(e.dataTransfer.getData(dragTask)) as ITask;
 
-    if (tasks.filter((x) => x.id === item.id).length === 0) {
+    if (items.filter((x) => x.id === item.id).length === 0) {
       if (onDrop) onDrop(item);
     }
   };
@@ -75,8 +70,8 @@ function TasksList({
     <>
       <p>Lita de Tareas</p>
       <ul onDragOver={handleDragOver} onDrop={handleDrop}>
-        {tasks.length > 0 ? (
-          tasks.map((item, i) => (
+        {items.length > 0 ? (
+          items.map((item, i) => (
             <li
               key={i}
               draggable={draggable}
