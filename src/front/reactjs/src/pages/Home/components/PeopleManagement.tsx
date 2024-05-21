@@ -31,6 +31,7 @@ function PeopleManagement() {
 
   const loadPersonList = async () => {
     await peopleService.filter({ page: currentPage, size: 10 }).then((res) => {
+      setCurrentPage(res.currentPage);
       setTotalPages(res.totalPages);
       setPersonList(res.items);
     });
@@ -39,16 +40,15 @@ function PeopleManagement() {
   const handlerSubmit = (result: IPersonViewModel) => {
     (async () => {
       if (result.id > 0) {
-        await peopleService.update(transform(result)).then(async () => {
-          await loadPersonList();
+        await peopleService.update(transform(result)).then(() => {
           alert("persona modificada satisfactoriamente!");
         });
       } else {
-        await peopleService.create(transform(result)).then(async () => {
-          await loadPersonList();
+        await peopleService.create(transform(result)).then(() => {
           alert("persona creada satisfactoriamente!");
         });
       }
+      await loadPersonList();
     })();
   };
 

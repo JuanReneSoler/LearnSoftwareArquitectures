@@ -5,6 +5,7 @@ using Infrastructure.EF;
 using Microsoft.EntityFrameworkCore;
 using EasyMapper;
 using TaskList.Api.Middlewares;
+using System.Security.Cryptography.Xml;
 
 var builder = WebApplication.CreateBuilder(args);
 const string allowOrigins = "AllowAnyOrigin";

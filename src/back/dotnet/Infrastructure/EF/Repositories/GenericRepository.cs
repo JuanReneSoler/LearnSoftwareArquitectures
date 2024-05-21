@@ -24,7 +24,7 @@ public sealed class GenericRepository<TEntity> : IGenericRepository<TEntity>
         await Task.Run(() =>
         {
             _table.Update(Entity);
-            _context.Entry(Entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            _context.Entry(Entity).State = EntityState.Modified;
         }, cancellationToken);
     }
 
@@ -79,6 +79,6 @@ public sealed class GenericRepository<TEntity> : IGenericRepository<TEntity>
         }, cancellationToken);
     }
 
-    public async Task<TEntity> Find(int Id, CancellationToken cancellationToken) 
-        => await _table.FirstAsync(x=>x.Id == Id, cancellationToken);
+    public async Task<bool> Exist(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken) 
+        => await _table.AnyAsync(expression, cancellationToken);
 }

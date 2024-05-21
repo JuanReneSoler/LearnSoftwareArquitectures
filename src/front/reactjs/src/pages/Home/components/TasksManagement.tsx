@@ -31,6 +31,7 @@ const TasksManagement = () => {
 
   const loadTaskList = async () => {
     await taskService.filter({ page: currentPage, size: 10 }).then((res) => {
+      setCurrentPage(res.currentPage);
       setTotalPages(res.totalPages);
       setTaskList(
         res.items.map((i) => {
@@ -49,24 +50,23 @@ const TasksManagement = () => {
   };
 
   useEffect(() => {
-    (async () => {
-      await loadTaskList();
-    })();
+    (async ()=>{
+        await loadTaskList();
+      })();
   }, [currentPage]);
 
   const handlerSubmit = (result: ITaskFormViewModel) => {
     (async () => {
       if (result.id > 0) {
-        await taskService.update(transform(result)).then(async () => {
-          await loadTaskList();
+        await taskService.update(transform(result)).then(() => {
           alert("tarea modificada satisfactoriamente!");
         });
       } else {
-        await taskService.create(transform(result)).then(async () => {
-          await loadTaskList();
+        await taskService.create(transform(result)).then(() => {
           alert("tarea creada satisfactoriamente!");
         });
       }
+      await loadTaskList();
     })();
   };
 

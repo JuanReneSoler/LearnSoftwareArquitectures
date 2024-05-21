@@ -14,8 +14,8 @@ public class TaskDto : DtoBase<int>
         this.Title = string.Empty;
         this.Description = string.Empty;
         this.GroupId = 0;
-        this.Group = new GroupDto();
+        this.Group = default;
         this.PersonId = 0;
-        this.Person = new PersonDto();
+        this.Person = default;
     }
 }

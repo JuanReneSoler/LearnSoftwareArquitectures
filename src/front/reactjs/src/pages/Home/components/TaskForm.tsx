@@ -56,7 +56,6 @@ function TaskForm({ viewModel, id, submitEvent, readonly }: IProps) {
   const handlerSubmit = async (e: FormEvent) => {
     e.preventDefault();
     submitEvent(vModel);
-    setViewModel(viewModel);
   };
 
   return (

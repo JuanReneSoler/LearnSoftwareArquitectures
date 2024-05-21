@@ -11,22 +11,27 @@ export const Tasks = ({ personId }: IProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
-  useEffect(() => {
-    (async () => {
+  const loadTasks = (page: number)=>{
+    (async ()=>{
       await taskService
-        .filter({ PersonId: personId, page: currentPage, size: 10 })
-        .then((res) => {
-          setTotalPages(res.totalPages);
-          setItems(res.items);
-        });
+    .filter({ PersonId: personId, page: page, size: 10 })
+    .then((res) => {
+      setCurrentPage(res.currentPage);
+      setTotalPages(res.totalPages);
+      setItems(res.items);
+    });
     })();
-  }, [currentPage]);
+  }
+
+  useEffect(()=>{
+    loadTasks(currentPage);
+  }, []);
 
   return (
     <TasksList
       totalPages={totalPages}
       currentPage={currentPage}
-      changePagination={(page) => setCurrentPage(page)}
+      changePagination={(page) => loadTasks(page)}
       items={items}
       readonly={true}
     />

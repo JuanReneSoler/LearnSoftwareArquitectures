@@ -7,8 +7,8 @@ public sealed class Tasks : BaseEntity<int>
     public int GroupId { get; set; }
     public int PersonId { get; set; }
 
-    public Person Person { get; set; }
-    public Group Group { get; set; }
+    public Person? Person { get; set; }
+    public Group? Group { get; set; }
 
     public Tasks() : base(0)
     {
@@ -16,7 +16,7 @@ public sealed class Tasks : BaseEntity<int>
         this.Description = string.Empty;
         this.GroupId = 0;
         this.PersonId = 0;
-        this.Person = new Person();
-        this.Group = new Group();
+        this.Person = default;
+        this.Group = default;
     }
 }

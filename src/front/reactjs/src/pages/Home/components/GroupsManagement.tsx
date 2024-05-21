@@ -31,6 +31,7 @@ function GroupsManagement() {
 
   const loadGroupList = async () => {
     await groupService.filter({ page: currentPage, size: 10 }).then((res) => {
+      setCurrentPage(res.currentPage);
       setTotalPages(res.totalPages);
       setGroupList(res.items);
     });

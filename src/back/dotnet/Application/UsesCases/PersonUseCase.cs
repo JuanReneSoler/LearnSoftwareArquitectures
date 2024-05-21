@@ -24,7 +24,7 @@ public sealed class PersonUseCase : IPersonUseCase
         _mapper = Mapper;
     }
 
-    public async Task<PersonDto?> Create(PersonDto Dto, CancellationToken cancellationToken)
+    public async Task<PersonDto> Create(PersonDto Dto, CancellationToken cancellationToken)
     {
         var entity = _mapper.Map<PersonDto, Person>(Dto);
         await _repository.Add(entity, cancellationToken);
@@ -33,21 +33,20 @@ public sealed class PersonUseCase : IPersonUseCase
             Dto.Id = entity.Id;
             return Dto;
         }
-        else
         {
             await _repository.Rollback(cancellationToken);
-            return default(PersonDto);
+            throw new Exception("No fue posible crear este registro.");
         }
     }
 
     public async Task<int> Delete(int Id, CancellationToken cancellationToken)
     {
-        var entity = (await _repository.Where(x => x.Id == Id, cancellationToken)).FirstOrDefault();
-
-        if (entity is null) throw new NullReferenceException("Esta Persona no existe.");
-
-        await _repository.Delete(Id, cancellationToken);
-        return await _repository.Commit(cancellationToken) ? Id : 0;
+        if(await _repository.Exist(x=>x.Id == Id, cancellationToken))
+        {
+            await _repository.Delete(Id, cancellationToken);
+            return await _repository.Commit(cancellationToken) ? Id : throw new Exception("No fue posible eliminar este registro.");
+        }
+        throw new NullReferenceException("Esta persona no existe.");
     }
 
     public async Task<IBasePagination<PersonDto>> Filter(Expression<Func<PersonDto, bool>> predicate, int page, int size, CancellationToken cancellationToken)
@@ -62,27 +61,32 @@ public sealed class PersonUseCase : IPersonUseCase
 
     public async Task<PersonDto> Find(int Id, CancellationToken cancellationToken)
     {
-        var entity = await _repository.Find(Id, cancellationToken);
-        return _mapper.Map<Person, PersonDto>(entity);
+        if(await _repository.Exist(x=>x.Id == Id, cancellationToken))
+        {
+            var result = await _repository.Select(x=>new PersonDto{
+                Name = x.Name,
+                Id=x.Id
+            },x=>x.Id == Id, cancellationToken);
+            return result.First();
+        }
+        throw new Exception("Este registro no existe.");
     }
 
     public async Task<PersonDto?> Update(PersonDto Dto, int Id, CancellationToken cancellationToken)
     {
-        var entity = (await _repository.Where(x => x.Id == Id, cancellationToken)).FirstOrDefault();
-
-        if (entity is null) throw new NullReferenceException("Esta Persona no existe.");
-
-        entity.Name = Dto.Name;
-        await _repository.Update(entity, cancellationToken);
-        if (await _repository.Commit(cancellationToken))
+        if(await _repository.Exist(x=>x.Id == Id, cancellationToken))
         {
-            Dto.Id = entity.Id;
-            return Dto;
+            var entity = _mapper.Map<PersonDto, Person>(Dto);
+            await _repository.Update(entity, cancellationToken);
+            if (await _repository.Commit(cancellationToken))
+            {
+                return Dto;
+            }
+            else {
+                await _repository.Rollback(cancellationToken);
+                throw new Exception("No fue posible actualizar el registro.");
+            }
         }
-        else
-        {
-            await _repository.Rollback(cancellationToken);
-            return default(PersonDto);
-        }
+        throw new NullReferenceException("Esta Persona no existe.");
     }
 }

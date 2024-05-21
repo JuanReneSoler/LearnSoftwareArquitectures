@@ -18,7 +18,6 @@ function PersonForm({ id, viewModel, submitEvent, readonly }: IProps) {
   const handlerSubmit = async (e: FormEvent) => {
     e.preventDefault();
     submitEvent(vModel);
-    setViewModel(viewModel);
   };
 
   const handlerChange = (e: ChangeEvent<HTMLInputElement>) => {

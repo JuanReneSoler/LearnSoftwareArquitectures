@@ -3,19 +3,17 @@ import { Tasks } from "./Tasks";
 
 interface IProps {
   item: { id: number; name: string };
-  key: number;
   handlerSelect: (id: number) => void;
   handlerDelete: (id: number) => void;
 }
 export const CustonLi = ({
   item,
-  key,
   handlerDelete,
   handlerSelect,
 }: IProps) => {
   const [showTasks, setShowTasks] = useState(false);
   return (
-    <li key={key}>
+    <li>
       {item.name}-
       <a
         href="#"
