@@ -17,6 +17,13 @@ public class TaskController : ControllerBase
         _taskService = TaskService;
     }
 
+    [HttpGet("{Id}")]
+    public async Task<IActionResult> Find(int Id, CancellationToken cancellationToken)
+    {
+        var entity = await _taskService.Find(Id, cancellationToken);
+        return Ok(entity);
+    }
+
     [HttpGet()]
     public async Task<IActionResult> List([FromQuery] TasksFilter Filter)
     {

@@ -17,6 +17,13 @@ public class PersonController : ControllerBase
         _personService = PersonService;
     }
 
+    [HttpGet("{Id}")]
+    public async Task<IActionResult> Find(int Id, CancellationToken cancellationToken)
+    {
+        var entity = await _personService.Find(Id, cancellationToken);
+        return Ok(entity);
+    }
+
     [HttpGet()]
     public async Task<IActionResult> List([FromQuery] PersonFilter Filter)
     {

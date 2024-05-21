@@ -79,4 +79,10 @@ public sealed class GroupsUseCase : IGroupUseCase
 
         return query?.Paginate(page, size);
     }
+
+    public async Task<GroupDto> Find(int Id, CancellationToken cancellationToken)
+    {
+        var entity = await _repository.Find(Id, cancellationToken);
+        return _mapper.Map<Group, GroupDto>(entity);
+    }
 }

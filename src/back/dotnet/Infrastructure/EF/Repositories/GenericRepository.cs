@@ -78,4 +78,7 @@ public sealed class GenericRepository<TEntity> : IGenericRepository<TEntity>
             return _table.Select(selector).Where(where);
         }, cancellationToken);
     }
+
+    public async Task<TEntity> Find(int Id, CancellationToken cancellationToken) 
+        => await _table.FirstAsync(x=>x.Id == Id, cancellationToken);
 }

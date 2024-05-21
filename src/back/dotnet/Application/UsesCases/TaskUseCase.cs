@@ -111,4 +111,10 @@ public sealed class TaskUseCase : ITaskUseCase
 
         return _mapper.Map<Tasks, TaskDto>(work);
     }
+
+    public async Task<TaskDto> Find(int Id, CancellationToken cancellationToken)
+    {
+        var entity = await _repository.Find(Id, cancellationToken);
+        return _mapper.Map<Tasks, TaskDto>(entity);
+    }
 }

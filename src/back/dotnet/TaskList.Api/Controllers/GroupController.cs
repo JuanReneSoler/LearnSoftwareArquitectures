@@ -17,6 +17,13 @@ public class GroupController : ControllerBase
         _groupService = GroupService;
     }
 
+    [HttpGet("{Id}")]
+    public async Task<IActionResult> Find(int Id, CancellationToken cancellationToken)
+    {
+        var item = await _groupService.Find(Id, cancellationToken);
+        return Ok(item);
+    }
+
     [HttpGet()]
     public async Task<IActionResult> List(GroupFilter Filter)
     {

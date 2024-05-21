@@ -60,6 +60,12 @@ public sealed class PersonUseCase : IPersonUseCase
         return query?.Paginate(page, size);
     }
 
+    public async Task<PersonDto> Find(int Id, CancellationToken cancellationToken)
+    {
+        var entity = await _repository.Find(Id, cancellationToken);
+        return _mapper.Map<Person, PersonDto>(entity);
+    }
+
     public async Task<PersonDto?> Update(PersonDto Dto, int Id, CancellationToken cancellationToken)
     {
         var entity = (await _repository.Where(x => x.Id == Id, cancellationToken)).FirstOrDefault();
