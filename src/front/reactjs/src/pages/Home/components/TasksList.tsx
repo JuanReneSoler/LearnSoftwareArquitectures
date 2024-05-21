@@ -48,7 +48,7 @@ function TasksList({
     e.dataTransfer.setData(dragTask, JSON.stringify(item));
   };
 
-  const handleDragEndCapture = (e: DragEvent<HTMLLIElement>, tagId: number) => {
+  const handleDragEndCapture = (e: DragEvent<HTMLLIElement>) => {
     e.preventDefault();
     if(onDrag)onDrag();
   };
@@ -76,7 +76,7 @@ function TasksList({
               key={i}
               draggable={draggable}
               onDragStart={(e) => handleDragStart(e, item.id)}
-              onDragEndCapture={(e) => handleDragEndCapture(e, item.id)}
+              onDragEndCapture={(e) => handleDragEndCapture(e)}
             >
               {item.title}
               {!readonly && (
