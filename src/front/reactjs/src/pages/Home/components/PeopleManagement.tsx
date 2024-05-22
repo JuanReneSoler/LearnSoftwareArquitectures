@@ -81,17 +81,18 @@ function PeopleManagement() {
             setIsReadOnly(false);
             setPersonForm(initialState);
           }}
+          title="Crear nueva persona."
         >
-          crear neeva persona
+          crear
         </button>
       )}
       {showForm && !isReadOnly && (
-        <button type="submit" form={formId}>
+        <button type="submit" form={formId} title="Guardar los datos.">
           guardar
         </button>
       )}
       {isReadOnly && showForm && (
-        <button type="button" onClick={() => setIsReadOnly(false)}>
+        <button type="button" onClick={() => setIsReadOnly(false)} title="Guardar los cambios.">
           editar
         </button>
       )}
@@ -102,6 +103,7 @@ function PeopleManagement() {
             setShowForm(false);
             setIsReadOnly(true);
           }}
+          title="Cerrar el formulario y deshacer los cambios."
         >
           cancelar
         </button>

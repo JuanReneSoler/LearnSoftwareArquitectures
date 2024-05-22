@@ -45,7 +45,7 @@ function Home() {
         (Lista de personas {showPeople ? "*" : ""})
       </a>
 
-      {showTasks && <TasksManagement />}
+      {(showTasks) && <TasksManagement />}
       {showGroups && <GroupsManagement />}
       {showPeople && <PeopleManagement />}
     </>

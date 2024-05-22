@@ -107,17 +107,18 @@ const TasksManagement = () => {
             setIsReadOnly(false);
             setTaskForm(formInitialState);
           }}
+          title="Crear Nueva Tareas."
         >
-          crear nueva tarea
+          crear
         </button>
       )}
       {showForm && !isReadOnly && (
-        <button type="submit" form={formId}>
+        <button type="submit" form={formId} title="Guardar los datos.">
           guardar
         </button>
       )}
       {isReadOnly && showForm && (
-        <button type="button" onClick={() => setIsReadOnly(false)}>
+        <button type="button" onClick={() => setIsReadOnly(false)} title="Guardar los cambios.">
           editar
         </button>
       )}
@@ -128,6 +129,7 @@ const TasksManagement = () => {
             setShowForm(false);
             setIsReadOnly(true);
           }}
+          title="Cerrar el formulario y deshacer todo."
         >
           cancelar
         </button>

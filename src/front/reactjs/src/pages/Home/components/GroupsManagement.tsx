@@ -82,17 +82,18 @@ function GroupsManagement() {
             setIsReadOnly(false);
             setGroupForm(initialState);
           }}
+          title="Crear Nuevo Grupo."
         >
-          crear nuevo grupo
+          crear
         </button>
       )}
       {showForm && !isReadOnly && (
-        <button type="submit" form={formId}>
+        <button type="submit" form={formId} title="Guardar los datos.">
           guardar
         </button>
       )}
       {isReadOnly && showForm && (
-        <button type="button" onClick={() => setIsReadOnly(false)}>
+        <button type="button" onClick={() => setIsReadOnly(false)} title="Guardar los cambios.">
           editar
         </button>
       )}
@@ -103,6 +104,7 @@ function GroupsManagement() {
             setShowForm(false);
             setIsReadOnly(true);
           }}
+          title="Cerrar el formulario y deshacer los cambios."
         >
           cancelar
         </button>
