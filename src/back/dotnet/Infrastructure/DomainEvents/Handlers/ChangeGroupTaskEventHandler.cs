@@ -14,6 +14,7 @@ public class ChangeGroupTaskEventHandler : IDomainEventHandler<CreateTaskEvent>
 
     public void Handle(CreateTaskEvent domainEvent)
     {
+        Console.WriteLine("prueba de un evento de dominio ejecutandose XD");
         throw new NotImplementedException();
     }
 }

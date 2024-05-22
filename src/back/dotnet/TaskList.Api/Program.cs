@@ -5,7 +5,9 @@ using Infrastructure.EF;
 using Microsoft.EntityFrameworkCore;
 using EasyMapper;
 using TaskList.Api.Middlewares;
-using System.Security.Cryptography.Xml;
+using Application.Dispatchers;
+using Infrastructure.DomainEvents;
+using Domain.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 const string allowOrigins = "AllowAnyOrigin";
@@ -43,6 +45,10 @@ builder.Services.AddScoped(typeof(IMapper), (x =>
     });
     return mapperConfig.CreateMapper();
 }));
+
+//domain events;
+builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+builder.Services.AddScoped<IDomainEventHandler<CreateTaskEvent>, ChangeGroupTaskEventHandler>();
 
 //services
 builder.Services.AddScoped<ITaskUseCase, TaskUseCase>();

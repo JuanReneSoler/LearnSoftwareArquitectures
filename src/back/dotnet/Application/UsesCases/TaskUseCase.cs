@@ -35,7 +35,6 @@ public sealed class TaskUseCase : ITaskUseCase
         await _repository.Add(entity, cancellationToken);
         if (await _repository.Commit(cancellationToken))
         {
-            _eventDispatcher.Dispatch(entity.DomainEvents);
             Dto.Id = entity.Id;
         }
         return Dto;
@@ -95,17 +94,25 @@ public sealed class TaskUseCase : ITaskUseCase
 
     public async Task<TaskDto> ReasignToGroup(int TaskId, int GroupId, CancellationToken cancellationToken)
     {
-        var work = (await _repository.Where(x => x.Id == TaskId, cancellationToken)).FirstOrDefault();
+        if(await _repository.Exist(x=>x.Id == TaskId, cancellationToken))
+        {
+            var result = await _repository.Where(x=>x.Id == TaskId, cancellationToken);
+            var task = result.First();
 
-        if (work is null) throw new Exception("This task not exist!");
+            task.GroupId = GroupId;
 
-        work.GroupId = GroupId;
+            await _repository.Update(task, cancellationToken);
 
-        await _repository.Update(work, cancellationToken);
-
-        await _repository.Commit(cancellationToken);
-
-        return _mapper.Map<Tasks, TaskDto>(work);
+            if(await _repository.Commit(cancellationToken))
+            {
+                _eventDispatcher.Dispatch(task.DomainEvents);
+                task.ClearEvents();
+                return _mapper.Map<Tasks, TaskDto>(task);
+            }
+            throw new Exception("No fue posible cambiar esta tarea de grupo.");
+        }
+        throw new Exception("This task not exist!");
+        
     }
 
     public async Task<TaskDto> Find(int Id, CancellationToken cancellationToken)
