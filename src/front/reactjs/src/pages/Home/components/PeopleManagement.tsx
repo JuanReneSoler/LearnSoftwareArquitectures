@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { PeopleList, IPerson, PersonForm, IPersonViewModel } from ".";
 import { Person as PersonDto, peopleService } from "../../../services";
+import { AppContext } from "../../../contexts";
 
 const initialState = {
   id: 0,
@@ -22,15 +23,16 @@ function PeopleManagement() {
   const formId = "group";
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const {globalSearchText}=useContext(AppContext);
 
   useEffect(() => {
     (async () => {
       await loadPersonList();
     })();
-  }, [currentPage]);
+  }, [currentPage, globalSearchText]);
 
   const loadPersonList = async () => {
-    await peopleService.filter({ page: currentPage, size: 10 }).then((res) => {
+    await peopleService.filter({ search:globalSearchText, page: currentPage, size: 10 }).then((res) => {
       setCurrentPage(res.currentPage);
       setTotalPages(res.totalPages);
       setPersonList(res.items);

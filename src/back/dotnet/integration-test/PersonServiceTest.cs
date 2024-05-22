@@ -59,7 +59,6 @@ public class PersonServiceTest
         if (person is null) Assert.Fail();
 
         _person = person;
-
     }
 
     [TestMethod]

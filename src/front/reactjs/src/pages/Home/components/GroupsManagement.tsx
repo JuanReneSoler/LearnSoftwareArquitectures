@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IGroup, GroupForm, IGroupViewModel, GroupsList } from ".";
 import { Group as GroupDto, groupService } from "../../../services";
+import { AppContext } from "../../../contexts";
 
 const initialState = {
   id: 0,
@@ -22,15 +23,16 @@ function GroupsManagement() {
   const formId = "group";
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const {globalSearchText}=useContext(AppContext);
 
   useEffect(() => {
     (async () => {
       await loadGroupList();
     })();
-  }, [currentPage]);
+  }, [currentPage, globalSearchText]);
 
   const loadGroupList = async () => {
-    await groupService.filter({ page: currentPage, size: 10 }).then((res) => {
+    await groupService.filter({ search:globalSearchText, page: currentPage, size: 10 }).then((res) => {
       setCurrentPage(res.currentPage);
       setTotalPages(res.totalPages);
       setGroupList(res.items);

@@ -63,10 +63,6 @@ public class GroupServiceTest
     [TestMethod]
     public async Task Delete()
     {
-
-
-
-
         var result = await _uc.Delete(_group.Id, _token);
 
         if (result is 0) Assert.Fail();

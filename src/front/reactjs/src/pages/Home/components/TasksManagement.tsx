@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ITask, TaskForm, ITaskFormViewModel, TasksList } from ".";
 import { Task as TaskDto, taskService } from "../../../services";
+import { AppContext } from "../../../contexts";
 
 const formInitialState = {
   id: 0,
@@ -28,9 +29,10 @@ const TasksManagement = () => {
   const formId = "task";
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const {globalSearchText}=useContext(AppContext);
 
   const loadTaskList = async () => {
-    await taskService.filter({ page: currentPage, size: 10 }).then((res) => {
+    await taskService.filter({ search:globalSearchText, page: currentPage, size: 10 }).then((res) => {
       setCurrentPage(res.currentPage);
       setTotalPages(res.totalPages);
       setTaskList(
@@ -53,7 +55,7 @@ const TasksManagement = () => {
     (async ()=>{
         await loadTaskList();
       })();
-  }, [currentPage]);
+  }, [currentPage, globalSearchText]);
 
   const handlerSubmit = (result: ITaskFormViewModel) => {
     (async () => {

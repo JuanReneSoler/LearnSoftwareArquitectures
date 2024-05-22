@@ -1,7 +1,10 @@
+import { AppContextProvider } from "./contexts";
 import { Home } from "./pages/Home";
 
 function App() {
-  return <Home />;
+  return <AppContextProvider>
+    <Home />
+  </AppContextProvider>;
 }
 
 export default App;

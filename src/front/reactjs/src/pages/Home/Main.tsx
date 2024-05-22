@@ -4,6 +4,7 @@ import {
   PeopleManagement,
   GroupsManagement,
 } from "./components";
+import { Searcher } from "../../components/searcher";
 
 function Home() {
   const [showTasks, setShowTasks] = useState(true);
@@ -40,6 +41,9 @@ function Home() {
         Lista de personas {showPeople ? "*" : ""}
       </button>
 
+      <br />
+      <br />
+      <Searcher />
       {showTasks && <TasksManagement />}
       {showGroups && <GroupsManagement />}
       {showPeople && <PeopleManagement />}

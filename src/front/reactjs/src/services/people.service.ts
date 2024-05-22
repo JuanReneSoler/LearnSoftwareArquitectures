@@ -7,6 +7,7 @@ const api = import.meta.env.VITE_API + "Person";
 interface IFilterParams {
   page: number;
   size: number;
+  search?:string;
 }
 
 const peopleService = {
