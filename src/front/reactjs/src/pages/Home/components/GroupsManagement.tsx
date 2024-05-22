@@ -115,14 +115,14 @@ function GroupsManagement() {
           readonly={isReadOnly}
         />
       )}
-      <GroupsList
+      {!showForm && <GroupsList
         currentPage={currentPage}
         totalPages={totalPages}
         items={groupList}
         selectEvent={handlerSelect}
         deleteEvent={handlerDelete}
         changePagination={(page) => setCurrentPage(page)}
-      />
+      />}
     </>
   );
 }

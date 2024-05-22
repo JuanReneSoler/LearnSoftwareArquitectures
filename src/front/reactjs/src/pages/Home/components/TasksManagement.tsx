@@ -140,14 +140,14 @@ const TasksManagement = () => {
           readonly={isReadOnly}
         />
       )}
-      <TasksList
+      {!showForm && <TasksList
         currentPage={currentPage}
         totalPages={totalPages}
         items={taskList}
         selectEvent={handlerSelect}
         deleteEvent={handlerDelete}
         changePagination={(page) => setCurrentPage(page)}
-      />
+      />}
     </>
   );
 };

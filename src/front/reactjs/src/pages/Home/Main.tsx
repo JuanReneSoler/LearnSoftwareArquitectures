@@ -31,19 +31,20 @@ function Home() {
 
   return (
     <>
-      <button type="button" onClick={viewTasks}>
-        Lista de Tareas {showTasks ? "*" : ""}
-      </button>
-      <button type="button" onClick={viewGroups}>
-        Lista de Grupos {showGroups ? "*" : ""}
-      </button>
-      <button type="button" onClick={viewPeople}>
-        Lista de personas {showPeople ? "*" : ""}
-      </button>
-
-      <br />
-      <br />
       <Searcher />
+      <br />
+      <a href="#" type="button" onClick={viewTasks}>
+        (Lista de Tareas {showTasks ? "*" : ""})
+      </a>
+      <br />
+      <a href="#" type="button" onClick={viewGroups}>
+        (Lista de Grupos {showGroups ? "*" : ""})
+      </a>
+      <br />
+      <a href="#" onClick={viewPeople}>
+        (Lista de personas {showPeople ? "*" : ""})
+      </a>
+
       {showTasks && <TasksManagement />}
       {showGroups && <GroupsManagement />}
       {showPeople && <PeopleManagement />}

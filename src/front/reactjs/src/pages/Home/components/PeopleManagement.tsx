@@ -114,14 +114,14 @@ function PeopleManagement() {
           readonly={isReadOnly}
         />
       )}
-      <PeopleList
+      {!showForm && <PeopleList
         currentPage={currentPage}
         totalPages={totalPages}
         items={personList}
         selectEvent={handlerSelect}
         deleteEvent={handlerDelete}
         changePagination={(page) => setCurrentPage(page)}
-      />
+      />}
     </>
   );
 }
