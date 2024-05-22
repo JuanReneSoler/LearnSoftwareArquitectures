@@ -8,7 +8,7 @@ public sealed class Group : BaseEntity<int>
 
     public Group() : base(0)
     {
-        this.Name = string.Empty;
-        this.Tasks = default;
+        Name = string.Empty;
+        Tasks = default;
     }
 }

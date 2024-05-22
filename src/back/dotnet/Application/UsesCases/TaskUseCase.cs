@@ -4,6 +4,7 @@ using Domain.Repositories;
 using EasyMapper;
 using Application.Utils;
 using Application.Extensions;
+using Application.Dispatchers;
 
 namespace Application.UsesCases;
 
@@ -16,13 +17,16 @@ public sealed class TaskUseCase : ITaskUseCase
 {
     private readonly IGenericRepository<Tasks> _repository;
     private readonly IMapper _mapper;
+    private readonly IDomainEventDispatcher _eventDispatcher;
 
     public TaskUseCase(
             IGenericRepository<Tasks> Repository,
-            IMapper Mapper)
+            IMapper Mapper,
+            IDomainEventDispatcher eventDispatcher)
     {
         _repository = Repository;
         _mapper = Mapper;
+        _eventDispatcher = eventDispatcher;
     }
 
     public async Task<TaskDto> Create(TaskDto Dto, CancellationToken cancellationToken)
@@ -31,6 +35,7 @@ public sealed class TaskUseCase : ITaskUseCase
         await _repository.Add(entity, cancellationToken);
         if (await _repository.Commit(cancellationToken))
         {
+            _eventDispatcher.Dispatch(entity.DomainEvents);
             Dto.Id = entity.Id;
         }
         return Dto;
@@ -59,7 +64,7 @@ public sealed class TaskUseCase : ITaskUseCase
             else
             {
                 await _repository.Rollback(cancellationToken);
-                return default(TaskDto);
+                return Dto;
             }
         }
         throw new NullReferenceException("Esta Persona no existe.");        
