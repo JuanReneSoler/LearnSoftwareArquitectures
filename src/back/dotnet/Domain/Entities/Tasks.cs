@@ -15,7 +15,7 @@ public sealed class Tasks : BaseEntity<int>
         {
             if (value != _groupId)
             {
-                var changeGroupEvent = new AsignToAGroupTask();
+                var changeGroupEvent = new AsignToAGroupTask(this);
                 _domainEvents.Add(changeGroupEvent);
                 _groupId = value;
             }
