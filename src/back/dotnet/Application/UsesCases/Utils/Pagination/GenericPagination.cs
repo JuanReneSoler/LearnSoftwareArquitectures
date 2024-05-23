@@ -7,7 +7,7 @@ public sealed class GenericPagination<TDto> : IBasePagination<TDto>
     private readonly int _size;
     private readonly int _page;
 
-    public ICollection<TDto>? Items { get => _query.Skip((_page - 1) * _size).Take(_size).ToArray(); }
+    public ICollection<TDto> Items { get => _query.Skip((_page - 1) * _size).Take(_size).ToArray(); }
     public int TotalPages { get => ((_query.Count() + _size - 1) / _size); }
     public int CurrentPage { get => _page; }
 
