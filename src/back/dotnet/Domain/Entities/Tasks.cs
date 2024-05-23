@@ -1,10 +1,26 @@
-﻿namespace Domain.Entities;
+﻿using Domain.Events;
+
+namespace Domain.Entities;
 
 public sealed class Tasks : BaseEntity<int>
 {
     public String Title { get; set; }
     public String Description { get; set; }
-    public Int32 GroupId { get; set; }
+
+    private Int32 _groupId;
+    public Int32 GroupId
+    {
+        get => _groupId;
+        set
+        {
+            if (value != _groupId)
+            {
+                var changeGroupEvent = new AsignToAGroupTask();
+                _domainEvents.Add(changeGroupEvent);
+                _groupId = value;
+            }
+        }
+    }
     public Int32 PersonId { get; set; }
 
     public Person? Person { get; set; }

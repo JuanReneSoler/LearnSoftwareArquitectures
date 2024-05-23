@@ -42,7 +42,7 @@ public sealed class TaskUseCase : ITaskUseCase
 
     public async Task<int> Delete(int Id, CancellationToken cancellationToken)
     {
-        if(await _repository.Exist(x=>x.Id == Id, cancellationToken))
+        if (await _repository.Exist(x => x.Id == Id, cancellationToken))
         {
             await _repository.Delete(Id, cancellationToken);
             return await _repository.Commit(cancellationToken) ? Id : throw new Exception("No fue posible eliminar este registro.");
@@ -52,7 +52,7 @@ public sealed class TaskUseCase : ITaskUseCase
 
     public async Task<TaskDto?> Update(TaskDto Dto, int Id, CancellationToken cancellationToken)
     {
-        if(await _repository.Exist(x=>x.Id == Id, cancellationToken))
+        if (await _repository.Exist(x => x.Id == Id, cancellationToken))
         {
             var entity = _mapper.Map<TaskDto, Tasks>(Dto);
             await _repository.Update(entity, cancellationToken);
@@ -66,7 +66,7 @@ public sealed class TaskUseCase : ITaskUseCase
                 return Dto;
             }
         }
-        throw new NullReferenceException("Esta Persona no existe.");        
+        throw new NullReferenceException("Esta Persona no existe.");
     }
 
     public async Task<IBasePagination<TaskDto>> Filter(Expression<Func<TaskDto, bool>> predicate, int page, int size, CancellationToken cancellationToken)
@@ -94,16 +94,16 @@ public sealed class TaskUseCase : ITaskUseCase
 
     public async Task<TaskDto> ReasignToGroup(int TaskId, int GroupId, CancellationToken cancellationToken)
     {
-        if(await _repository.Exist(x=>x.Id == TaskId, cancellationToken))
+        if (await _repository.Exist(x => x.Id == TaskId, cancellationToken))
         {
-            var result = await _repository.Where(x=>x.Id == TaskId, cancellationToken);
+            var result = await _repository.Where(x => x.Id == TaskId, cancellationToken);
             var task = result.First();
 
             task.GroupId = GroupId;
 
             await _repository.Update(task, cancellationToken);
 
-            if(await _repository.Commit(cancellationToken))
+            if (await _repository.Commit(cancellationToken))
             {
                 _eventDispatcher.Dispatch(task.DomainEvents);
                 task.ClearEvents();
@@ -112,12 +112,12 @@ public sealed class TaskUseCase : ITaskUseCase
             throw new Exception("No fue posible cambiar esta tarea de grupo.");
         }
         throw new Exception("This task not exist!");
-        
+
     }
 
     public async Task<TaskDto> Find(int Id, CancellationToken cancellationToken)
     {
-        if(await _repository.Exist(x=>x.Id == Id, cancellationToken))
+        if (await _repository.Exist(x => x.Id == Id, cancellationToken))
         {
             var result = await _repository.Select(x => new TaskDto
             {
@@ -136,7 +136,7 @@ public sealed class TaskUseCase : ITaskUseCase
                     Id = x.PersonId,
                     Name = x.Person.Name
                 }
-            }, x=>x.Id == Id, cancellationToken);
+            }, x => x.Id == Id, cancellationToken);
             return result.First();
         }
         throw new Exception("Este registro no existe.");

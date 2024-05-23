@@ -1,60 +1,34 @@
-using Application.UsesCases;
-using Domain.Entities;
-using Domain.Repositories;
-using Infrastructure.EF;
 using Microsoft.EntityFrameworkCore;
-using EasyMapper;
-using TaskList.Api.Middlewares;
-using Application.Dispatchers;
-using Infrastructure.DomainEvents;
-using Domain.Events;
+using TaskList.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 const string allowOrigins = "AllowAnyOrigin";
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //db context
-builder.Services.AddDbContext<SqlServerContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("default"));
-});
+builder.Services.InjectDbContext(builder.Configuration.GetConnectionString("default"));
 
 //Repositories
-builder.Services.AddScoped<IGenericRepository<Tasks>, GenericRepository<Tasks>>();
-builder.Services.AddScoped<IGenericRepository<Person>, GenericRepository<Person>>();
-builder.Services.AddScoped<IGenericRepository<Group>, GenericRepository<Group>>();
+builder.Services.InjectRepositories();
 
 //mapper
-builder.Services.AddScoped(typeof(IMapper), (x =>
-{
-    var mapperConfig = new MapperConfiguration();
-    mapperConfig.SetMapperProfile(profile =>
-    {
-        profile.CreateMap<Group, GroupDto>();
-        profile.CreateMap<GroupDto, Group>();
-        profile.CreateMap<Person, PersonDto>();
-        profile.CreateMap<PersonDto, Person>();
-        profile.CreateMap<Tasks, TaskDto>();
-        profile.CreateMap<TaskDto, Tasks>();
-    });
-    return mapperConfig.CreateMapper();
-}));
+builder.Services.InjectMapper();
+
+//inject services
+builder.Services.InjectServices();
 
 //domain events;
-builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
-builder.Services.AddScoped<IDomainEventHandler<CreateTaskEvent>, ChangeGroupTaskEventHandler>();
+builder.Services.InjectDomainEvents();
 
-//services
-builder.Services.AddScoped<ITaskUseCase, TaskUseCase>();
-builder.Services.AddScoped<IGroupUseCase, GroupsUseCase>();
-builder.Services.AddScoped<IPersonUseCase, PersonUseCase>();
+//Uses Cases
+builder.Services.InjectUsesCases();
 
+//configure cors
 builder.Services.AddCors(opt =>
 {
     opt.AddPolicy(allowOrigins, builder =>
@@ -75,7 +49,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(allowOrigins);
-app.UseMiddleware<ExceptionsMiddleware>();
+
+app.InjectMiddlewares();
 
 app.UseHttpsRedirection();
 
