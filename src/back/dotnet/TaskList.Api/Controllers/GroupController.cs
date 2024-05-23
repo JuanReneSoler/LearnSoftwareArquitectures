@@ -1,7 +1,5 @@
 using Application.UsesCases;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq.Expressions;
-using Application.Extensions;
 using TaskList.Api.Dtos;
 
 namespace TaskList.Api.Controllers;

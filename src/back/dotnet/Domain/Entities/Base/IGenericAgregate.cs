@@ -1,6 +1,6 @@
 using Domain.Events;
 
-namespace Domain.Agregates;
+namespace Domain.Entities;
 
 public interface IGenericAgregate
 {

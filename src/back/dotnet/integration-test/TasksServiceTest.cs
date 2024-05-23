@@ -81,9 +81,8 @@ public class TasksServiceTest
     [TestMethod]
     public async Task Read()
     {
-        var tasks = await _taskUC.Filter(x => x.Id == _task.Id, 0, 0, _token);
-
-        if (tasks.Items?.Count() is 0) Assert.Fail();
+        var task = await _taskUC.Find(_task.Id, _token);
+        if (task is null) Assert.Fail();
     }
 
     [TestMethod]

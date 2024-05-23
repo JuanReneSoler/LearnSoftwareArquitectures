@@ -2,8 +2,6 @@
 using System.Linq.Expressions;
 using Domain.Repositories;
 using EasyMapper;
-using Application.Utils;
-using Application.Extensions;
 
 namespace Application.UsesCases;
 

@@ -1,8 +1,4 @@
-﻿using System.Linq.Expressions;
-using Application.Utils;
-using Domain.Entities;
-
-namespace Application.UsesCases;
+﻿namespace Application.UsesCases;
 
 public interface IBaseUseCase<TDto, TDtoID>
     where TDto : DtoBase<TDtoID>

@@ -1,8 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Repositories;
 using EasyMapper;
-using Application.Utils;
-using Application.Extensions;
 using Application.Dispatchers;
 using System.Linq.Expressions;
 
@@ -18,7 +16,7 @@ public sealed class TaskUseCase : ITaskUseCase
 {
     private readonly IGenericRepository<Tasks> _repository;
     private readonly IMapper _mapper;
-    private readonly IDomainEventDispatcher _eventDispatcher;
+    private readonly IDomainEventDispatcher? _eventDispatcher;
 
     public TaskUseCase(
             IGenericRepository<Tasks> Repository,
@@ -28,6 +26,14 @@ public sealed class TaskUseCase : ITaskUseCase
         _repository = Repository;
         _mapper = Mapper;
         _eventDispatcher = eventDispatcher;
+    }
+
+    public TaskUseCase(
+            IGenericRepository<Tasks> Repository,
+            IMapper Mapper)
+    {
+        _repository = Repository;
+        _mapper = Mapper;
     }
 
     public async Task<TaskDto> Create(TaskDto Dto, CancellationToken cancellationToken)
@@ -83,7 +89,7 @@ public sealed class TaskUseCase : ITaskUseCase
 
             if (await _repository.Commit(cancellationToken))
             {
-                _eventDispatcher.Dispatch(task.DomainEvents);
+                if(_eventDispatcher is not null) _eventDispatcher.Dispatch(task.DomainEvents);
                 task.ClearEvents();
                 return _mapper.Map<Tasks, TaskDto>(task);
             }

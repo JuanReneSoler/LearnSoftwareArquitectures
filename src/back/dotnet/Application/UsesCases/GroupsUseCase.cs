@@ -1,8 +1,6 @@
-﻿using Application.Utils;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.Repositories;
 using EasyMapper;
-using Application.Extensions;
 using System.Linq.Expressions;
 
 namespace Application.UsesCases;

@@ -1,4 +1,3 @@
-using Domain.Agregates;
 using Domain.Events;
 
 namespace Domain.Entities;
