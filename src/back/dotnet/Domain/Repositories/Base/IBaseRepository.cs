@@ -11,6 +11,4 @@ public interface IBaseRepository<TEntity, TEntityID>
     Task Update(TEntity Entity, CancellationToken cancellationToken);
     Task Delete(TEntityID Id, CancellationToken cancellationToken);
     Task<IQueryable<TEntity>> Where(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken);
-    Task<bool> Commit(CancellationToken cancellationToken);
-    Task Rollback(CancellationToken cancellationToken);
 }

@@ -48,29 +48,6 @@ public sealed class GenericRepository<TEntity> : IGenericRepository<TEntity>
         }, cancellationToken);
     }
 
-    public async Task<bool> Commit(CancellationToken cancellationToken) => await _context.SaveChangesAsync(cancellationToken) == 1;
-
-    public async Task Rollback(CancellationToken cancellationToken)
-    {
-        await Task.Run(() =>
-        {
-            foreach (var entry in _context.ChangeTracker.Entries()
-                    .Where(e => e.State != EntityState.Unchanged))
-            {
-                switch (entry.State)
-                {
-                    case EntityState.Added:
-                        entry.State = EntityState.Detached;
-                        break;
-                    case EntityState.Modified:
-                    case EntityState.Deleted:
-                        entry.Reload();
-                        break;
-                }
-            }
-        }, cancellationToken);
-    }
-
     public async Task<bool> Exist(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken) 
         => await _table.AnyAsync(expression, cancellationToken);
 }

@@ -14,7 +14,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.InjectDbContext(builder.Configuration.GetConnectionString("default"));
 
 //Repositories
-builder.Services.InjectRepositories();
+//builder.Services.InjectRepositories();
+
+//Unit of Work
+builder.Services.InjectUnitOfWork();
 
 //mapper
 builder.Services.InjectMapper();

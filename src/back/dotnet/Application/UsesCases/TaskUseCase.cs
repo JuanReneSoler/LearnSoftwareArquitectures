@@ -1,8 +1,8 @@
 ﻿using Domain.Entities;
-using Domain.Repositories;
 using EasyMapper;
 using Application.Dispatchers;
 using System.Linq.Expressions;
+using Application.UnitOfWorks;
 
 namespace Application.UsesCases;
 
@@ -14,33 +14,33 @@ public interface ITaskUseCase : IGenericUseCase<TaskDto>
 
 public sealed class TaskUseCase : ITaskUseCase
 {
-    private readonly IGenericRepository<Tasks> _repository;
+    private readonly IGenericUnitOfWork _uow;
     private readonly IMapper _mapper;
     private readonly IDomainEventDispatcher? _eventDispatcher;
 
     public TaskUseCase(
-            IGenericRepository<Tasks> Repository,
+            IGenericUnitOfWork UoW,
             IMapper Mapper,
             IDomainEventDispatcher eventDispatcher)
     {
-        _repository = Repository;
+        _uow = UoW;
         _mapper = Mapper;
         _eventDispatcher = eventDispatcher;
     }
 
     public TaskUseCase(
-            IGenericRepository<Tasks> Repository,
+            IGenericUnitOfWork UoW,
             IMapper Mapper)
     {
-        _repository = Repository;
+        _uow = UoW;
         _mapper = Mapper;
     }
 
     public async Task<TaskDto> Create(TaskDto Dto, CancellationToken cancellationToken)
     {
         var entity = _mapper.Map<TaskDto, Tasks>(Dto);
-        await _repository.Add(entity, cancellationToken);
-        if (await _repository.Commit(cancellationToken))
+        await _uow.Tasks.Add(entity, cancellationToken);
+        if (await _uow.Commit(cancellationToken))
         {
             Dto.Id = entity.Id;
         }
@@ -49,27 +49,27 @@ public sealed class TaskUseCase : ITaskUseCase
 
     public async Task<int> Delete(int Id, CancellationToken cancellationToken)
     {
-        if (await _repository.Exist(x => x.Id == Id, cancellationToken))
+        if (await _uow.Tasks.Exist(x => x.Id == Id, cancellationToken))
         {
-            await _repository.Delete(Id, cancellationToken);
-            return await _repository.Commit(cancellationToken) ? Id : throw new Exception("No fue posible eliminar este registro.");
+            await _uow.Tasks.Delete(Id, cancellationToken);
+            return await _uow.Commit(cancellationToken) ? Id : throw new Exception("No fue posible eliminar este registro.");
         }
         throw new NullReferenceException("Esta Tarea no existe.");
     }
 
     public async Task<TaskDto?> Update(TaskDto Dto, int Id, CancellationToken cancellationToken)
     {
-        if (await _repository.Exist(x => x.Id == Id, cancellationToken))
+        if (await _uow.Tasks.Exist(x => x.Id == Id, cancellationToken))
         {
             var entity = _mapper.Map<TaskDto, Tasks>(Dto);
-            await _repository.Update(entity, cancellationToken);
-            if (await _repository.Commit(cancellationToken))
+            await _uow.Tasks.Update(entity, cancellationToken);
+            if (await _uow.Commit(cancellationToken))
             {
                 return Dto;
             }
             else
             {
-                await _repository.Rollback(cancellationToken);
+                await _uow.Rollback(cancellationToken);
                 return Dto;
             }
         }
@@ -78,16 +78,16 @@ public sealed class TaskUseCase : ITaskUseCase
 
     public async Task<TaskDto> ReasignToGroup(int TaskId, int GroupId, CancellationToken cancellationToken)
     {
-        if (await _repository.Exist(x => x.Id == TaskId, cancellationToken))
+        if (await _uow.Tasks.Exist(x => x.Id == TaskId, cancellationToken))
         {
-            var result = await _repository.Where(x => x.Id == TaskId, cancellationToken);
+            var result = await _uow.Tasks.Where(x => x.Id == TaskId, cancellationToken);
             var task = result.First();
 
             task.GroupId = GroupId;
 
-            await _repository.Update(task, cancellationToken);
+            await _uow.Tasks.Update(task, cancellationToken);
 
-            if (await _repository.Commit(cancellationToken))
+            if (await _uow.Commit(cancellationToken))
             {
                 if(_eventDispatcher is not null) _eventDispatcher.Dispatch(task.DomainEvents);
                 task.ClearEvents();
@@ -101,9 +101,9 @@ public sealed class TaskUseCase : ITaskUseCase
 
     public async Task<TaskDto> Find(int Id, CancellationToken cancellationToken)
     {
-        if (await _repository.Exist(x => x.Id == Id, cancellationToken))
+        if (await _uow.Tasks.Exist(x => x.Id == Id, cancellationToken))
         {
-            var result = await _repository.Where(x => x.Id == Id, cancellationToken);
+            var result = await _uow.Tasks.Where(x => x.Id == Id, cancellationToken);
             var entity = result.ToArray()[0];
             return _mapper.Map<Tasks, TaskDto>(entity);
         }
@@ -126,7 +126,7 @@ public sealed class TaskUseCase : ITaskUseCase
             expression = expression.And(combineOrExpression);
         }
 
-        var query = await _repository.Where(expression, cancellationToken);
+        var query = await _uow.Tasks.Where(expression, cancellationToken);
         return query.Select(x=>_mapper.Map<Tasks, TaskDto>(x)).Paginate(page, size);
     }
 }

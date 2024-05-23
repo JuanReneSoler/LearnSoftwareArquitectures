@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using System.Linq.Expressions;
-using Domain.Repositories;
 using EasyMapper;
+using Application.UnitOfWorks;
 
 namespace Application.UsesCases;
 
@@ -12,38 +12,38 @@ public interface IPersonUseCase : IGenericUseCase<PersonDto>
 
 public sealed class PersonUseCase : IPersonUseCase
 {
-    private readonly IGenericRepository<Person> _repository;
+    private readonly IGenericUnitOfWork _uow;
     private readonly IMapper _mapper;
 
     public PersonUseCase(
-            IGenericRepository<Person> Repository,
+            IGenericUnitOfWork UoW,
             IMapper Mapper)
     {
-        _repository = Repository;
+        _uow = UoW;
         _mapper = Mapper;
     }
 
     public async Task<PersonDto> Create(PersonDto Dto, CancellationToken cancellationToken)
     {
         var entity = _mapper.Map<PersonDto, Person>(Dto);
-        await _repository.Add(entity, cancellationToken);
-        if (await _repository.Commit(cancellationToken))
+        await _uow.People.Add(entity, cancellationToken);
+        if (await _uow.Commit(cancellationToken))
         {
             Dto.Id = entity.Id;
             return Dto;
         }
         {
-            await _repository.Rollback(cancellationToken);
+            await _uow.Rollback(cancellationToken);
             throw new Exception("No fue posible crear este registro.");
         }
     }
 
     public async Task<int> Delete(int Id, CancellationToken cancellationToken)
     {
-        if(await _repository.Exist(x=>x.Id == Id, cancellationToken))
+        if(await _uow.People.Exist(x=>x.Id == Id, cancellationToken))
         {
-            await _repository.Delete(Id, cancellationToken);
-            return await _repository.Commit(cancellationToken) ? Id : throw new Exception("No fue posible eliminar este registro.");
+            await _uow.People.Delete(Id, cancellationToken);
+            return await _uow.Commit(cancellationToken) ? Id : throw new Exception("No fue posible eliminar este registro.");
         }
         throw new NullReferenceException("Esta persona no existe.");
     }
@@ -57,15 +57,15 @@ public sealed class PersonUseCase : IPersonUseCase
             expression = expression.And(x => x.Name.Contains(Search));
         }
         
-        var query = await _repository.Where(expression, cancellationToken);
+        var query = await _uow.People.Where(expression, cancellationToken);
         return query.Select(x=>_mapper.Map<Person, PersonDto>(x)).Paginate(page, size);
     }
 
     public async Task<PersonDto> Find(int Id, CancellationToken cancellationToken)
     {
-        if(await _repository.Exist(x=>x.Id == Id, cancellationToken))
+        if(await _uow.People.Exist(x=>x.Id == Id, cancellationToken))
         {
-            var result = await _repository.Where(x=>x.Id == Id, cancellationToken);
+            var result = await _uow.People.Where(x=>x.Id == Id, cancellationToken);
             var entity = result.ToArray()[0];
             return _mapper.Map<Person, PersonDto>(entity);
         }
@@ -74,16 +74,16 @@ public sealed class PersonUseCase : IPersonUseCase
 
     public async Task<PersonDto?> Update(PersonDto Dto, int Id, CancellationToken cancellationToken)
     {
-        if(await _repository.Exist(x=>x.Id == Id, cancellationToken))
+        if(await _uow.People.Exist(x=>x.Id == Id, cancellationToken))
         {
             var entity = _mapper.Map<PersonDto, Person>(Dto);
-            await _repository.Update(entity, cancellationToken);
-            if (await _repository.Commit(cancellationToken))
+            await _uow.People.Update(entity, cancellationToken);
+            if (await _uow.Commit(cancellationToken))
             {
                 return Dto;
             }
             else {
-                await _repository.Rollback(cancellationToken);
+                await _uow.Rollback(cancellationToken);
                 throw new Exception("No fue posible actualizar el registro.");
             }
         }
