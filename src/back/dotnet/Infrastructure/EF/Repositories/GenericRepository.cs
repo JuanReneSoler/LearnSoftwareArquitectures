@@ -71,14 +71,6 @@ public sealed class GenericRepository<TEntity> : IGenericRepository<TEntity>
         }, cancellationToken);
     }
 
-    public async Task<IQueryable<TResult>> Select<TResult>(Expression<Func<TEntity, TResult>> selector, Expression<Func<TResult, bool>> where, CancellationToken cancellationToken)
-    {
-        return await Task.Run(() =>
-        {
-            return _table.Select(selector).Where(where);
-        }, cancellationToken);
-    }
-
     public async Task<bool> Exist(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken) 
         => await _table.AnyAsync(expression, cancellationToken);
 }

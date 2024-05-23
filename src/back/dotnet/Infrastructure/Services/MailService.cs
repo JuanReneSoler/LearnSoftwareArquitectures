@@ -22,15 +22,8 @@ public class MailService : IMailService
             Body = "",
             IsBodyHtml = true,
         };
-        mail.To.Add("");
+        mail.To.Add("destinatario@mail.com");
 
-        try
-        {
-            await smtpClient.SendMailAsync(mail, cancellationToken);
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
+        await smtpClient.SendMailAsync(mail, cancellationToken);
     }
 }

@@ -9,6 +9,7 @@ namespace Application.UsesCases;
 
 public interface IPersonUseCase : IGenericUseCase<PersonDto>
 {
+    Task<IBasePagination<PersonDto>> Filter(string Search, int page, int size, CancellationToken cancellationToken);
 }
 
 public sealed class PersonUseCase : IPersonUseCase
@@ -49,25 +50,26 @@ public sealed class PersonUseCase : IPersonUseCase
         throw new NullReferenceException("Esta persona no existe.");
     }
 
-    public async Task<IBasePagination<PersonDto>> Filter(Expression<Func<PersonDto, bool>> predicate, int page, int size, CancellationToken cancellationToken)
+    public async Task<IBasePagination<PersonDto>> Filter(string Search, int page, int size, CancellationToken cancellationToken)
     {
-        var query = await _repository.Select(x => new PersonDto
+        Expression<Func<Person, bool>> expression = x => x.Id > 0;
+
+        if (!string.IsNullOrEmpty(Search) && !string.IsNullOrWhiteSpace(Search))
         {
-            Id = x.Id,
-            Name = x.Name
-        }, predicate, cancellationToken);
-        return query?.Paginate(page, size);
+            expression = expression.And(x => x.Name.Contains(Search));
+        }
+        
+        var query = await _repository.Where(expression, cancellationToken);
+        return query.Select(x=>_mapper.Map<Person, PersonDto>(x)).Paginate(page, size);
     }
 
     public async Task<PersonDto> Find(int Id, CancellationToken cancellationToken)
     {
         if(await _repository.Exist(x=>x.Id == Id, cancellationToken))
         {
-            var result = await _repository.Select(x=>new PersonDto{
-                Name = x.Name,
-                Id=x.Id
-            },x=>x.Id == Id, cancellationToken);
-            return result.First();
+            var result = await _repository.Where(x=>x.Id == Id, cancellationToken);
+            var entity = result.ToArray()[0];
+            return _mapper.Map<Person, PersonDto>(entity);
         }
         throw new Exception("Este registro no existe.");
     }

@@ -1,7 +1,5 @@
 using Application.UsesCases;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq.Expressions;
-using Application.Extensions;
 using TaskList.Api.Dtos;
 
 namespace TaskList.Api.Controllers;
@@ -27,14 +25,7 @@ public class PersonController : ControllerBase
     [HttpGet()]
     public async Task<IActionResult> List([FromQuery] PersonFilter Filter)
     {
-        Expression<Func<PersonDto, bool>> expression = x => x.Id > 0;
-
-        if (!string.IsNullOrEmpty(Filter.Search) && !string.IsNullOrWhiteSpace(Filter.Search))
-        {
-            expression = expression.And(x => x.Name.Contains(Filter.Search));
-        }
-
-        var result = await _personService.Filter(expression, Filter.page, Filter.size, Filter.cancellationToken);
+        var result = await _personService.Filter(Filter.Search, Filter.page, Filter.size, Filter.cancellationToken);
         return Ok(result);
     }
 

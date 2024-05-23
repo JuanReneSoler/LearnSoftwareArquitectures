@@ -1,14 +1,15 @@
-﻿using System.Linq.Expressions;
-using Application.Extensions;
-using Application.Utils;
+﻿using Application.Utils;
 using Domain.Entities;
 using Domain.Repositories;
 using EasyMapper;
+using Application.Extensions;
+using System.Linq.Expressions;
 
 namespace Application.UsesCases;
 
 public interface IGroupUseCase : IGenericUseCase<GroupDto>
 {
+    Task<IBasePagination<GroupDto>> Filter(string Search, int page, int size, CancellationToken cancellationToken);
 }
 
 public sealed class GroupsUseCase : IGroupUseCase
@@ -68,28 +69,28 @@ public sealed class GroupsUseCase : IGroupUseCase
         throw new Exception("El registro que esta intentando actualizar no existe.");
     }
 
-    public async Task<IBasePagination<GroupDto>> Filter(Expression<Func<GroupDto, bool>> predicate, int page, int size, CancellationToken cancellationToken)
-    {
-        var query = await _repository.Select(x => new GroupDto
-        {
-            Id = x.Id,
-            Name = x.Name
-        }, predicate, cancellationToken);
-
-        return query?.Paginate(page, size);
-    }
-
     public async Task<GroupDto> Find(int Id, CancellationToken cancellationToken)
     {
         if(await _repository.Exist(x=>x.Id == Id, cancellationToken))
         {
-            var select = await _repository.Select(x=>new GroupDto{
-                Name=x.Name,
-                Id=x.Id
-            }, x=>x.Id == Id, cancellationToken);
+            var select = await _repository.Where(x=>x.Id == Id, cancellationToken);
 
-            return select.First();
+            var item = select.ToArray()[0];
+            return _mapper.Map<Group, GroupDto>(item);
         }
         throw new Exception("Este registro no existe.");
+    }
+
+    public async Task<IBasePagination<GroupDto>> Filter(string Search, int page, int size, CancellationToken cancellationToken)
+    {
+         Expression<Func<Group, bool>> expression = x => x.Id > 0;
+
+        if (!string.IsNullOrEmpty(Search) && !string.IsNullOrWhiteSpace(Search))
+        {
+            expression = expression.And(x => x.Name.Contains(Search));
+        }
+
+        var query = await _repository.Where(expression, cancellationToken);
+        return query.Select(x=>_mapper.Map<Group, GroupDto>(x)).Paginate(page, size);
     }
 }

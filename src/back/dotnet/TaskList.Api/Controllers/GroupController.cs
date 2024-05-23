@@ -27,14 +27,7 @@ public class GroupController : ControllerBase
     [HttpGet()]
     public async Task<IActionResult> List(GroupFilter Filter)
     {
-        Expression<Func<GroupDto, bool>> expression = x => x.Id > 0;
-
-        if (!string.IsNullOrEmpty(Filter.Search) && !string.IsNullOrWhiteSpace(Filter.Search))
-        {
-            expression = expression.And(x => x.Name.Contains(Filter.Search));
-        }
-
-        var result = await _groupService.Filter(expression, Filter.page, Filter.size, Filter.cancellationToken);
+        var result = await _groupService.Filter(Filter.Search, Filter.page, Filter.size, Filter.cancellationToken);
         return Ok(result);
     }
 

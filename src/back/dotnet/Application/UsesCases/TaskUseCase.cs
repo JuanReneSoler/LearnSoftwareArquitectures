@@ -1,15 +1,16 @@
 ﻿using Domain.Entities;
-using System.Linq.Expressions;
 using Domain.Repositories;
 using EasyMapper;
 using Application.Utils;
 using Application.Extensions;
 using Application.Dispatchers;
+using System.Linq.Expressions;
 
 namespace Application.UsesCases;
 
 public interface ITaskUseCase : IGenericUseCase<TaskDto>
 {
+    Task<IBasePagination<TaskDto>> Filter(int GroupId, int PersonId, string Search, int page, int size, CancellationToken cancellationToken);
     Task<TaskDto> ReasignToGroup(int TaskId, int GroupId, CancellationToken cancellationToken);
 }
 
@@ -69,29 +70,6 @@ public sealed class TaskUseCase : ITaskUseCase
         throw new NullReferenceException("Esta Persona no existe.");
     }
 
-    public async Task<IBasePagination<TaskDto>> Filter(Expression<Func<TaskDto, bool>> predicate, int page, int size, CancellationToken cancellationToken)
-    {
-        var result = await _repository.Select(x => new TaskDto
-        {
-            Id = x.Id,
-            Title = x.Title,
-            Description = x.Description,
-            GroupId = x.GroupId,
-            Group = new GroupDto
-            {
-                Id = x.GroupId,
-                Name = x.Group.Name,
-            },
-            PersonId = x.PersonId,
-            Person = new PersonDto
-            {
-                Id = x.PersonId,
-                Name = x.Person.Name
-            }
-        }, predicate, cancellationToken);
-        return result?.Paginate(page, size);
-    }
-
     public async Task<TaskDto> ReasignToGroup(int TaskId, int GroupId, CancellationToken cancellationToken)
     {
         if (await _repository.Exist(x => x.Id == TaskId, cancellationToken))
@@ -119,26 +97,30 @@ public sealed class TaskUseCase : ITaskUseCase
     {
         if (await _repository.Exist(x => x.Id == Id, cancellationToken))
         {
-            var result = await _repository.Select(x => new TaskDto
-            {
-                Id = x.Id,
-                Title = x.Title,
-                Description = x.Description,
-                GroupId = x.GroupId,
-                Group = new GroupDto
-                {
-                    Id = x.GroupId,
-                    Name = x.Group.Name,
-                },
-                PersonId = x.PersonId,
-                Person = new PersonDto
-                {
-                    Id = x.PersonId,
-                    Name = x.Person.Name
-                }
-            }, x => x.Id == Id, cancellationToken);
-            return result.First();
+            var result = await _repository.Where(x => x.Id == Id, cancellationToken);
+            var entity = result.ToArray()[0];
+            return _mapper.Map<Tasks, TaskDto>(entity);
         }
         throw new Exception("Este registro no existe.");
+    }
+
+    public async Task<IBasePagination<TaskDto>> Filter(int GroupId, int PersonId, string Search, int page, int size, CancellationToken cancellationToken)
+    {
+        Expression<Func<Tasks, bool>> expression = (x) => x.Id > 0;
+
+        if (GroupId > 0) expression = expression.And(x => x.GroupId == GroupId);
+
+        if (PersonId > 0) expression = expression.And(x => x.PersonId == PersonId);
+
+        if (!string.IsNullOrEmpty(Search) && !string.IsNullOrWhiteSpace(Search))
+        {
+            Expression<Func<Tasks, bool>> expressionByTitle = (x) => x.Title.Contains(Search);
+            Expression<Func<Tasks, bool>> expressionByDescription = (x) => x.Description.Contains(Search);
+            var combineOrExpression = expressionByTitle.Or(expressionByDescription);
+            expression = expression.And(combineOrExpression);
+        }
+
+        var query = await _repository.Where(expression, cancellationToken);
+        return query.Select(x=>_mapper.Map<Tasks, TaskDto>(x)).Paginate(page, size);
     }
 }
