@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using System.Linq.Expressions;
 using EasyMapper;
-using Application.UnitOfWorks;
+using Domain.UnitOfWork;
 
 namespace Application.UsesCases;
 
@@ -40,7 +40,7 @@ public sealed class PersonUseCase : IPersonUseCase
 
     public async Task<int> Delete(int Id, CancellationToken cancellationToken)
     {
-        if(await _uow.People.Exist(x=>x.Id == Id, cancellationToken))
+        if (await _uow.People.Exist(x => x.Id == Id, cancellationToken))
         {
             await _uow.People.Delete(Id, cancellationToken);
             return await _uow.Commit(cancellationToken) ? Id : throw new Exception("No fue posible eliminar este registro.");
@@ -56,16 +56,16 @@ public sealed class PersonUseCase : IPersonUseCase
         {
             expression = expression.And(x => x.Name.Contains(Search));
         }
-        
+
         var query = await _uow.People.Where(expression, cancellationToken);
-        return query.Select(x=>_mapper.Map<Person, PersonDto>(x)).Paginate(page, size);
+        return query.Select(x => _mapper.Map<Person, PersonDto>(x)).Paginate(page, size);
     }
 
     public async Task<PersonDto> Find(int Id, CancellationToken cancellationToken)
     {
-        if(await _uow.People.Exist(x=>x.Id == Id, cancellationToken))
+        if (await _uow.People.Exist(x => x.Id == Id, cancellationToken))
         {
-            var result = await _uow.People.Where(x=>x.Id == Id, cancellationToken);
+            var result = await _uow.People.Where(x => x.Id == Id, cancellationToken);
             var entity = result.ToArray()[0];
             return _mapper.Map<Person, PersonDto>(entity);
         }
@@ -74,7 +74,7 @@ public sealed class PersonUseCase : IPersonUseCase
 
     public async Task<PersonDto?> Update(PersonDto Dto, int Id, CancellationToken cancellationToken)
     {
-        if(await _uow.People.Exist(x=>x.Id == Id, cancellationToken))
+        if (await _uow.People.Exist(x => x.Id == Id, cancellationToken))
         {
             var entity = _mapper.Map<PersonDto, Person>(Dto);
             await _uow.People.Update(entity, cancellationToken);
@@ -82,7 +82,8 @@ public sealed class PersonUseCase : IPersonUseCase
             {
                 return Dto;
             }
-            else {
+            else
+            {
                 await _uow.Rollback(cancellationToken);
                 throw new Exception("No fue posible actualizar el registro.");
             }

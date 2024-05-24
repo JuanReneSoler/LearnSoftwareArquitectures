@@ -1,8 +1,8 @@
 ﻿using Domain.Entities;
+using Domain.UnitOfWork;
+using Domain.UsesCases;
 using EasyMapper;
-using Application.Dispatchers;
 using System.Linq.Expressions;
-using Application.UnitOfWorks;
 
 namespace Application.UsesCases;
 
@@ -89,7 +89,7 @@ public sealed class TaskUseCase : ITaskUseCase
 
             if (await _uow.Commit(cancellationToken))
             {
-                if(_eventDispatcher is not null) _eventDispatcher.Dispatch(task.DomainEvents);
+                if (_eventDispatcher is not null) _eventDispatcher.Dispatch(task.DomainEvents);
                 task.ClearEvents();
                 return _mapper.Map<Tasks, TaskDto>(task);
             }
@@ -127,6 +127,6 @@ public sealed class TaskUseCase : ITaskUseCase
         }
 
         var query = await _uow.Tasks.Where(expression, cancellationToken);
-        return query.Select(x=>_mapper.Map<Tasks, TaskDto>(x)).Paginate(page, size);
+        return query.Select(x => _mapper.Map<Tasks, TaskDto>(x)).Paginate(page, size);
     }
 }

@@ -1,6 +1,6 @@
-using Application.UnitOfWorks;
 using Domain.Entities;
 using Domain.Repositories;
+using Domain.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.EF;

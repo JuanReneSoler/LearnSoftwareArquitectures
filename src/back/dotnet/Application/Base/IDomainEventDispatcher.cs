@@ -1,6 +1,6 @@
 using Domain.Events;
 
-namespace Application.Dispatchers;
+namespace Domain.UsesCases;
 
 public interface IDomainEventDispatcher
 {

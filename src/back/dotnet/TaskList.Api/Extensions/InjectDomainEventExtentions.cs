@@ -1,5 +1,5 @@
-﻿using Application.Dispatchers;
-using Domain.Events;
+﻿using Domain.Events;
+using Domain.UsesCases;
 using Infrastructure.DomainEvents;
 
 namespace TaskList.Api.Extensions;

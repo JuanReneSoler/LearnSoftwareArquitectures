@@ -48,6 +48,6 @@ public sealed class GenericRepository<TEntity> : IGenericRepository<TEntity>
         }, cancellationToken);
     }
 
-    public async Task<bool> Exist(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken) 
+    public async Task<bool> Exist(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken)
         => await _table.AnyAsync(expression, cancellationToken);
 }

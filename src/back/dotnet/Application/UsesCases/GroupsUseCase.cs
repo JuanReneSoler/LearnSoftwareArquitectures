@@ -1,5 +1,5 @@
-﻿using Application.UnitOfWorks;
-using Domain.Entities;
+﻿using Domain.Entities;
+using Domain.UnitOfWork;
 using EasyMapper;
 using System.Linq.Expressions;
 
@@ -32,7 +32,8 @@ public sealed class GroupsUseCase : IGroupUseCase
             Dto.Id = group.Id;
             return Dto;
         }
-        else{
+        else
+        {
             await _uow.Rollback(cancellationToken);
             throw new Exception("No fue posible crear el registro.");
         }
@@ -40,7 +41,7 @@ public sealed class GroupsUseCase : IGroupUseCase
 
     public async Task<int> Delete(int Id, CancellationToken cancellationToken)
     {
-        if(await _uow.Groups.Exist(x=>x.Id == Id, cancellationToken))
+        if (await _uow.Groups.Exist(x => x.Id == Id, cancellationToken))
         {
             await _uow.Groups.Delete(Id, cancellationToken);
             return await _uow.Commit(cancellationToken) ? Id : throw new Exception("No fue posible eliminar ele registro.");
@@ -50,7 +51,7 @@ public sealed class GroupsUseCase : IGroupUseCase
 
     public async Task<GroupDto?> Update(GroupDto Dto, int Id, CancellationToken cancellationToken)
     {
-        if(await _uow.Groups.Exist(x=> x.Id == Id, cancellationToken))
+        if (await _uow.Groups.Exist(x => x.Id == Id, cancellationToken))
         {
             var entity = _mapper.Map<GroupDto, Group>(Dto);
             await _uow.Groups.Update(entity, cancellationToken);
@@ -69,9 +70,9 @@ public sealed class GroupsUseCase : IGroupUseCase
 
     public async Task<GroupDto> Find(int Id, CancellationToken cancellationToken)
     {
-        if(await _uow.Groups.Exist(x=>x.Id == Id, cancellationToken))
+        if (await _uow.Groups.Exist(x => x.Id == Id, cancellationToken))
         {
-            var select = await _uow.Groups.Where(x=>x.Id == Id, cancellationToken);
+            var select = await _uow.Groups.Where(x => x.Id == Id, cancellationToken);
 
             var item = select.ToArray()[0];
             return _mapper.Map<Group, GroupDto>(item);
@@ -81,7 +82,7 @@ public sealed class GroupsUseCase : IGroupUseCase
 
     public async Task<IBasePagination<GroupDto>> Filter(string Search, int page, int size, CancellationToken cancellationToken)
     {
-         Expression<Func<Group, bool>> expression = x => x.Id > 0;
+        Expression<Func<Group, bool>> expression = x => x.Id > 0;
 
         if (!string.IsNullOrEmpty(Search) && !string.IsNullOrWhiteSpace(Search))
         {
@@ -89,6 +90,6 @@ public sealed class GroupsUseCase : IGroupUseCase
         }
 
         var query = await _uow.Groups.Where(expression, cancellationToken);
-        return query.Select(x=>_mapper.Map<Group, GroupDto>(x)).Paginate(page, size);
+        return query.Select(x => _mapper.Map<Group, GroupDto>(x)).Paginate(page, size);
     }
 }

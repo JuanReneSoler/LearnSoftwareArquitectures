@@ -1,7 +1,7 @@
 using Domain.Entities;
 using Domain.Repositories;
 
-namespace Application.UnitOfWorks;
+namespace Domain.UnitOfWork;
 
 public interface IGenericUnitOfWork
 {

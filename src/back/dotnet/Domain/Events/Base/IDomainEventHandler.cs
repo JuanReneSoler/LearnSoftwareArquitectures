@@ -1,6 +1,4 @@
-using Domain.Events;
-
-namespace Infrastructure.DomainEvents;
+namespace Domain.Events;
 
 public interface IDomainEventHandler<TEvent>
     where TEvent : IDomainEvent
