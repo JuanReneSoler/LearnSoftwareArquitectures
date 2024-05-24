@@ -1,4 +1,4 @@
-using Application.UsesCases;
+using Application.Dtos;
 using Domain.Entities;
 using EasyMapper;
 

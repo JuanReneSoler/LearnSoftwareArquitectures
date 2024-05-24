@@ -1,4 +1,4 @@
-using Domain.UnitOfWork;
+using Domain.UnitsOfWork;
 using Infrastructure.EF;
 
 namespace TaskList.Api.Extensions;

@@ -1,4 +1,6 @@
-﻿namespace Application.UsesCases;
+﻿using Application.Dtos;
+
+namespace Application.UseCases;
 
 public interface IBaseUseCase<TDto, TDtoID>
     where TDto : DtoBase<TDtoID>

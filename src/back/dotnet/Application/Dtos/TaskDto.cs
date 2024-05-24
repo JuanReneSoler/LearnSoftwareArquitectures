@@ -1,4 +1,4 @@
-namespace Application.UsesCases;
+namespace Application.Dtos;
 
 public class TaskDto : DtoBase<int>
 {

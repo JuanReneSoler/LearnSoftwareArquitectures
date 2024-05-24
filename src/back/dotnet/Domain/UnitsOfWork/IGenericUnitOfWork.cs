@@ -1,9 +1,9 @@
 using Domain.Entities;
 using Domain.Repositories;
 
-namespace Domain.UnitOfWork;
+namespace Domain.UnitsOfWork;
 
-public interface IGenericUnitOfWork
+public interface IGenericUnitOfWork : IDisposable
 {
     IGenericRepository<Tasks> Tasks { get; }
     IGenericRepository<Group> Groups { get; }

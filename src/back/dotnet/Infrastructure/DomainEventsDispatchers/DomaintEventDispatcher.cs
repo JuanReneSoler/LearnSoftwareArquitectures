@@ -1,8 +1,7 @@
 using Domain.Events;
-using Domain.UsesCases;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Infrastructure.DomainEvents;
+namespace Infrastructure.DomainEventsDispatchers;
 
 public class DomainEventDispatcher : IDomainEventDispatcher
 {

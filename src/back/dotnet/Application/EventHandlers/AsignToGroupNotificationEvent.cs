@@ -1,7 +1,7 @@
 ﻿using Domain.Events;
 using Domain.Services;
 
-namespace Infrastructure.DomainEvents;
+namespace Application.EventHandlers;
 
 public class AsignToGroupNotificationEvent : IDomainEventHandler<AsignToAGroupTask>
 {
@@ -13,6 +13,8 @@ public class AsignToGroupNotificationEvent : IDomainEventHandler<AsignToAGroupTa
 
     public void Handle(AsignToAGroupTask domainEvent)
     {
+        Console.WriteLine("prueba");
+        Console.ReadLine();
         throw new NotImplementedException();
     }
 }

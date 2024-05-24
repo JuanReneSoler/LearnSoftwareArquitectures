@@ -1,4 +1,4 @@
-namespace Application.UsesCases;
+namespace Application.Utils;
 
 public interface IBasePagination<T>
 where T : class

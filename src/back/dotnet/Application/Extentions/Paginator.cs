@@ -1,4 +1,7 @@
-namespace Application.UsesCases;
+using Application.Dtos;
+using Application.Utils;
+
+namespace Application.Extensions;
 
 internal static class Paginator
 {

@@ -1,6 +1,6 @@
-﻿using Domain.Events;
-using Domain.UsesCases;
-using Infrastructure.DomainEvents;
+﻿using Application.EventHandlers;
+using Domain.Events;
+using Infrastructure.DomainEventsDispatchers;
 
 namespace TaskList.Api.Extensions;
 

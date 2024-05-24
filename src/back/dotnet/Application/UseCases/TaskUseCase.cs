@@ -1,10 +1,12 @@
-﻿using Domain.Entities;
-using Domain.UnitOfWork;
-using Domain.UsesCases;
+﻿using Application.Dtos;
+using Application.Extensions;
+using Application.Utils;
+using Domain.Entities;
+using Domain.UnitsOfWork;
 using EasyMapper;
 using System.Linq.Expressions;
 
-namespace Application.UsesCases;
+namespace Application.UseCases;
 
 public interface ITaskUseCase : IGenericUseCase<TaskDto>
 {
@@ -16,17 +18,6 @@ public sealed class TaskUseCase : ITaskUseCase
 {
     private readonly IGenericUnitOfWork _uow;
     private readonly IMapper _mapper;
-    private readonly IDomainEventDispatcher? _eventDispatcher;
-
-    public TaskUseCase(
-            IGenericUnitOfWork UoW,
-            IMapper Mapper,
-            IDomainEventDispatcher eventDispatcher)
-    {
-        _uow = UoW;
-        _mapper = Mapper;
-        _eventDispatcher = eventDispatcher;
-    }
 
     public TaskUseCase(
             IGenericUnitOfWork UoW,
@@ -89,8 +80,6 @@ public sealed class TaskUseCase : ITaskUseCase
 
             if (await _uow.Commit(cancellationToken))
             {
-                if (_eventDispatcher is not null) _eventDispatcher.Dispatch(task.DomainEvents);
-                task.ClearEvents();
                 return _mapper.Map<Tasks, TaskDto>(task);
             }
             throw new Exception("No fue posible cambiar esta tarea de grupo.");

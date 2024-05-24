@@ -1,4 +1,4 @@
-using Application.UsesCases;
+using Application.UseCases;
 
 namespace TaskList.Api.Extensions;
 

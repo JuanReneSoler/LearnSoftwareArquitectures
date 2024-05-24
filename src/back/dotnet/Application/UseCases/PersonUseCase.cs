@@ -1,9 +1,12 @@
 ﻿using Domain.Entities;
 using System.Linq.Expressions;
 using EasyMapper;
-using Domain.UnitOfWork;
+using Application.Utils;
+using Application.Dtos;
+using Application.Extensions;
+using Domain.UnitsOfWork;
 
-namespace Application.UsesCases;
+namespace Application.UseCases;
 
 public interface IPersonUseCase : IGenericUseCase<PersonDto>
 {

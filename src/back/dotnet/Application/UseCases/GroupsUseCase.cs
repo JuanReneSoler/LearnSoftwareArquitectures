@@ -1,9 +1,12 @@
-﻿using Domain.Entities;
-using Domain.UnitOfWork;
+﻿using Application.Dtos;
+using Application.Extensions;
+using Application.Utils;
+using Domain.Entities;
+using Domain.UnitsOfWork;
 using EasyMapper;
 using System.Linq.Expressions;
 
-namespace Application.UsesCases;
+namespace Application.UseCases;
 
 public interface IGroupUseCase : IGenericUseCase<GroupDto>
 {
