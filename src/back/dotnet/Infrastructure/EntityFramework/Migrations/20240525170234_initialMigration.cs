@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Infrastructure.EF.Migrations
+namespace Infrastructure.EntityFramework.Migrations
 {
     /// <inheritdoc />
     public partial class initialMigration : Migration

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Infrastructure.EF.Migrations
+namespace Infrastructure.EntityFramework.Migrations
 {
     /// <inheritdoc />
     public partial class addShadowProperties : Migration

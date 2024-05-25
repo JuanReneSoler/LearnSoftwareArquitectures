@@ -2,16 +2,16 @@ using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.EF;
+namespace Infrastructure.EntityFramework;
 
-public sealed class PersonMap : IEntityTypeConfiguration<Person>
+public sealed class TaskMap : IEntityTypeConfiguration<Tasks>
 {
-    public void Configure(EntityTypeBuilder<Person> builder)
+    public void Configure(EntityTypeBuilder<Tasks> builder)
     {
-        builder.ToTable("Person");
+        builder.ToTable("Task");
         builder.HasKey(x => x.Id);
-        builder.HasMany(x => x.Groups);
-        builder.HasMany(x => x.Tasks);
+        builder.HasOne(x => x.Group);
+        builder.HasOne(x => x.Person);
 
         builder.Property<int>("CreatedById")
             .HasDefaultValue(null);

@@ -2,7 +2,7 @@ using Domain.Events;
 
 namespace Domain.Entities;
 
-public abstract class BaseEntity<TEntityID> : IGenericAgregate
+public abstract class BaseEntity<TEntityID> : IGenericAgregate, ISoftDelete<TEntityID>
 {
     public TEntityID Id { get; set; }
 

@@ -2,7 +2,7 @@ using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.EF;
+namespace Infrastructure.EntityFramework;
 
 public sealed class GroupMap : IEntityTypeConfiguration<Group>
 {

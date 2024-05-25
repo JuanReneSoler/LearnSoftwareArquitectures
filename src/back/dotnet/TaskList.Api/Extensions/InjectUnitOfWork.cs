@@ -1,5 +1,5 @@
 using Domain.UnitsOfWork;
-using Infrastructure.EF;
+using Infrastructure.EntityFramework;
 
 namespace TaskList.Api.Extensions;
 

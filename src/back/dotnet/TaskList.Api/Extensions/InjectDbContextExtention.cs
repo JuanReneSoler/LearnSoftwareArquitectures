@@ -1,4 +1,4 @@
-using Infrastructure.EF;
+using Infrastructure.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 
 namespace TaskList.Api.Extensions;

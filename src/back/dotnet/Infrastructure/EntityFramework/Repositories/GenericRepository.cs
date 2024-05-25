@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Domain.Repositories;
 using Domain.Entities;
 
-namespace Infrastructure.EF;
+namespace Infrastructure.EntityFramework;
 
 public sealed class GenericRepository<TEntity> : IGenericRepository<TEntity>
     where TEntity : BaseEntity<int>

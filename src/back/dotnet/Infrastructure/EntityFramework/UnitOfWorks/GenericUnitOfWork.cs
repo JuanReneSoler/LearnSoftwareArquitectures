@@ -4,7 +4,7 @@ using Domain.Repositories;
 using Domain.UnitsOfWork;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.EF;
+namespace Infrastructure.EntityFramework;
 
 public sealed class GenericUnitOfWork : IGenericUnitOfWork
 {
