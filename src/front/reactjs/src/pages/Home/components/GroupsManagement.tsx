@@ -1,22 +1,15 @@
 import { useContext, useEffect, useState } from "react";
-import { IGroup, GroupForm, IGroupViewModel, GroupsList } from ".";
+import { GroupForm, GroupsList } from ".";
 import { Group as GroupDto, groupService } from "../../../services";
 import { AppContext } from "../../../contexts";
 
 const initialState = {
   id: 0,
   name: "",
-} as IGroupViewModel;
-
-const transform = (group: IGroupViewModel): GroupDto => {
-  return {
-    id: group.id,
-    name: group.name,
-  } as GroupDto;
-};
+} as GroupDto;
 
 function GroupsManagement() {
-  const [groupList, setGroupList] = useState([] as Array<IGroup>);
+  const [groupList, setGroupList] = useState([] as Array<GroupDto>);
   const [showForm, setShowForm] = useState(false);
   const [groupForm, setGroupForm] = useState(initialState);
   const [isReadOnly, setIsReadOnly] = useState(true);
@@ -41,15 +34,15 @@ function GroupsManagement() {
       });
   };
 
-  const handlerSubmit = (result: IGroupViewModel) => {
+  const handlerSubmit = (result: GroupDto) => {
     (async () => {
       if (result.id > 0) {
-        await groupService.update(transform(result)).then(async () => {
+        await groupService.update(result).then(async () => {
           await loadGroupList();
           alert("grupo modificado satisfactoriamente!");
         });
       } else {
-        await groupService.create(transform(result)).then(async () => {
+        await groupService.create(result).then(async () => {
           await loadGroupList();
           alert("grupo creado satisfactoriamente!");
         });
@@ -59,7 +52,7 @@ function GroupsManagement() {
 
   const handlerSelect = (id: number) => {
     const item = groupList.filter((x) => x.id === id)[0];
-    setGroupForm(transform(item));
+    setGroupForm(item);
     setShowForm(true);
     setIsReadOnly(true);
   };

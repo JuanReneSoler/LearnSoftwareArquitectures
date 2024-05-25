@@ -1,13 +1,9 @@
 import { Pagination } from "../../../../components";
+import { Group } from "../../../../services";
 import { CustonLi } from "./CustomLi";
 
-export interface IGroup {
-  id: number;
-  name: string;
-}
-
 interface IProps {
-  items: Array<IGroup>;
+  items: Array<Group>;
   selectEvent?: (id: number) => void;
   deleteEvent?: (id: number) => void;
   totalPages: number;

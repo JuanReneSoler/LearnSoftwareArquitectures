@@ -1,13 +1,9 @@
 import { Pagination } from "../../../../components";
+import { Person } from "../../../../services";
 import { CustonLi } from "./CustomLi";
 
-export interface IPerson {
-  id: number;
-  name: string;
-}
-
 interface IProps {
-  items: Array<IPerson>;
+  items: Array<Person>;
   selectEvent?: (id: number) => void;
   deleteEvent?: (id: number) => void;
   totalPages: number;

@@ -1,18 +1,10 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { groupService, peopleService } from "../../../services";
-
-export interface ITaskFormViewModel {
-  id: number;
-  title: string;
-  description: string;
-  groupId: number;
-  personId: number;
-}
+import { Task, groupService, peopleService } from "../../../services";
 
 interface IProps {
-  viewModel: ITaskFormViewModel;
+  viewModel: Task;
   id: string;
-  submitEvent: (viewModel: ITaskFormViewModel) => void;
+  submitEvent: (viewModel: Task) => void;
   readonly?: boolean;
 }
 function TaskForm({ viewModel, id, submitEvent, readonly }: IProps) {

@@ -1,22 +1,15 @@
-import { DragEvent, useEffect, useState } from "react";
+import { DragEvent } from "react";
 import { Pagination } from "../../../components";
-
-export interface ITask {
-  id: number;
-  title: string;
-  description: string;
-  groupId: number;
-  personId: number;
-}
+import { Task } from "../../../services";
 
 interface IProps {
-  items: Array<ITask>;
+  items: Array<Task>;
   deleteEvent?: (id: number) => void;
   selectEvent?: (id: number) => void;
   readonly?: boolean;
   draggable?: boolean;
-  onDrop?: (task: ITask) => void;
-  onDrag?:()=>void;
+  onDrop?: (task: Task) => void;
+  onDrag?: () => void;
   totalPages: number;
   currentPage: number;
   changePagination: (newPage: number) => void;
@@ -50,7 +43,7 @@ function TasksList({
 
   const handleDragEndCapture = (e: DragEvent<HTMLLIElement>) => {
     e.preventDefault();
-    if(onDrag)onDrag();
+    if (onDrag) onDrag();
   };
 
   const handleDragOver = (e: DragEvent<HTMLUListElement>) => {
@@ -59,7 +52,7 @@ function TasksList({
 
   const handleDrop = (e: DragEvent<HTMLUListElement>) => {
     e.preventDefault();
-    const item = JSON.parse(e.dataTransfer.getData(dragTask)) as ITask;
+    const item = JSON.parse(e.dataTransfer.getData(dragTask)) as Task;
 
     if (items.filter((x) => x.id === item.id).length === 0) {
       if (onDrop) onDrop(item);

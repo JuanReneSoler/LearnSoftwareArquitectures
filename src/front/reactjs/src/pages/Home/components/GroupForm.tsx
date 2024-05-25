@@ -1,14 +1,10 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-
-export interface IGroupViewModel {
-  id: number;
-  name: string;
-}
+import { Group } from "../../../services";
 
 interface IProps {
   id: string;
-  viewModel: IGroupViewModel;
-  submitEvent: (viewModel: IGroupViewModel) => void;
+  viewModel: Group;
+  submitEvent: (viewModel: Group) => void;
   readonly?: boolean;
 }
 

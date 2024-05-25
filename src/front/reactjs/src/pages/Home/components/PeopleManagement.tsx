@@ -1,29 +1,22 @@
 import { useContext, useEffect, useState } from "react";
-import { PeopleList, IPerson, PersonForm, IPersonViewModel } from ".";
+import { PeopleList, PersonForm } from ".";
 import { Person as PersonDto, peopleService } from "../../../services";
 import { AppContext } from "../../../contexts";
 
 const initialState = {
   id: 0,
   name: "",
-} as IPersonViewModel;
-
-const transform = (group: IPersonViewModel): PersonDto => {
-  return {
-    id: group.id,
-    name: group.name,
-  } as PersonDto;
-};
+} as PersonDto;
 
 function PeopleManagement() {
-  const [personList, setPersonList] = useState([] as Array<IPerson>);
+  const [personList, setPersonList] = useState([] as Array<PersonDto>);
   const [showForm, setShowForm] = useState(false);
   const [personForm, setPersonForm] = useState(initialState);
   const [isReadOnly, setIsReadOnly] = useState(true);
   const formId = "group";
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const {globalSearchText}=useContext(AppContext);
+  const { globalSearchText } = useContext(AppContext);
 
   useEffect(() => {
     (async () => {
@@ -32,21 +25,23 @@ function PeopleManagement() {
   }, [currentPage, globalSearchText]);
 
   const loadPersonList = async () => {
-    await peopleService.filter({ search:globalSearchText, page: currentPage, size: 10 }).then((res) => {
-      setCurrentPage(res.currentPage);
-      setTotalPages(res.totalPages);
-      setPersonList(res.items);
-    });
+    await peopleService
+      .filter({ search: globalSearchText, page: currentPage, size: 10 })
+      .then((res) => {
+        setCurrentPage(res.currentPage);
+        setTotalPages(res.totalPages);
+        setPersonList(res.items);
+      });
   };
 
-  const handlerSubmit = (result: IPersonViewModel) => {
+  const handlerSubmit = (result: PersonDto) => {
     (async () => {
       if (result.id > 0) {
-        await peopleService.update(transform(result)).then(() => {
+        await peopleService.update(result).then(() => {
           alert("persona modificada satisfactoriamente!");
         });
       } else {
-        await peopleService.create(transform(result)).then(() => {
+        await peopleService.create(result).then(() => {
           alert("persona creada satisfactoriamente!");
         });
       }
@@ -56,7 +51,7 @@ function PeopleManagement() {
 
   const handlerSelect = (id: number) => {
     const item = personList.filter((x) => x.id === id)[0];
-    setPersonForm(transform(item));
+    setPersonForm(item);
     setShowForm(true);
     setIsReadOnly(true);
   };
@@ -92,7 +87,11 @@ function PeopleManagement() {
         </button>
       )}
       {isReadOnly && showForm && (
-        <button type="button" onClick={() => setIsReadOnly(false)} title="Guardar los cambios.">
+        <button
+          type="button"
+          onClick={() => setIsReadOnly(false)}
+          title="Guardar los cambios."
+        >
           editar
         </button>
       )}
@@ -116,14 +115,16 @@ function PeopleManagement() {
           readonly={isReadOnly}
         />
       )}
-      {!showForm && <PeopleList
-        currentPage={currentPage}
-        totalPages={totalPages}
-        items={personList}
-        selectEvent={handlerSelect}
-        deleteEvent={handlerDelete}
-        changePagination={(page) => setCurrentPage(page)}
-      />}
+      {!showForm && (
+        <PeopleList
+          currentPage={currentPage}
+          totalPages={totalPages}
+          items={personList}
+          selectEvent={handlerSelect}
+          deleteEvent={handlerDelete}
+          changePagination={(page) => setCurrentPage(page)}
+        />
+      )}
     </>
   );
 }

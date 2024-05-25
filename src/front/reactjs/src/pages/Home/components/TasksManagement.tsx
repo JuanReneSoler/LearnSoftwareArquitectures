@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { ITask, TaskForm, ITaskFormViewModel, TasksList } from ".";
+import { TaskForm, TasksList } from ".";
 import { Task as TaskDto, taskService } from "../../../services";
 import { AppContext } from "../../../contexts";
 
@@ -9,9 +9,9 @@ const formInitialState = {
   description: "",
   groupId: 0,
   personId: 0,
-} as ITaskFormViewModel;
+} as TaskDto;
 
-const transform = (task: ITaskFormViewModel) => {
+const transform = (task: TaskDto) => {
   return {
     id: task.id,
     title: task.title,
@@ -23,41 +23,31 @@ const transform = (task: ITaskFormViewModel) => {
 
 const TasksManagement = () => {
   const [showForm, setShowForm] = useState(false);
-  const [taskList, setTaskList] = useState([] as Array<ITask>);
+  const [taskList, setTaskList] = useState([] as Array<TaskDto>);
   const [taskForm, setTaskForm] = useState(formInitialState);
   const [isReadOnly, setIsReadOnly] = useState(true);
   const formId = "task";
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const {globalSearchText}=useContext(AppContext);
+  const { globalSearchText } = useContext(AppContext);
 
   const loadTaskList = async () => {
-    await taskService.filter({ search:globalSearchText, page: currentPage, size: 10 }).then((res) => {
-      setCurrentPage(res.currentPage);
-      setTotalPages(res.totalPages);
-      setTaskList(
-        res.items.map((i) => {
-          return {
-            id: i.id,
-            title: i.title,
-            description: i.description,
-            groupId: i.groupId,
-            groupName: i.group.name,
-            personId: i.personId,
-            personName: i.person.name,
-          };
-        })
-      );
-    });
+    await taskService
+      .filter({ search: globalSearchText, page: currentPage, size: 10 })
+      .then((res) => {
+        setCurrentPage(res.currentPage);
+        setTotalPages(res.totalPages);
+        setTaskList(res.items);
+      });
   };
 
   useEffect(() => {
-    (async ()=>{
-        await loadTaskList();
-      })();
+    (async () => {
+      await loadTaskList();
+    })();
   }, [currentPage, globalSearchText]);
 
-  const handlerSubmit = (result: ITaskFormViewModel) => {
+  const handlerSubmit = (result: TaskDto) => {
     (async () => {
       if (result.id > 0) {
         await taskService.update(transform(result)).then(() => {
@@ -118,7 +108,11 @@ const TasksManagement = () => {
         </button>
       )}
       {isReadOnly && showForm && (
-        <button type="button" onClick={() => setIsReadOnly(false)} title="Guardar los cambios.">
+        <button
+          type="button"
+          onClick={() => setIsReadOnly(false)}
+          title="Guardar los cambios."
+        >
           editar
         </button>
       )}
@@ -142,14 +136,16 @@ const TasksManagement = () => {
           readonly={isReadOnly}
         />
       )}
-      {!showForm && <TasksList
-        currentPage={currentPage}
-        totalPages={totalPages}
-        items={taskList}
-        selectEvent={handlerSelect}
-        deleteEvent={handlerDelete}
-        changePagination={(page) => setCurrentPage(page)}
-      />}
+      {!showForm && (
+        <TasksList
+          currentPage={currentPage}
+          totalPages={totalPages}
+          items={taskList}
+          selectEvent={handlerSelect}
+          deleteEvent={handlerDelete}
+          changePagination={(page) => setCurrentPage(page)}
+        />
+      )}
     </>
   );
 };

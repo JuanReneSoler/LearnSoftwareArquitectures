@@ -1,5 +1,5 @@
-import { taskService } from "../../../../services";
-import { ITask, TasksList } from "..";
+import { Task, taskService } from "../../../../services";
+import { TasksList } from "..";
 import { useEffect, useState } from "react";
 
 interface IProps {
@@ -7,7 +7,7 @@ interface IProps {
 }
 
 export const Tasks = ({ groupId }: IProps) => {
-  const [items, setItems] = useState([] as Array<ITask>);
+  const [items, setItems] = useState([] as Array<Task>);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
@@ -27,7 +27,7 @@ export const Tasks = ({ groupId }: IProps) => {
     })();
   }, [currentPage]);
 
-  const handlerDropEvent = (task: ITask) => {
+  const handlerDropEvent = (task: Task) => {
     (async () => {
       await taskService.changeGroup(task.id, groupId ?? 0).then(() => {
         //

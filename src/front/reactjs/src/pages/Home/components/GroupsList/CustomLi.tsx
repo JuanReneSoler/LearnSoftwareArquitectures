@@ -6,11 +6,7 @@ interface IProps {
   handlerSelect: (id: number) => void;
   handlerDelete: (id: number) => void;
 }
-export const CustonLi = ({
-  item,
-  handlerDelete,
-  handlerSelect,
-}: IProps) => {
+export const CustonLi = ({ item, handlerDelete, handlerSelect }: IProps) => {
   const [showTasks, setShowTasks] = useState(false);
   return (
     <li>

@@ -7,7 +7,7 @@ const api = import.meta.env.VITE_API + "Task";
 interface IFilterParams {
   GroupId?: number;
   PersonId?: number;
-  search?:string;
+  search?: string;
   page: number;
   size: number;
 }

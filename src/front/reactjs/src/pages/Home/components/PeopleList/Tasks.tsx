@@ -1,29 +1,29 @@
 import { useEffect, useState } from "react";
-import { ITask, TasksList } from "..";
-import { taskService } from "../../../../services";
+import { TasksList } from "..";
+import { Task, taskService } from "../../../../services";
 
 interface IProps {
   personId: number;
 }
 
 export const Tasks = ({ personId }: IProps) => {
-  const [items, setItems] = useState([] as Array<ITask>);
+  const [items, setItems] = useState([] as Array<Task>);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
-  const loadTasks = (page: number)=>{
-    (async ()=>{
+  const loadTasks = (page: number) => {
+    (async () => {
       await taskService
-    .filter({ PersonId: personId, page: page, size: 10 })
-    .then((res) => {
-      setCurrentPage(res.currentPage);
-      setTotalPages(res.totalPages);
-      setItems(res.items);
-    });
+        .filter({ PersonId: personId, page: page, size: 10 })
+        .then((res) => {
+          setCurrentPage(res.currentPage);
+          setTotalPages(res.totalPages);
+          setItems(res.items);
+        });
     })();
-  }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     loadTasks(currentPage);
   }, []);
 

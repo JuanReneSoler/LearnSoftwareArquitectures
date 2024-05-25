@@ -13,12 +13,12 @@ public sealed class Tasks : BaseEntity<int>
         get => _groupId;
         set
         {
-            if (value != _groupId)
+            if (value > 0 && _groupId > 0 && value != _groupId)
             {
                 var changeGroupEvent = new AsignToAGroupTask(this);
                 _domainEvents.Add(changeGroupEvent);
-                _groupId = value;
             }
+            _groupId = value;
         }
     }
     public Int32 PersonId { get; set; }
