@@ -36,11 +36,11 @@ export const Tasks = ({ groupId }: IProps) => {
     })();
   };
 
-  const handlerDragEvent =()=>{
+  const handlerDragEvent = () => {
     (async () => {
       await loadDataList();
     })();
-  }
+  };
 
   return (
     <TasksList

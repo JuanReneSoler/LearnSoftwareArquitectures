@@ -13,7 +13,7 @@ function Pagination({ totalPages, currentPage, changeCurrentPage }: IProps) {
   }, [currentPage]);
 
   return (
-    <span>
+    <span style={{ display: totalPages == 0 ? "none" : "inline-block" }}>
       <a
         href="#"
         onClick={() => {

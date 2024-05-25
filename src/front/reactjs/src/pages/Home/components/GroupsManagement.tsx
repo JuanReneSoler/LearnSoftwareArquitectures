@@ -23,7 +23,7 @@ function GroupsManagement() {
   const formId = "group";
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const {globalSearchText}=useContext(AppContext);
+  const { globalSearchText } = useContext(AppContext);
 
   useEffect(() => {
     (async () => {
@@ -32,11 +32,13 @@ function GroupsManagement() {
   }, [currentPage, globalSearchText]);
 
   const loadGroupList = async () => {
-    await groupService.filter({ search:globalSearchText, page: currentPage, size: 10 }).then((res) => {
-      setCurrentPage(res.currentPage);
-      setTotalPages(res.totalPages);
-      setGroupList(res.items);
-    });
+    await groupService
+      .filter({ search: globalSearchText, page: currentPage, size: 10 })
+      .then((res) => {
+        setCurrentPage(res.currentPage);
+        setTotalPages(res.totalPages);
+        setGroupList(res.items);
+      });
   };
 
   const handlerSubmit = (result: IGroupViewModel) => {
@@ -93,7 +95,11 @@ function GroupsManagement() {
         </button>
       )}
       {isReadOnly && showForm && (
-        <button type="button" onClick={() => setIsReadOnly(false)} title="Guardar los cambios.">
+        <button
+          type="button"
+          onClick={() => setIsReadOnly(false)}
+          title="Guardar los cambios."
+        >
           editar
         </button>
       )}
@@ -117,14 +123,16 @@ function GroupsManagement() {
           readonly={isReadOnly}
         />
       )}
-      {!showForm && <GroupsList
-        currentPage={currentPage}
-        totalPages={totalPages}
-        items={groupList}
-        selectEvent={handlerSelect}
-        deleteEvent={handlerDelete}
-        changePagination={(page) => setCurrentPage(page)}
-      />}
+      {!showForm && (
+        <GroupsList
+          currentPage={currentPage}
+          totalPages={totalPages}
+          items={groupList}
+          selectEvent={handlerSelect}
+          deleteEvent={handlerDelete}
+          changePagination={(page) => setCurrentPage(page)}
+        />
+      )}
     </>
   );
 }

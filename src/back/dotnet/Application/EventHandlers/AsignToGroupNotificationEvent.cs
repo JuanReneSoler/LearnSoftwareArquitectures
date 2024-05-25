@@ -13,8 +13,6 @@ public class AsignToGroupNotificationEvent : IDomainEventHandler<AsignToAGroupTa
 
     public void Handle(AsignToAGroupTask domainEvent)
     {
-        Console.WriteLine("prueba");
-        Console.ReadLine();
         throw new NotImplementedException();
     }
 }

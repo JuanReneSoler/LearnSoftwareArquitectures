@@ -15,6 +15,8 @@ public sealed class GenericUnitOfWork : IGenericUnitOfWork
 
     public IGenericRepository<Person> People => new GenericRepository<Person>(_context);
 
+    private bool disposed = false;
+
     private readonly SqlServerContext _context;
     private readonly IDomainEventDispatcher _dispatcher;
 
@@ -28,8 +30,12 @@ public sealed class GenericUnitOfWork : IGenericUnitOfWork
 
     public async Task<bool> Commit(CancellationToken cancellationToken)
     {
-        await DispatchDomainEvents(cancellationToken);
-        return await _context.SaveChangesAsync(cancellationToken) == 1;
+        if (await _context.SaveChangesAsync(cancellationToken) == 1)
+        {
+            await DispatchDomainEvents(cancellationToken);
+            return true;
+        }
+        return false;
     }
 
     public async Task Rollback(CancellationToken cancellationToken)
@@ -65,17 +71,35 @@ public sealed class GenericUnitOfWork : IGenericUnitOfWork
             var domainEvents = domainEntities.SelectMany(x => x.Entity.DomainEvents)
                 .ToArray();
 
-            _dispatcher.Dispatch(domainEvents);
             foreach (var entity in domainEntities)
             {
                 entity.Entity.ClearEvents();
             }
+            _dispatcher.Dispatch(domainEvents);
 
         }, cancellationToken);
     }
 
     public void Dispose()
     {
-        throw new NotImplementedException();
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (!disposed)
+        {
+            if (disposing)
+            {
+                _context.Dispose();
+            }
+            disposed = true;
+        }
+    }
+
+    ~GenericUnitOfWork()
+    {
+        Dispose(false);
     }
 }
