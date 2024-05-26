@@ -1,6 +1,7 @@
 import { Task, taskService } from "../../../../services";
 import { TasksList } from "..";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AppContext } from "../../../../contexts";
 
 interface IProps {
   groupId?: number;
@@ -10,10 +11,11 @@ export const Tasks = ({ groupId }: IProps) => {
   const [items, setItems] = useState([] as Array<Task>);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const { token } = useContext(AppContext);
 
   const loadDataList = async () => {
     await taskService
-      .filter({ GroupId: groupId, page: currentPage, size: 10 })
+      .filter({ GroupId: groupId, page: currentPage, size: 10 }, token)
       .then((res) => {
         setItems(res.items);
         setTotalPages(res.totalPages);
@@ -29,7 +31,7 @@ export const Tasks = ({ groupId }: IProps) => {
 
   const handlerDropEvent = (task: Task) => {
     (async () => {
-      await taskService.changeGroup(task.id, groupId ?? 0).then(() => {
+      await taskService.changeGroup(task.id, groupId ?? 0, token).then(() => {
         //
       });
       await loadDataList();

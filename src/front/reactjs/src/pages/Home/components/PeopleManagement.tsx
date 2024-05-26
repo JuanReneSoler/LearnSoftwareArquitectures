@@ -16,7 +16,7 @@ function PeopleManagement() {
   const formId = "group";
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const { globalSearchText } = useContext(AppContext);
+  const { globalSearchText, token } = useContext(AppContext);
 
   useEffect(() => {
     (async () => {
@@ -26,7 +26,7 @@ function PeopleManagement() {
 
   const loadPersonList = async () => {
     await peopleService
-      .filter({ search: globalSearchText, page: currentPage, size: 10 })
+      .filter({ search: globalSearchText, page: currentPage, size: 10 }, token)
       .then((res) => {
         setCurrentPage(res.currentPage);
         setTotalPages(res.totalPages);
@@ -37,11 +37,11 @@ function PeopleManagement() {
   const handlerSubmit = (result: PersonDto) => {
     (async () => {
       if (result.id > 0) {
-        await peopleService.update(result).then(() => {
+        await peopleService.update(result, token).then(() => {
           alert("persona modificada satisfactoriamente!");
         });
       } else {
-        await peopleService.create(result).then(() => {
+        await peopleService.create(result, token).then(() => {
           alert("persona creada satisfactoriamente!");
         });
       }
@@ -58,7 +58,7 @@ function PeopleManagement() {
 
   const handlerDelete = (id: number) => {
     (async () => {
-      await peopleService.delete(id).then(async () => {
+      await peopleService.delete(id, token).then(async () => {
         await loadPersonList();
       });
     })();

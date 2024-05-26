@@ -16,7 +16,7 @@ function GroupsManagement() {
   const formId = "group";
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const { globalSearchText } = useContext(AppContext);
+  const { globalSearchText, token } = useContext(AppContext);
 
   useEffect(() => {
     (async () => {
@@ -26,7 +26,7 @@ function GroupsManagement() {
 
   const loadGroupList = async () => {
     await groupService
-      .filter({ search: globalSearchText, page: currentPage, size: 10 })
+      .filter({ search: globalSearchText, page: currentPage, size: 10 }, token)
       .then((res) => {
         setCurrentPage(res.currentPage);
         setTotalPages(res.totalPages);
@@ -37,12 +37,12 @@ function GroupsManagement() {
   const handlerSubmit = (result: GroupDto) => {
     (async () => {
       if (result.id > 0) {
-        await groupService.update(result).then(async () => {
+        await groupService.update(result, token).then(async () => {
           await loadGroupList();
           alert("grupo modificado satisfactoriamente!");
         });
       } else {
-        await groupService.create(result).then(async () => {
+        await groupService.create(result, token).then(async () => {
           await loadGroupList();
           alert("grupo creado satisfactoriamente!");
         });
@@ -59,7 +59,7 @@ function GroupsManagement() {
 
   const handlerDelete = (id: number) => {
     (async () => {
-      await groupService.delete(id).then(async () => {
+      await groupService.delete(id, token).then(async () => {
         await loadGroupList();
       });
     })();

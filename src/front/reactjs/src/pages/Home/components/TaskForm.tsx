@@ -1,5 +1,6 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useContext, useEffect, useState } from "react";
 import { Task, groupService, peopleService } from "../../../services";
+import { AppContext } from "../../../contexts";
 
 interface IProps {
   viewModel: Task;
@@ -16,16 +17,18 @@ function TaskForm({ viewModel, id, submitEvent, readonly }: IProps) {
     [] as Array<{ id: number; name: string }>
   );
 
+  const { token } = useContext(AppContext);
+
   useEffect(() => {
     (async () => {
-      await groupService.filter({ page: 1, size: 10 }).then((res) => {
+      await groupService.filter({ page: 1, size: 10 }, token).then((res) => {
         setGroupList(
           res.items.map((item) => {
             return { id: item.id, name: item.name };
           })
         );
       });
-      await peopleService.filter({ page: 1, size: 10 }).then((res) => {
+      await peopleService.filter({ page: 1, size: 10 }, token).then((res) => {
         setPeopleList(
           res.items.map((item) => {
             return { id: item.id, name: item.name };

@@ -11,16 +11,6 @@ const formInitialState = {
   personId: 0,
 } as TaskDto;
 
-const transform = (task: TaskDto) => {
-  return {
-    id: task.id,
-    title: task.title,
-    description: task.description,
-    groupId: task.groupId,
-    personId: task.personId,
-  } as TaskDto;
-};
-
 const TasksManagement = () => {
   const [showForm, setShowForm] = useState(false);
   const [taskList, setTaskList] = useState([] as Array<TaskDto>);
@@ -29,11 +19,11 @@ const TasksManagement = () => {
   const formId = "task";
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const { globalSearchText } = useContext(AppContext);
+  const { globalSearchText, token } = useContext(AppContext);
 
   const loadTaskList = async () => {
     await taskService
-      .filter({ search: globalSearchText, page: currentPage, size: 10 })
+      .filter({ search: globalSearchText, page: currentPage, size: 10 }, token)
       .then((res) => {
         setCurrentPage(res.currentPage);
         setTotalPages(res.totalPages);
@@ -50,11 +40,11 @@ const TasksManagement = () => {
   const handlerSubmit = (result: TaskDto) => {
     (async () => {
       if (result.id > 0) {
-        await taskService.update(transform(result)).then(() => {
+        await taskService.update(result, token).then(() => {
           alert("tarea modificada satisfactoriamente!");
         });
       } else {
-        await taskService.create(transform(result)).then(() => {
+        await taskService.create(result, token).then(() => {
           alert("tarea creada satisfactoriamente!");
         });
       }
@@ -64,22 +54,14 @@ const TasksManagement = () => {
 
   const handlerSelect = (id: number) => {
     const vm = taskList.filter((x) => x.id === id)[0];
-    setTaskForm(
-      transform({
-        id: vm.id,
-        title: vm.title,
-        description: vm.description,
-        groupId: vm.groupId,
-        personId: vm.personId,
-      })
-    );
+    setTaskForm(vm);
     setShowForm(true);
     setIsReadOnly(true);
   };
 
   const handlerDelete = (id: number) => {
     (async () => {
-      await taskService.delete(id).then(async () => {
+      await taskService.delete(id, token).then(async () => {
         await loadTaskList();
       });
     })();
