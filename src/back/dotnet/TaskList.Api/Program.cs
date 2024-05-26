@@ -6,30 +6,30 @@ const string allowOrigins = "AllowAnyOrigin";
 
 // Add services to the container.
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //db context
-builder.Services.InjectDbContext(builder.Configuration.GetConnectionString("default"));
+builder.Services.AddDbContext(builder.Configuration.GetConnectionString("default"));
 
-//Repositories
-//builder.Services.InjectRepositories();
+builder.Services.AddAuthorization();
 
 //Unit of Work
-builder.Services.InjectUnitOfWork();
+builder.Services.AddUnitOfWork();
 
 //mapper
-builder.Services.InjectMapper();
+builder.Services.AddMapper();
 
 //inject services
-builder.Services.InjectServices();
+builder.Services.AddServices();
 
 //domain events;
-builder.Services.InjectDomainEvents();
+builder.Services.AddDomainEvents();
 
 //Uses Cases
-builder.Services.InjectUsesCases();
+builder.Services.AddUsesCases();
 
 //configure cors
 builder.Services.AddCors(opt =>
@@ -42,6 +42,8 @@ builder.Services.AddCors(opt =>
     });
 });
 
+builder.Services.AddJwt(builder.Configuration);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -53,10 +55,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(allowOrigins);
 
-app.InjectMiddlewares();
+app.UseMiddlewares();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

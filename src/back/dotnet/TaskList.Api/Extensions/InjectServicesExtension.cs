@@ -5,7 +5,7 @@ namespace TaskList.Api.Extensions;
 
 public static class InjectServicesExtension
 {
-    public static IServiceCollection InjectServices(this IServiceCollection services)
+    public static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddScoped<IMailService, MailService>();
         return services;

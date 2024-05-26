@@ -5,7 +5,7 @@ namespace TaskList.Api.Extensions;
 
 public static class InjectUnitOfWorkExtention
 {
-    public static IServiceCollection InjectUnitOfWork(this IServiceCollection services)
+    public static IServiceCollection AddUnitOfWork(this IServiceCollection services)
     {
         services.AddScoped<IGenericUnitOfWork, GenericUnitOfWork>();
         return services;

@@ -6,7 +6,7 @@ namespace TaskList.Api.Extensions;
 
 public static class InjectMapperExtension
 {
-    public static IServiceCollection InjectMapper(this IServiceCollection services)
+    public static IServiceCollection AddMapper(this IServiceCollection services)
     {
         services.AddScoped(typeof(IMapper), (x =>
         {

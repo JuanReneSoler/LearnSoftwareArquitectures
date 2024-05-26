@@ -5,7 +5,7 @@ namespace TaskList.Api.Extensions;
 
 public static class InjectDbContextExtention
 {
-    public static IServiceCollection InjectDbContext(this IServiceCollection services, string? connectionString)
+    public static IServiceCollection AddDbContext(this IServiceCollection services, string? connectionString)
     {
         services.AddDbContext<SqlServerContext>(options =>
         {

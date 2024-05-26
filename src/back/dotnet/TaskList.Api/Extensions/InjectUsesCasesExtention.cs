@@ -4,7 +4,7 @@ namespace TaskList.Api.Extensions;
 
 public static class InjectUsesCasesExtention
 {
-    public static IServiceCollection InjectUsesCases(this IServiceCollection services)
+    public static IServiceCollection AddUsesCases(this IServiceCollection services)
     {
         services.AddScoped<ITaskUseCase, TaskUseCase>();
         services.AddScoped<IGroupUseCase, GroupsUseCase>();

@@ -1,5 +1,6 @@
 using Application.Dtos;
 using Application.UseCases;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskList.Api.Dtos;
 
@@ -7,6 +8,7 @@ namespace TaskList.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize]
 public class GroupController : ControllerBase
 {
     private readonly IGroupUseCase _groupService;
