@@ -2,5 +2,5 @@ namespace Domain.Services;
 
 public interface IMailService
 {
-    Task Send(CancellationToken cancellationToken);
+    Task Send(string destinatarioMail, string message, CancellationToken cancellationToken);
 }

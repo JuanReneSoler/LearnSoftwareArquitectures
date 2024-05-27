@@ -30,12 +30,14 @@ public sealed class GenericUnitOfWork : IGenericUnitOfWork
 
     public async Task<bool> Commit(CancellationToken cancellationToken)
     {
-        if (await _context.SaveChangesAsync(cancellationToken) == 1)
+        var result = await _context.SaveChangesAsync(cancellationToken) == 1;
+
+        if (result)
         {
             await DispatchDomainEvents(cancellationToken);
-            return true;
         }
-        return false;
+
+        return result;
     }
 
     public async Task Rollback(CancellationToken cancellationToken)
@@ -61,23 +63,19 @@ public sealed class GenericUnitOfWork : IGenericUnitOfWork
 
     private async Task DispatchDomainEvents(CancellationToken cancellationToken)
     {
-        await Task.Run(() =>
+        var domainEntities = _context.ChangeTracker
+            .Entries<IGenericAgregate>()
+            .Where(x => x.Entity.DomainEvents.Any())
+            .ToArray();
+
+        var domainEvents = domainEntities.SelectMany(x => x.Entity.DomainEvents)
+            .ToArray();
+
+        foreach (var entity in domainEntities)
         {
-            var domainEntities = _context.ChangeTracker
-                .Entries<IGenericAgregate>()
-                .Where(x => x.Entity.DomainEvents.Any())
-                .ToArray();
-
-            var domainEvents = domainEntities.SelectMany(x => x.Entity.DomainEvents)
-                .ToArray();
-
-            foreach (var entity in domainEntities)
-            {
-                entity.Entity.ClearEvents();
-            }
-            _dispatcher.Dispatch(domainEvents);
-
-        }, cancellationToken);
+            entity.Entity.ClearEvents();
+        }
+        await _dispatcher.Dispatch(domainEvents, cancellationToken);
     }
 
     public void Dispose()
@@ -92,8 +90,9 @@ public sealed class GenericUnitOfWork : IGenericUnitOfWork
         {
             if (disposing)
             {
-                _context.Dispose();
+                //
             }
+            _context.Dispose();
             disposed = true;
         }
     }

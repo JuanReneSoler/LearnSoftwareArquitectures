@@ -45,6 +45,16 @@ function PersonForm({ id, viewModel, submitEvent, readonly }: IProps) {
           disabled={readonly}
         />
       </div>
+      <div>
+        <label htmlFor="">Correo:</label>
+        <input
+          type="text"
+          name="email"
+          onChange={handlerChange}
+          value={vModel.email}
+          disabled={readonly}
+        />
+      </div>
     </form>
   );
 }

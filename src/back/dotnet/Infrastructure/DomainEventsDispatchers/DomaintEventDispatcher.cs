@@ -12,7 +12,7 @@ public class DomainEventDispatcher : IDomainEventDispatcher
         _serviceProvider = serviceProvider;
     }
 
-    public void Dispatch(IEnumerable<IDomainEvent> Events)
+    public async Task Dispatch(IEnumerable<IDomainEvent> Events, CancellationToken cancellationToken)
     {
         foreach (var domainEvent in Events)
         {
@@ -22,7 +22,7 @@ public class DomainEventDispatcher : IDomainEventDispatcher
             {
                 if (handler is not null)
                 {
-                    ((dynamic)handler).Handle((dynamic)domainEvent);
+                    await ((dynamic)handler).Handle((dynamic)domainEvent, cancellationToken);
                 }
             }
         }

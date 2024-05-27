@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Tasks } from "./Tasks";
 
 interface IProps {
-  item: { id: number; name: string };
+  item: { id: number; name: string; email: string };
   handlerSelect: (id: number) => void;
   handlerDelete: (id: number) => void;
 }

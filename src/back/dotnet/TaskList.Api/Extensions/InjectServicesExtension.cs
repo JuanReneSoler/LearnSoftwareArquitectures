@@ -7,7 +7,7 @@ public static class InjectServicesExtension
 {
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
-        services.AddScoped<IMailService, MailService>();
+        services.AddScoped<IMailService, GoogleMailService>();
         return services;
     }
 }

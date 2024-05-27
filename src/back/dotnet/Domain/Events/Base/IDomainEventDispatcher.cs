@@ -2,5 +2,5 @@ namespace Domain.Events;
 
 public interface IDomainEventDispatcher
 {
-    void Dispatch(IEnumerable<IDomainEvent> Events);
+    Task Dispatch(IEnumerable<IDomainEvent> Events, CancellationToken cancellationToken);
 }
