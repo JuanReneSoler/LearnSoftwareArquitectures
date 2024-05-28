@@ -1,7 +1,8 @@
+using Application.Dtos;
+using Application.UseCases;
 using Domain.Entities;
-using Application.UsesCases;
-using Infrastructure.EF;
 using EasyMapper;
+using Infrastructure.EntityFramework;
 
 namespace integration_test;
 
@@ -66,10 +67,8 @@ public class TasksServiceTest
         {
             Description = "Esta tarea es una prueba, XD",
             GroupId = group?.Id ?? 0,
-            Group = _group,
             Id = 0,
             PersonId = person?.Id ?? 0,
-            Person = _person,
             Title = "Tarea de prueba"
         }, _token);
 

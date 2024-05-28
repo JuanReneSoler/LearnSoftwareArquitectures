@@ -1,7 +1,8 @@
+using Application.Dtos;
+using Application.UseCases;
 using Domain.Entities;
-using Application.UsesCases;
-using Infrastructure.EF;
 using EasyMapper;
+using Infrastructure.EntityFramework;
 
 namespace integration_test;
 
