@@ -17,10 +17,9 @@ public class ExceptionsMiddleware
         }
         catch (Exception ex)
         {
+            //context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            //await context.Response.WriteAsync(ex.Message);
             Console.WriteLine(ex.Message);
-            Console.ReadKey();
-            await context.Response.WriteAsync("Ocurrio un error interno en el servidor.");
-            context.Response.StatusCode = StatusCodes.Status400BadRequest;
         }
     }
 }

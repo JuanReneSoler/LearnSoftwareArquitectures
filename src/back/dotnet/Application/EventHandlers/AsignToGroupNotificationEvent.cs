@@ -33,7 +33,6 @@ public class AsignToGroupNotificationEvent : IDomainEventHandler<AsignToAGroupTa
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
-            Console.ReadKey();
         }
     }
 }

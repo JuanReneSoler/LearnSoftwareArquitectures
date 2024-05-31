@@ -11,7 +11,7 @@ public sealed class GenericRepository<TEntity> : IGenericRepository<TEntity>
     private readonly DbContext _context;
     private readonly DbSet<TEntity> _table;
 
-    public GenericRepository(SqlServerContext Context)
+    public GenericRepository(DbContext Context)
     {
         _context = Context;
         _table = Context.Set<TEntity>();

@@ -12,6 +12,7 @@ public class MailService : IMailService
     {
         _config = configuration;
     }
+
     public async Task Send(string destinatarioMail, string subject, string message, CancellationToken cancellationToken)
     {
         var smtp = _config["MailConfiguration:Smtp"] ?? string.Empty;
