@@ -30,14 +30,12 @@ public sealed class GenericRepository<TEntity> : IGenericRepository<TEntity>
 
     public async Task Delete(int Id, CancellationToken cancellationToken)
     {
-        await Task.Run(async () =>
+        if (await Exist(x => x.Id == Id, cancellationToken))
         {
-            var entity = (await this.Where(x => x.Id == Id, cancellationToken)).FirstOrDefault();
-
-            if (entity is null) throw new NullReferenceException("El elemento no existe.");
-
+            var entity = await Find(Id, cancellationToken);
             _table.Remove(entity);
-        }, cancellationToken);
+        }
+        throw new Exception($"No se encontro ningun elemento con el Id={Id}");
     }
 
     public async Task<IQueryable<TEntity>> Where(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
@@ -50,4 +48,14 @@ public sealed class GenericRepository<TEntity> : IGenericRepository<TEntity>
 
     public async Task<bool> Exist(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken)
         => await _table.AnyAsync(expression, cancellationToken);
+
+    public async Task<TEntity> Find(int Id, CancellationToken cancellationToken)
+    {
+        if (await Exist(x => x.Id == Id, cancellationToken))
+        {
+            var result = await Where(x => x.Id == Id, cancellationToken);
+            return result.First();
+        }
+        throw new Exception($"No se encontro ningun elemento con el Id={Id}");
+    }
 }

@@ -12,7 +12,7 @@ public class MailService : IMailService
     {
         _config = configuration;
     }
-    public async Task Send(string destinatarioMail, string message, CancellationToken cancellationToken)
+    public async Task Send(string destinatarioMail, string subject, string message, CancellationToken cancellationToken)
     {
         var smtp = _config["MailConfiguration:Smtp"] ?? string.Empty;
         var correo = _config["MailConfiguration:Correo"] ?? string.Empty;
@@ -24,16 +24,31 @@ public class MailService : IMailService
             Credentials = new NetworkCredential(correo, password),
             EnableSsl = true,
         };
+
+        smtpClient.SendCompleted += new SendCompletedEventHandler(SendCompletedCallback);
+
         MailMessage mail = new MailMessage
         {
             From = new MailAddress(correo),
-            Subject = "Asignacion de tarea",
+            Subject = subject,
             Body = message,
             IsBodyHtml = false,
         };
         mail.To.Add(destinatarioMail);
 
         await smtpClient.SendMailAsync(mail, cancellationToken);
-        Console.WriteLine("main send successfull");
+    }
+
+    private void SendCompletedCallback(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+    {
+        if (e.Error != null)
+        {
+            Console.WriteLine($"Error al enviar el correo: {e.Error.ToString()}");
+        }
+        else if (e.Cancelled)
+        {
+            Console.WriteLine("Envio de correo cancelado.");
+        }
+        else Console.WriteLine("envio de correo exitoso!");
     }
 }

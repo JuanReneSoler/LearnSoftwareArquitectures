@@ -26,8 +26,8 @@ public class AsignToGroupNotificationEvent : IDomainEventHandler<AsignToAGroupTa
             if (array.Any())
             {
                 var entity = array[0];
-                var message = $"la tarea {domainEvent.Task.Title} the ha sido asignada {entity.Name}, este mensaje fue enviado a tu correo {entity.Email} automaticamte.";
-                await _service.Send(entity.Email, message, cancellationToken);
+                var message = $"Estimado {entity.Name}, la tarea '{domainEvent.Task.Title}' le ha sido asignada.\n\n\n Este mensaje fue enviado a tu correo {entity.Email} automaticamte. Por favor no responder!";
+                await _service.Send(entity.Email, "Asignacion de tarea", message, cancellationToken);
             }
         }
         catch (Exception ex)

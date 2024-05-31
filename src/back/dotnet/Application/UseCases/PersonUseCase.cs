@@ -68,8 +68,7 @@ public sealed class PersonUseCase : IPersonUseCase
     {
         if (await _uow.People.Exist(x => x.Id == Id, cancellationToken))
         {
-            var result = await _uow.People.Where(x => x.Id == Id, cancellationToken);
-            var entity = result.ToArray()[0];
+            var entity = await _uow.People.Find(Id, cancellationToken);
             return _mapper.Map<Person, PersonDto>(entity);
         }
         throw new Exception("Este registro no existe.");

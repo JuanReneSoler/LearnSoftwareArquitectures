@@ -75,9 +75,7 @@ public sealed class GroupsUseCase : IGroupUseCase
     {
         if (await _uow.Groups.Exist(x => x.Id == Id, cancellationToken))
         {
-            var select = await _uow.Groups.Where(x => x.Id == Id, cancellationToken);
-
-            var item = select.ToArray()[0];
+            var item = await _uow.Groups.Find(Id, cancellationToken);
             return _mapper.Map<Group, GroupDto>(item);
         }
         throw new Exception("Este registro no existe.");

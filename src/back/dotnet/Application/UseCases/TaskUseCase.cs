@@ -92,8 +92,7 @@ public sealed class TaskUseCase : ITaskUseCase
     {
         if (await _uow.Tasks.Exist(x => x.Id == Id, cancellationToken))
         {
-            var result = await _uow.Tasks.Where(x => x.Id == Id, cancellationToken);
-            var entity = result.ToArray()[0];
+            var entity = await _uow.Tasks.Find(Id, cancellationToken);
             return _mapper.Map<Tasks, TaskDto>(entity);
         }
         throw new Exception("Este registro no existe.");
