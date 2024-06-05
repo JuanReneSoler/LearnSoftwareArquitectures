@@ -9,10 +9,11 @@ import { PeopleService } from 'src/app/services/people.service';
 export class PeopleManagementComponent implements OnInit {
   constructor(private service: PeopleService) {}
   peopleList: any[] = [];
-  showForm=false;
+  showForm = false;
+  token: string = `${localStorage.getItem('token')}`;
 
   async ngOnInit() {
-    await this.service.filter().then((res) => {
+    await this.service.filter(this.token).then((res) => {
       this.peopleList = res;
     });
   }

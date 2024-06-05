@@ -19,11 +19,15 @@ import { TasksManagementComponent } from './pages/home/components/tasks-manageme
 import { GroupsManagementComponent } from './pages/home/components/groups-management/groups-management.component';
 import { TaskByGroupComponent } from './pages/home/components/groups-list/task-by-group/task-by-group.component';
 import { TasksByPersonComponent } from './pages/home/components/people-list/tasks-by-person/tasks-by-person.component';
+import { AuthComponent } from './pages/auth/auth.component';
+import { LogInFormComponent } from './pages/auth/components/log-in-form/log-in-form.component';
+
+const token = localStorage.getItem('token');
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent,
+    component: token !== null ? HomeComponent : AuthComponent,
     pathMatch: 'full',
   },
   {
@@ -48,6 +52,8 @@ const routes: Routes = [
     GroupsManagementComponent,
     TaskByGroupComponent,
     TasksByPersonComponent,
+    AuthComponent,
+    LogInFormComponent,
   ],
   exports: [RouterModule],
   imports: [

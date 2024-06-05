@@ -9,11 +9,12 @@ import { GroupService } from 'src/app/services/group.service';
 export class GroupsManagementComponent implements OnInit {
   groupsList: any[] = [];
   showForm = false;
+  token: string = `${localStorage.getItem('token')}`;
 
   constructor(private service: GroupService) {}
 
   async ngOnInit() {
-    await this.service.filter().then((res) => {
+    await this.service.filter(this.token).then((res) => {
       this.groupsList = res;
     });
   }

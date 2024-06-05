@@ -10,11 +10,15 @@ export class TaskByGroupComponent implements OnInit {
   @Input() groupId: number = 0;
   tasksList: any[] = [];
 
+  token: string = `${localStorage.getItem('token')}`;
+
   constructor(private service: TasksService) {}
 
   async ngOnInit() {
-    await this.service.filter({ groupId: this.groupId }).then((res) => {
-      this.tasksList = res;
-    });
+    await this.service
+      .filter({ groupId: this.groupId }, this.token)
+      .then((res) => {
+        this.tasksList = res;
+      });
   }
 }

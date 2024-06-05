@@ -15,13 +15,14 @@ export class TaskFormComponent implements OnInit {
 
   groupsList = [] as any[];
   peopleList = [] as any[];
+  token: string = `${localStorage.getItem('token')}`;
 
   async ngOnInit() {
-    await this.gruposSerivce.filter().then((res) => {
+    await this.gruposSerivce.filter(this.token).then((res) => {
       this.groupsList = res;
     });
 
-    await this.peopleService.filter().then((res) => {
+    await this.peopleService.filter(this.token).then((res) => {
       this.peopleList = res;
     });
   }

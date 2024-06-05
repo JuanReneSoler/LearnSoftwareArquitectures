@@ -10,11 +10,15 @@ export class TasksByPersonComponent implements OnInit {
   @Input() personId: number = 0;
   tasksList: any[] = [];
 
+  token: string = `${localStorage.getItem('token')}`;
+
   constructor(private service: TasksService) {}
 
   async ngOnInit() {
-    await this.service.filter({ personId: this.personId }).then((res) => {
-      this.tasksList = res;
-    });
+    await this.service
+      .filter({ personId: this.personId }, this.token)
+      .then((res) => {
+        this.tasksList = res;
+      });
   }
 }

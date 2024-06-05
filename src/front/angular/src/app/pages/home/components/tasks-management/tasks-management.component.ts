@@ -9,12 +9,13 @@ import { TasksService } from 'src/app/services/tasks.service';
 export class TasksManagementComponent implements OnInit {
   taskList = [] as any[];
   showForm = false;
+  token: string = `${localStorage.getItem('token')}`;
 
   constructor(private service: TasksService) {
     //
   }
   async ngOnInit() {
-    await this.service.filter().then((res) => {
+    await this.service.filter({}, this.token).then((res) => {
       this.taskList = res;
     });
   }
