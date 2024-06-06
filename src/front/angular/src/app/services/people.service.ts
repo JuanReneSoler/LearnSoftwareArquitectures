@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Person } from './dtos/Person';
 import { env } from '../../../env';
+import { buildUrl } from '../utils/buildUrl';
 
 const api = env.apiUrl + 'Person';
 
@@ -19,8 +20,12 @@ export class PeopleService {
     }).then((res) => res.json());
   }
 
-  async filter(token: string): Promise<Array<Person>> {
-    return await fetch(api, {
+  async filter(
+    params: { page: number; size: number },
+    token: string
+  ): Promise<Array<Person>> {
+    const url = buildUrl(api, params);
+    return await fetch(url, {
       method: 'GET',
       headers: {
         Authorization: token,

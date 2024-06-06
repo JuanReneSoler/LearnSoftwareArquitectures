@@ -1,12 +1,12 @@
-<form (submit)="onSubmit($event)">
+<form [formGroup]="viewModel" (submit)="onSubmit($event)">
   <p>LogIn</p>
   <div>
     <label>Usuario:</label>
-    <input type="text" value="" name="" />
+    <input type="text" value="" name="user" formControlName="user" />
   </div>
   <div>
     <label>Contraseña:</label>
-    <input type="text" name="" id="" />
+    <input type="text" name="user" id="user" formControlName="password" />
   </div>
   <div>
     <button type="submit">Acceder</button>

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Task } from './dtos/Task';
 import { env } from '../../../env';
 
 const api = env.apiUrl + 'Auth';
@@ -17,7 +16,7 @@ export class AuthService {
     return await fetch(api, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application-json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(auth),
     }).then((res) => res.json());

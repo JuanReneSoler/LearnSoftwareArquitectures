@@ -15,7 +15,7 @@ export class TasksManagementComponent implements OnInit {
     //
   }
   async ngOnInit() {
-    await this.service.filter({}, this.token).then((res) => {
+    await this.service.filter({ page: 1, size: 10 }, this.token).then((res) => {
       this.taskList = res;
     });
   }

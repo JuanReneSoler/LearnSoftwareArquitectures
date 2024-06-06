@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Group } from './dtos/Group';
 import { env } from '../../../env';
+import { buildUrl } from '../utils/buildUrl';
 
 const api = env.apiUrl + 'Group';
 
@@ -19,8 +20,12 @@ export class GroupService {
     }).then((res) => res.json());
   }
 
-  async filter(token: string): Promise<Array<Group>> {
-    return await fetch(api, {
+  async filter(
+    params: { page: number; size: number },
+    token: string
+  ): Promise<Array<Group>> {
+    const url = buildUrl(api, params);
+    return await fetch(url, {
       method: 'GET',
       headers: {
         Authorization: token,

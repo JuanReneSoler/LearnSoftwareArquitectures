@@ -16,7 +16,7 @@ export class TasksByPersonComponent implements OnInit {
 
   async ngOnInit() {
     await this.service
-      .filter({ personId: this.personId }, this.token)
+      .filter({ personId: this.personId, page: 1, size: 10 }, this.token)
       .then((res) => {
         this.tasksList = res;
       });

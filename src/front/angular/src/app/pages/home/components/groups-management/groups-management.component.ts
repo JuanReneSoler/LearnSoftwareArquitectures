@@ -14,7 +14,7 @@ export class GroupsManagementComponent implements OnInit {
   constructor(private service: GroupService) {}
 
   async ngOnInit() {
-    await this.service.filter(this.token).then((res) => {
+    await this.service.filter({ page: 1, size: 10 }, this.token).then((res) => {
       this.groupsList = res;
     });
   }

@@ -16,7 +16,7 @@ export class TaskByGroupComponent implements OnInit {
 
   async ngOnInit() {
     await this.service
-      .filter({ groupId: this.groupId }, this.token)
+      .filter({ groupId: this.groupId, page: 1, size: 10 }, this.token)
       .then((res) => {
         this.tasksList = res;
       });

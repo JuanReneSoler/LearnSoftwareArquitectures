@@ -6,6 +6,8 @@ import { buildUrl } from '../utils/buildUrl';
 const api = env.apiUrl + 'Task';
 
 interface IFilterProps {
+  page: number;
+  size: number;
   groupId?: number;
   personId?: number;
 }

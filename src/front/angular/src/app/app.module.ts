@@ -21,13 +21,22 @@ import { TaskByGroupComponent } from './pages/home/components/groups-list/task-b
 import { TasksByPersonComponent } from './pages/home/components/people-list/tasks-by-person/tasks-by-person.component';
 import { AuthComponent } from './pages/auth/auth.component';
 import { LogInFormComponent } from './pages/auth/components/log-in-form/log-in-form.component';
-
-const token = localStorage.getItem('token');
+import { ReactiveFormsModule } from '@angular/forms';
+import { authGuard } from './pages/auth/components/log-in-form/auth.guard';
 
 const routes: Routes = [
   {
+    path: 'home',
+    component: HomeComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'login',
+    component: AuthComponent,
+  },
+  {
     path: '',
-    component: token !== null ? HomeComponent : AuthComponent,
+    redirectTo: '/login',
     pathMatch: 'full',
   },
   {
@@ -63,6 +72,7 @@ const routes: Routes = [
     MatIconModule,
     MatButtonModule,
     MatToolbarModule,
+    ReactiveFormsModule,
   ],
   bootstrap: [AppComponent],
 })

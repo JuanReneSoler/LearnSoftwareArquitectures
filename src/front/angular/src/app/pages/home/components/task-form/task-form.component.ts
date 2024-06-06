@@ -18,12 +18,16 @@ export class TaskFormComponent implements OnInit {
   token: string = `${localStorage.getItem('token')}`;
 
   async ngOnInit() {
-    await this.gruposSerivce.filter(this.token).then((res) => {
-      this.groupsList = res;
-    });
+    await this.gruposSerivce
+      .filter({ page: 1, size: 10 }, this.token)
+      .then((res) => {
+        this.groupsList = res;
+      });
 
-    await this.peopleService.filter(this.token).then((res) => {
-      this.peopleList = res;
-    });
+    await this.peopleService
+      .filter({ page: 1, size: 10 }, this.token)
+      .then((res) => {
+        this.peopleList = res;
+      });
   }
 }
