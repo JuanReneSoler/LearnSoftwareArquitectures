@@ -1,8 +1,10 @@
 using Application.Dtos;
 using Application.UseCases;
 using Domain.Entities;
+using Domain.UnitsOfWork;
 using EasyMapper;
 using Infrastructure.EntityFramework;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace integration_test;
 
@@ -16,8 +18,12 @@ public class PersonServiceTest
 
     public PersonServiceTest()
     {
-        var context = new SqlServerContext();
-        context.Database.EnsureCreated();
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<SqlServerContext>()
+            .AddSingleton<IGenericUnitOfWork, GenericUnitOfWork>()
+            .BuildServiceProvider();
+        var context = serviceProvider.GetService<SqlServerContext>();
+        context?.Database.EnsureCreated();
         var mapperConfig = new MapperConfiguration();
         mapperConfig.SetMapperProfile(x =>
         {
@@ -25,8 +31,8 @@ public class PersonServiceTest
             x.CreateMap<PersonDto, Person>();
         });
         _mapper = mapperConfig.CreateMapper();
-        var repository2 = new GenericRepository<Person>(context);
-        _uc = new PersonUseCase(repository2, _mapper);
+        var uow = serviceProvider.GetService<IGenericUnitOfWork>();
+        _uc = new PersonUseCase(uow, _mapper);
     }
 
     [TestMethod]

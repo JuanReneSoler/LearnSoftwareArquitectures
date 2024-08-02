@@ -1,8 +1,10 @@
 ﻿using Application.Dtos;
 using Application.UseCases;
 using Domain.Entities;
+using Domain.UnitsOfWork;
 using EasyMapper;
 using Infrastructure.EntityFramework;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace integration_test;
 
@@ -16,8 +18,13 @@ public class GroupServiceTest
 
     public GroupServiceTest()
     {
-        var context = new SqlServerContext();
-        context.Database.EnsureCreated();
+        var serviceProvider = new ServiceCollection()
+            .AddDbContext<SqlServerContext>()
+            .AddSingleton<IGenericUnitOfWork, GenericUnitOfWork>()
+            .BuildServiceProvider();
+        var context = serviceProvider.GetService<SqlServerContext>();
+        context?.Database.EnsureCreated();
+        var uow = serviceProvider.GetService<IGenericUnitOfWork>();
         var mapperConfig = new MapperConfiguration();
         mapperConfig.SetMapperProfile(x =>
         {
@@ -25,8 +32,7 @@ public class GroupServiceTest
             x.CreateMap<GroupDto, Group>();
         });
         _mapper = mapperConfig.CreateMapper();
-        var repository = new GenericRepository<Group>(context);
-        _uc = new GroupsUseCase(repository, _mapper);
+        _uc = new GroupsUseCase(uow, _mapper);
     }
 
     [TestMethod]
