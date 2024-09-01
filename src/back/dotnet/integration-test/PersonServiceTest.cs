@@ -1,17 +1,14 @@
 using Application.Dtos;
 using Application.UseCases;
-using Domain.Entities;
-using Domain.UnitsOfWork;
-using EasyMapper;
-using Infrastructure.EntityFramework;
 using Microsoft.Extensions.DependencyInjection;
+using Infrastructure.DependencyInyection;
+using Application.DependencyInjection;
 
 namespace integration_test;
 
 [TestClass]
 public class PersonServiceTest
 {
-    private readonly IMapper _mapper;
     private readonly PersonUseCase _uc;
     private static PersonDto _person = new PersonDto();
     private static CancellationToken _token = new CancellationToken();
@@ -19,20 +16,13 @@ public class PersonServiceTest
     public PersonServiceTest()
     {
         var serviceProvider = new ServiceCollection()
-            .AddDbContext<SqlServerContext>()
-            .AddSingleton<IGenericUnitOfWork, GenericUnitOfWork>()
+            .AddDbContext("")
+            .AddUnitOfWork()
+            .AddUsesCases()
+            .AddMapper()
+            .AddServices()
             .BuildServiceProvider();
-        var context = serviceProvider.GetService<SqlServerContext>();
-        context?.Database.EnsureCreated();
-        var mapperConfig = new MapperConfiguration();
-        mapperConfig.SetMapperProfile(x =>
-        {
-            x.CreateMap<Person, PersonDto>();
-            x.CreateMap<PersonDto, Person>();
-        });
-        _mapper = mapperConfig.CreateMapper();
-        var uow = serviceProvider.GetService<IGenericUnitOfWork>();
-        _uc = new PersonUseCase(uow, _mapper);
+        _uc = serviceProvider.GetService<PersonUseCase>();
     }
 
     [TestMethod]

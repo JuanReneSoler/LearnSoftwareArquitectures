@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TaskList.Api.Extensions;
+using Infrastructure.DependencyInyection;
+using Application.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 const string allowOrigins = "AllowAnyOrigin";

@@ -2,8 +2,8 @@
 using Application.Extensions;
 using Application.Utils;
 using Domain.Entities;
+using Domain.Services;
 using Domain.UnitsOfWork;
-using EasyMapper;
 using System.Linq.Expressions;
 
 namespace Application.UseCases;
@@ -14,88 +14,17 @@ public interface ITaskUseCase : IGenericUseCase<TaskDto>
     Task<TaskDto> ReasignToGroup(int TaskId, int GroupId, CancellationToken cancellationToken);
 }
 
-public sealed class TaskUseCase : ITaskUseCase
+public sealed class TaskUseCase : GenericUseCase<Tasks, TaskDto>, ITaskUseCase
 {
     private readonly IGenericUnitOfWork _uow;
-    private readonly IMapper _mapper;
+    private readonly IMapperService _mapper;
 
     public TaskUseCase(
             IGenericUnitOfWork UoW,
-            IMapper Mapper)
+            IMapperService Mapper) : base(UoW, Mapper)
     {
         _uow = UoW;
         _mapper = Mapper;
-    }
-
-    public async Task<TaskDto> Create(TaskDto Dto, CancellationToken cancellationToken)
-    {
-        var entity = _mapper.Map<TaskDto, Tasks>(Dto);
-        await _uow.Tasks.Add(entity, cancellationToken);
-        if (await _uow.Commit(cancellationToken))
-        {
-            Dto.Id = entity.Id;
-        }
-        return Dto;
-    }
-
-    public async Task<int> Delete(int Id, CancellationToken cancellationToken)
-    {
-        if (await _uow.Tasks.Exist(x => x.Id == Id, cancellationToken))
-        {
-            await _uow.Tasks.Delete(Id, cancellationToken);
-            return await _uow.Commit(cancellationToken) ? Id : throw new Exception("No fue posible eliminar este registro.");
-        }
-        throw new NullReferenceException("Esta Tarea no existe.");
-    }
-
-    public async Task<TaskDto?> Update(TaskDto Dto, int Id, CancellationToken cancellationToken)
-    {
-        if (await _uow.Tasks.Exist(x => x.Id == Id, cancellationToken))
-        {
-            var entity = _mapper.Map<TaskDto, Tasks>(Dto);
-            await _uow.Tasks.Update(entity, cancellationToken);
-            if (await _uow.Commit(cancellationToken))
-            {
-                return Dto;
-            }
-            else
-            {
-                await _uow.Rollback(cancellationToken);
-                return Dto;
-            }
-        }
-        throw new NullReferenceException("Esta Persona no existe.");
-    }
-
-    public async Task<TaskDto> ReasignToGroup(int TaskId, int GroupId, CancellationToken cancellationToken)
-    {
-        if (await _uow.Tasks.Exist(x => x.Id == TaskId, cancellationToken))
-        {
-            var result = await _uow.Tasks.Where(x => x.Id == TaskId, cancellationToken);
-            var task = result.First();
-
-            task.GroupId = GroupId;
-
-            await _uow.Tasks.Update(task, cancellationToken);
-
-            if (await _uow.Commit(cancellationToken))
-            {
-                return _mapper.Map<Tasks, TaskDto>(task);
-            }
-            throw new Exception("No fue posible cambiar esta tarea de grupo.");
-        }
-        throw new Exception("This task not exist!");
-
-    }
-
-    public async Task<TaskDto> Find(int Id, CancellationToken cancellationToken)
-    {
-        if (await _uow.Tasks.Exist(x => x.Id == Id, cancellationToken))
-        {
-            var entity = await _uow.Tasks.Find(Id, cancellationToken);
-            return _mapper.Map<Tasks, TaskDto>(entity);
-        }
-        throw new Exception("Este registro no existe.");
     }
 
     public async Task<IBasePagination<TaskDto>> Filter(int GroupId, int PersonId, string Search, int page, int size, CancellationToken cancellationToken)
@@ -114,7 +43,28 @@ public sealed class TaskUseCase : ITaskUseCase
             expression = expression.And(combineOrExpression);
         }
 
-        var query = await _uow.Tasks.Where(expression, cancellationToken);
+        var query = await _uow.GetRepository<Tasks>().Where(expression, cancellationToken);
         return query.Select(x => _mapper.Map<Tasks, TaskDto>(x)).Paginate(page, size);
+    }
+
+    public async Task<TaskDto> ReasignToGroup(int TaskId, int GroupId, CancellationToken cancellationToken)
+    {
+        if (await _uow.GetRepository<Tasks>().Exist(x => x.Id == TaskId, cancellationToken))
+        {
+            var result = await _uow.GetRepository<Tasks>().Where(x => x.Id == TaskId, cancellationToken);
+            var task = result.First();
+
+            task.GroupId = GroupId;
+
+            await _uow.GetRepository<Tasks>().Update(task, cancellationToken);
+
+            if (await _uow.Commit(cancellationToken))
+            {
+                return _mapper.Map<Tasks, TaskDto>(task);
+            }
+            throw new Exception("No fue posible cambiar esta tarea de grupo.");
+        }
+        throw new Exception("This task not exist!");
+
     }
 }

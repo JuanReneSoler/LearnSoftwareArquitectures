@@ -1,6 +1,7 @@
 using Application.UseCases;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace TaskList.Api.Extensions;
+namespace Application.DependencyInjection;
 
 public static class InjectUsesCasesExtention
 {

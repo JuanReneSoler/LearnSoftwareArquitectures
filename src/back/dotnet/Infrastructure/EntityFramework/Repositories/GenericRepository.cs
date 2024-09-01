@@ -21,29 +21,34 @@ public sealed class GenericRepository<TEntity> : IGenericRepository<TEntity>
 
     public async Task Update(TEntity Entity, CancellationToken cancellationToken)
     {
-        await Task.Run(() =>
+        if (await Exist(x => x.Id == Entity.Id, cancellationToken))
         {
-            _table.Update(Entity);
-            _context.Entry(Entity).State = EntityState.Modified;
-        }, cancellationToken);
+            await Task.Run(() =>
+            {
+                _table.Update(Entity);
+                _context.Entry(Entity).State = EntityState.Modified;
+            }, cancellationToken);
+        }
     }
 
     public async Task Delete(int Id, CancellationToken cancellationToken)
     {
-        if (await Exist(x => x.Id == Id, cancellationToken))
-        {
-            var entity = await Find(Id, cancellationToken);
+        var entity = await Find(Id, cancellationToken);
+        if (entity is not null)
             _table.Remove(entity);
-        }
-        throw new Exception($"No se encontro ningun elemento con el Id={Id}");
+        else throw new Exception($"No se encontro ningun elemento con el Id={Id}");
     }
 
     public async Task<IQueryable<TEntity>> Where(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken)
     {
-        return await Task.Run(() =>
+        if (await Exist(predicate, cancellationToken))
         {
-            return _table.Where(predicate);
-        }, cancellationToken);
+            return await Task.Run(() =>
+            {
+                return _table.Where(predicate);
+            }, cancellationToken);
+        }
+        throw new Exception("No hay datos para mostrar.");
     }
 
     public async Task<bool> Exist(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken)
@@ -53,8 +58,8 @@ public sealed class GenericRepository<TEntity> : IGenericRepository<TEntity>
     {
         if (await Exist(x => x.Id == Id, cancellationToken))
         {
-            var result = await Where(x => x.Id == Id, cancellationToken);
-            return result.First();
+            var result = await _table.FirstAsync(x => x.Id == Id, cancellationToken);
+            return result;
         }
         throw new Exception($"No se encontro ningun elemento con el Id={Id}");
     }

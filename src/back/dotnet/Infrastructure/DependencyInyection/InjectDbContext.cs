@@ -1,9 +1,10 @@
 using Infrastructure.EntityFramework;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace TaskList.Api.Extensions;
+namespace Infrastructure.DependencyInyection;
 
-public static class InjectDbContextExtention
+public static class InjectDbContext
 {
     public static IServiceCollection AddDbContext(this IServiceCollection services, string? connectionString)
     {

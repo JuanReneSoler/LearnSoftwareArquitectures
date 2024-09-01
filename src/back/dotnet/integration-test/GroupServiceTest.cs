@@ -1,17 +1,14 @@
 ﻿using Application.Dtos;
 using Application.UseCases;
-using Domain.Entities;
-using Domain.UnitsOfWork;
-using EasyMapper;
-using Infrastructure.EntityFramework;
 using Microsoft.Extensions.DependencyInjection;
+using Infrastructure.DependencyInyection;
+using Application.DependencyInjection;
 
 namespace integration_test;
 
 [TestClass]
 public class GroupServiceTest
 {
-    private readonly IMapper _mapper;
     private readonly GroupsUseCase _uc;
     private static GroupDto _group = new GroupDto();
     private static CancellationToken _token = new CancellationToken();
@@ -19,20 +16,13 @@ public class GroupServiceTest
     public GroupServiceTest()
     {
         var serviceProvider = new ServiceCollection()
-            .AddDbContext<SqlServerContext>()
-            .AddSingleton<IGenericUnitOfWork, GenericUnitOfWork>()
+            .AddDbContext("")
+            .AddUnitOfWork()
+            .AddUsesCases()
+            .AddMapper()
+            .AddServices()
             .BuildServiceProvider();
-        var context = serviceProvider.GetService<SqlServerContext>();
-        context?.Database.EnsureCreated();
-        var uow = serviceProvider.GetService<IGenericUnitOfWork>();
-        var mapperConfig = new MapperConfiguration();
-        mapperConfig.SetMapperProfile(x =>
-        {
-            x.CreateMap<Group, GroupDto>();
-            x.CreateMap<GroupDto, Group>();
-        });
-        _mapper = mapperConfig.CreateMapper();
-        _uc = new GroupsUseCase(uow, _mapper);
+        _uc = serviceProvider.GetService<GroupsUseCase>();
     }
 
     [TestMethod]

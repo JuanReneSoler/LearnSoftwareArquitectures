@@ -1,10 +1,13 @@
 using Application.Dtos;
 using Domain.Entities;
+using Domain.Services;
 using EasyMapper;
+using Infrastructure.Services;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace TaskList.Api.Extensions;
+namespace Infrastructure.DependencyInyection;
 
-public static class InjectMapperExtension
+public static class InjectMapper
 {
     public static IServiceCollection AddMapper(this IServiceCollection services)
     {
@@ -22,6 +25,7 @@ public static class InjectMapperExtension
             });
             return mapperConfig.CreateMapper();
         }));
+        services.AddScoped<IMapperService, MapperService>();
         return services;
     }
 }

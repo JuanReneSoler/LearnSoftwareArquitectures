@@ -1,9 +1,10 @@
 using Domain.Services;
 using Infrastructure.Services;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace TaskList.Api.Extensions;
+namespace Infrastructure.DependencyInyection;
 
-public static class InjectServicesExtension
+public static class InjectMailServices
 {
     public static IServiceCollection AddServices(this IServiceCollection services)
     {

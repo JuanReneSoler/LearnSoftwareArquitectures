@@ -17,9 +17,8 @@ public class ExceptionsMiddleware
         }
         catch (Exception ex)
         {
-            //context.Response.StatusCode = StatusCodes.Status400BadRequest;
-            //await context.Response.WriteAsync(ex.Message);
-            Console.WriteLine(ex.Message);
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            await context.Response.WriteAsync(ex.Message);
         }
     }
 }

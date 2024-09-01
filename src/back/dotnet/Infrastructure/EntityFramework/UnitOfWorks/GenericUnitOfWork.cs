@@ -9,11 +9,11 @@ namespace Infrastructure.EntityFramework;
 public sealed class GenericUnitOfWork : IGenericUnitOfWork
 {
     //
-    public IGenericRepository<Tasks> Tasks => new GenericRepository<Tasks>(_context);
+    //public IGenericRepository<Tasks> Tasks => new GenericRepository<Tasks>(_context);
 
-    public IGenericRepository<Group> Groups => new GenericRepository<Group>(_context);
+    //public IGenericRepository<Group> Groups => new GenericRepository<Group>(_context);
 
-    public IGenericRepository<Person> People => new GenericRepository<Person>(_context);
+    //public IGenericRepository<Person> People => new GenericRepository<Person>(_context);
 
     private bool disposed = false;
 
@@ -25,12 +25,13 @@ public sealed class GenericUnitOfWork : IGenericUnitOfWork
             IDomainEventDispatcher Dispatcher)
     {
         _context = context;
+        _context.Database.EnsureCreated();
         _dispatcher = Dispatcher;
     }
 
     public async Task<bool> Commit(CancellationToken cancellationToken)
     {
-        var result = await _context.SaveChangesAsync(cancellationToken) == 1;
+        var result = await _context.SaveChangesAsync(cancellationToken) > 0;
 
         if (result)
         {
@@ -95,6 +96,11 @@ public sealed class GenericUnitOfWork : IGenericUnitOfWork
             _context.Dispose();
             disposed = true;
         }
+    }
+
+    public IGenericRepository<T> GetRepository<T>() where T : BaseEntity<int>
+    {
+        return new GenericRepository<T>(_context);
     }
 
     ~GenericUnitOfWork()

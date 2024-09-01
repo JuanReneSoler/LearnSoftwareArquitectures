@@ -1,10 +1,11 @@
 ﻿using Application.EventHandlers;
 using Domain.Events;
 using Infrastructure.DomainEventsDispatchers;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace TaskList.Api.Extensions;
+namespace Infrastructure.DependencyInyection;
 
-public static class InjectDomainEventExtentions
+public static class InjectDomainEvent
 {
     public static IServiceCollection AddDomainEvents(this IServiceCollection services)
     {

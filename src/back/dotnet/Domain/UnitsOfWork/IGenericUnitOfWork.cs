@@ -5,9 +5,7 @@ namespace Domain.UnitsOfWork;
 
 public interface IGenericUnitOfWork : IDisposable
 {
-    IGenericRepository<Tasks> Tasks { get; }
-    IGenericRepository<Group> Groups { get; }
-    IGenericRepository<Person> People { get; }
+    IGenericRepository<T> GetRepository<T>() where T : BaseEntity<int>;
     Task<bool> Commit(CancellationToken cancellationToken);
     Task Rollback(CancellationToken cancellationToken);
 }

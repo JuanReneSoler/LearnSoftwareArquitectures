@@ -1,4 +1,5 @@
-﻿using Domain.Events;
+﻿using Domain.Entities;
+using Domain.Events;
 using Domain.Services;
 using Domain.UnitsOfWork;
 
@@ -21,7 +22,7 @@ public class AsignToGroupNotificationEvent : IDomainEventHandler<AsignToAGroupTa
     {
         try
         {
-            var result = await _uow.People.Where(x => x.Id == domainEvent.Task.PersonId, cancellationToken);
+            var result = await _uow.GetRepository<Person>().Where(x => x.Id == domainEvent.Task.PersonId, cancellationToken);
             var array = result.ToArray();
             if (array.Any())
             {

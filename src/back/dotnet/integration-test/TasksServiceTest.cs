@@ -1,17 +1,14 @@
 using Application.Dtos;
 using Application.UseCases;
-using Domain.Entities;
-using Domain.UnitsOfWork;
-using EasyMapper;
-using Infrastructure.EntityFramework;
 using Microsoft.Extensions.DependencyInjection;
+using Infrastructure.DependencyInyection;
+using Application.DependencyInjection;
 
 namespace integration_test;
 
 [TestClass]
 public class TasksServiceTest
 {
-    private readonly IMapper _mapper;
     private readonly TaskUseCase _taskUC;
     private readonly GroupsUseCase _groupUC;
     private readonly PersonUseCase _personUC;
@@ -23,28 +20,15 @@ public class TasksServiceTest
     public TasksServiceTest()
     {
         var serviceProvider = new ServiceCollection()
-            .AddDbContext<SqlServerContext>()
-            .AddSingleton<IGenericUnitOfWork, GenericUnitOfWork>()
+            .AddDbContext("")
+            .AddUnitOfWork()
+            .AddUsesCases()
+            .AddMapper()
+            .AddServices()
             .BuildServiceProvider();
-        var context = serviceProvider.GetService<SqlServerContext>();
-        context?.Database.EnsureCreated();
-        var mapperConfig = new MapperConfiguration();
-        mapperConfig.SetMapperProfile(x =>
-        {
-            x.CreateMap<Tasks, TaskDto>();
-            x.CreateMap<TaskDto, Tasks>();
-            //
-            x.CreateMap<PersonDto, Person>();
-            x.CreateMap<Person, PersonDto>();
-            //
-            x.CreateMap<Group, GroupDto>();
-            x.CreateMap<GroupDto, Group>();
-        });
-        _mapper = mapperConfig.CreateMapper();
-        var uow = serviceProvider.GetService<IGenericUnitOfWork>();
-        _taskUC = new TaskUseCase(uow, _mapper);
-        _groupUC = new GroupsUseCase(uow, _mapper);
-        _personUC = new PersonUseCase(uow, _mapper);
+        _taskUC = serviceProvider.GetService<TaskUseCase>();
+        _groupUC = serviceProvider.GetService<GroupsUseCase>();
+        _personUC = serviceProvider.GetService<PersonUseCase>();
     }
 
     [TestMethod]
